@@ -1,10 +1,10 @@
 import { relations } from 'drizzle-orm'
 import { integer, numeric, pgEnum, pgTable, text } from 'drizzle-orm/pg-core'
-import { created_at, id, updated_at } from '../schemaHelpers'
-import { orderItemsTable } from './orderItems'
-import { favoritesTable } from './favorites'
-import { cartTable } from './cart'
-import { reviewsTable } from './reviews'
+import { created_at, id, updated_at } from '../schemaHelpers.js'
+import { orderItemsTable } from './orderItems.js'
+import { favoritesTable } from './favorites.js'
+import { cartTable } from './cart.js'
+import { reviewsTable } from './reviews.js'
 
 export const productStatus = ['active', 'inactive']
 export const productCategory = ['ring', 'necklace', 'pendant']

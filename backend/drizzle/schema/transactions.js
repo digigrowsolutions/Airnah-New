@@ -6,9 +6,9 @@ import {
 	text,
 	timestamp,
 } from 'drizzle-orm/pg-core'
-import { created_at, id, updated_at } from '../schemaHelpers'
-import { userTable } from './users'
-import { ordersTable } from './orders'
+import { created_at, id, updated_at } from '../schemaHelpers.js'
+import { userTable } from './users.js'
+import { ordersTable } from './orders.js'
 import { relations } from 'drizzle-orm'
 
 export const paymentMethod = ['creditCard', 'upi']
@@ -21,7 +21,7 @@ export const transactionsTable = pgTable('transactions', {
 	order_id: serial().references(() => ordersTable.order_id, {
 		onDelete: 'restrict',
 	}),
-	user_id: serial().references(() => userTable.user_id, {
+	user_id: serial('user_id').references(() => userTable.user_id, {
 		onDelete: 'restrict',
 	}),
 	payment_method: paymentMethodEnum().notNull(),
