@@ -86,8 +86,8 @@ CREATE TABLE "transactions" (
 );
 --> statement-breakpoint
 CREATE TABLE "users" (
-	"favourite_id" serial PRIMARY KEY NOT NULL,
-	"clerk_user_id" text NOT NULL,
+	"user_id" serial PRIMARY KEY NOT NULL,
+	"clerk_user_id" text,
 	"name" text NOT NULL,
 	"email" text NOT NULL,
 	"role" "user_roles" DEFAULT 'user',
@@ -97,14 +97,14 @@ CREATE TABLE "users" (
 	CONSTRAINT "users_email_unique" UNIQUE("email")
 );
 --> statement-breakpoint
-ALTER TABLE "cart" ADD CONSTRAINT "cart_user_id_users_favourite_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("favourite_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "cart" ADD CONSTRAINT "cart_user_id_users_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("user_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "cart" ADD CONSTRAINT "cart_product_id_products_favourite_id_fk" FOREIGN KEY ("product_id") REFERENCES "public"."products"("favourite_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "favorites" ADD CONSTRAINT "favorites_user_id_users_favourite_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("favourite_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "favorites" ADD CONSTRAINT "favorites_user_id_users_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("user_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "favorites" ADD CONSTRAINT "favorites_product_id_products_favourite_id_fk" FOREIGN KEY ("product_id") REFERENCES "public"."products"("favourite_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "order_items" ADD CONSTRAINT "order_items_order_id_orders_favourite_id_fk" FOREIGN KEY ("order_id") REFERENCES "public"."orders"("favourite_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "order_items" ADD CONSTRAINT "order_items_product_id_products_favourite_id_fk" FOREIGN KEY ("product_id") REFERENCES "public"."products"("favourite_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "orders" ADD CONSTRAINT "orders_user_id_users_favourite_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("favourite_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "reviews" ADD CONSTRAINT "reviews_user_id_users_favourite_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("favourite_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "orders" ADD CONSTRAINT "orders_user_id_users_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("user_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "reviews" ADD CONSTRAINT "reviews_user_id_users_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("user_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "reviews" ADD CONSTRAINT "reviews_product_id_products_favourite_id_fk" FOREIGN KEY ("product_id") REFERENCES "public"."products"("favourite_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "transactions" ADD CONSTRAINT "transactions_order_id_orders_favourite_id_fk" FOREIGN KEY ("order_id") REFERENCES "public"."orders"("favourite_id") ON DELETE restrict ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "transactions" ADD CONSTRAINT "transactions_user_id_users_favourite_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("favourite_id") ON DELETE restrict ON UPDATE no action;
+ALTER TABLE "transactions" ADD CONSTRAINT "transactions_user_id_users_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("user_id") ON DELETE restrict ON UPDATE no action;

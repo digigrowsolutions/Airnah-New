@@ -1,5 +1,5 @@
 {
-  "id": "35b86922-5241-4bca-b826-64ca7f1da296",
+  "id": "1e2453f7-9ffb-4526-9a80-7fd725180b78",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -49,15 +49,15 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "cart_user_id_users_favourite_id_fk": {
-          "name": "cart_user_id_users_favourite_id_fk",
+        "cart_user_id_users_user_id_fk": {
+          "name": "cart_user_id_users_user_id_fk",
           "tableFrom": "cart",
           "tableTo": "users",
           "columnsFrom": [
             "user_id"
           ],
           "columnsTo": [
-            "favourite_id"
+            "user_id"
           ],
           "onDelete": "cascade",
           "onUpdate": "no action"
@@ -173,15 +173,15 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "favorites_user_id_users_favourite_id_fk": {
-          "name": "favorites_user_id_users_favourite_id_fk",
+        "favorites_user_id_users_user_id_fk": {
+          "name": "favorites_user_id_users_user_id_fk",
           "tableFrom": "favorites",
           "tableTo": "users",
           "columnsFrom": [
             "user_id"
           ],
           "columnsTo": [
-            "favourite_id"
+            "user_id"
           ],
           "onDelete": "cascade",
           "onUpdate": "no action"
@@ -337,15 +337,15 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "orders_user_id_users_favourite_id_fk": {
-          "name": "orders_user_id_users_favourite_id_fk",
+        "orders_user_id_users_user_id_fk": {
+          "name": "orders_user_id_users_user_id_fk",
           "tableFrom": "orders",
           "tableTo": "users",
           "columnsFrom": [
             "user_id"
           ],
           "columnsTo": [
-            "favourite_id"
+            "user_id"
           ],
           "onDelete": "cascade",
           "onUpdate": "no action"
@@ -481,15 +481,15 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "reviews_user_id_users_favourite_id_fk": {
-          "name": "reviews_user_id_users_favourite_id_fk",
+        "reviews_user_id_users_user_id_fk": {
+          "name": "reviews_user_id_users_user_id_fk",
           "tableFrom": "reviews",
           "tableTo": "users",
           "columnsFrom": [
             "user_id"
           ],
           "columnsTo": [
-            "favourite_id"
+            "user_id"
           ],
           "onDelete": "cascade",
           "onUpdate": "no action"
@@ -606,15 +606,15 @@
           "onDelete": "restrict",
           "onUpdate": "no action"
         },
-        "transactions_user_id_users_favourite_id_fk": {
-          "name": "transactions_user_id_users_favourite_id_fk",
+        "transactions_user_id_users_user_id_fk": {
+          "name": "transactions_user_id_users_user_id_fk",
           "tableFrom": "transactions",
           "tableTo": "users",
           "columnsFrom": [
             "user_id"
           ],
           "columnsTo": [
-            "favourite_id"
+            "user_id"
           ],
           "onDelete": "restrict",
           "onUpdate": "no action"
@@ -630,8 +630,8 @@
       "name": "users",
       "schema": "",
       "columns": {
-        "favourite_id": {
-          "name": "favourite_id",
+        "user_id": {
+          "name": "user_id",
           "type": "serial",
           "primaryKey": true,
           "notNull": true
@@ -640,7 +640,7 @@
           "name": "clerk_user_id",
           "type": "text",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
         "name": {
           "name": "name",

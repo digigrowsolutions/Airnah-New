@@ -1,7 +1,7 @@
 import { integer, pgTable, serial } from 'drizzle-orm/pg-core'
-import { created_at, id, updated_at } from '../schemaHelpers'
-import { productsTable } from './products'
-import { ordersTable } from './orders'
+import { created_at, id, updated_at } from '../schemaHelpers.js'
+import { productsTable } from './products.js'
+import { ordersTable } from './orders.js'
 import { relations } from 'drizzle-orm'
 
 export const orderItemsTable = pgTable('order_items', {

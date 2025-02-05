@@ -1,12 +1,12 @@
 import { pgTable, text, integer, serial } from 'drizzle-orm/pg-core'
-import { id, created_at } from '../schemaHelpers'
-import { userTable } from './users'
-import { productsTable } from './products'
+import { id, created_at } from '../schemaHelpers.js'
+import { userTable } from './users.js'
+import { productsTable } from './products.js'
 import { relations } from 'drizzle-orm'
 
 export const reviewsTable = pgTable('reviews', {
 	review_id: id,
-	user_id: serial().references(() => userTable.user_id, {
+	user_id: serial('user_id').references(() => userTable.user_id, {
 		onDelete: 'cascade',
 	}),
 	product_id: serial().references(() => productsTable.product_id, {
