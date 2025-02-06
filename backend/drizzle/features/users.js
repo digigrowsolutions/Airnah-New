@@ -33,7 +33,6 @@ export async function deleteUser({ clerk_user_id }) {
 	const [deletedUser] = await db
 		.update(userTable)
 		.set({
-			deleted_at: new Date(),
 			email: 'redacted@deleted.com',
 			name: 'Deleted User',
 			clerk_user_id: 'deleted',

@@ -4,19 +4,13 @@ import bodyParser from 'body-parser'
 import dotenv from 'dotenv'
 import ngrok from '@ngrok/ngrok'
 import { insertUser, updateUser, deleteUser } from './drizzle/features/users.js'
-import { clerkClient, clerkMiddleware } from '@clerk/express'
+import { clerkClient } from '@clerk/express'
 
 dotenv.config()
 
 const app = express()
 const port = process.env.PORT || 4000
 app.use(bodyParser.json())
-app.use(
-	clerkMiddleware({
-		publishableKey: process.env.CLERK_API_KEY,
-		secretKey: process.env.CLERK_SECRET_KEY,
-	})
-)
 
 const CLERK_WEBHOOK_SECRET = process.env.CLERK_WEBHOOK_KEY
 
@@ -92,32 +86,26 @@ app.post('/webhook', async (req, res) => {
 					name,
 					role: 'user',
 				})
-				// await clerkClient.users.updateUserMetadata(user.clerk_user_id, {
-				// 	publicMetadata: {
-				// 		dbId: user.user_id,
-				// 		role: user.role,
-				// 	},
-				// })
+				await clerkClient.users.updateUserMetadata(user.clerk_user_id, {
+					publicMetadata: {
+						dbId: user.user_id,
+						role: user.role,
+					},
+				})
 			} else {
-				const updatedUser = await updateUser(
-					{ clerkUserId: event.data.id },
+				await updateUser(
+					{ clerk_user_id: event.data.id },
 					{
 						email,
 						name,
 						role: event.data.public_metadata.role,
 					}
 				)
-				// await clerkClient.users.updateUserMetadata(updatedUser.clerk_user_id, {
-				// 	publicMetadata: {
-				// 		dbId: updatedUser.user_id,
-				// 		role: updatedUser.role,
-				// 	},
-				// })
 			}
 			break
 		case 'user.deleted':
 			if (event.data.id != null) {
-				await deleteUser({ clerkUserId: event.data.id })
+				await deleteUser({ clerk_user_id: event.data.id })
 			}
 			break
 		default:
