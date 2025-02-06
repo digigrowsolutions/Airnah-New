@@ -1,18 +1,18 @@
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
-import Home from './screens/Home'
-import Header from './components/Header'
-import Footer from './components/Footer'
+import { Route, Routes } from 'react-router-dom';
+import Home from './screens/Home';
+import Header from './components/Header';
+import Footer from './components/Footer';
 
 function App() {
-	return (
-		<BrowserRouter>
-			<Header />
-			<Routes>
-				<Route path="/" element={<Home />} />
-			</Routes>
-			<Footer />
-		</BrowserRouter>
-	)
+  return (
+    <>
+      <Header />
+      <Routes>
+        <Route path="/" element={<Home />} />
+      </Routes>
+      <Footer />
+    </>
+  );
 }
 
-export default App
+export default App;

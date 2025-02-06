@@ -1077,10 +1077,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-*
-{
-  font-family: 'DM sans';
-}
+
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",

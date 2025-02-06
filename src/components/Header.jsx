@@ -129,14 +129,7 @@ export default function Header() {
 			name: 'Fine Jewelry',
 			submenu: ['Earrings', 'Bracelets', 'Necklaces'],
 		},
-		{
-			name: 'Education',
-			submenu: ['Diamond Guide', 'Ring Sizing', 'FAQs'],
-		},
-		{
-			name: 'FAQ',
-			submenu: [],
-		},
+
 	]
 
 	const handleMenuClick = (index) => {
@@ -196,17 +189,16 @@ export default function Header() {
 				{/* Right Controls */}
 				<div className="flex items-center space-x-4">
 					{/* Search Bar */}
-					<div className="relative hidden md:block">
-						<input
-							type="text"
-							placeholder="Search"
-							className="border border-gray-300 rounded-full py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-400 w-48"
-						/>
-						<Search
-							className="absolute top-3 right-3 text-gray-500"
-							size={18}
-						/>
-					</div>
+					<div className="hidden md:flex items-center space-x-2">
+    <input
+        type="text"
+        placeholder="Search"
+        className="border border-gray-300 rounded-full py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-400 w-48"
+    />
+    <Search className="text-gray-500 cursor-pointer" size={18} />
+</div>
+
+
 
 					{/* Icons */}
 					<SignedIn>
@@ -270,4 +262,4 @@ export default function Header() {
 			)}
 		</header>
 	)
-}
+} 

@@ -10,11 +10,14 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-*
-{
-    font-family: 'DM sans';
+@font-face {
+  font-family: 'Lexend';
+  src: url('./assets/fonts/Lexend.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
 }
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
-    monospace;
+
+* {
+  font-family: 'Lexend';
 }
+
