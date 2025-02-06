@@ -1,16 +1,32 @@
-import { useState } from 'react'
-import { ShoppingCart, User, Heart, Search } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import { ShoppingCart, Heart, Search } from 'lucide-react'
 import LOGO from '../assets/logo.webp'
 import {
 	SignedIn,
 	SignedOut,
 	SignInButton,
 	UserButton,
+	useUser,
 } from '@clerk/clerk-react'
+import { useDispatch } from 'react-redux'
+import { clearUser, setUser } from '../redux/authSlice'
 
 export default function Header() {
 	const [dropdownOpen, setDropdownOpen] = useState(null)
 	const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+
+	const { user, isSignedIn } = useUser()
+	const dispatch = useDispatch()
+
+	useEffect(() => {
+		if (isSignedIn) {
+			dispatch(
+				setUser({ id: user.id, email: user.emailAddresses[0].emailAddress })
+			)
+		} else {
+			dispatch(clearUser())
+		}
+	}, [user, isSignedIn, dispatch])
 
 	const menuItems = [
 		{
