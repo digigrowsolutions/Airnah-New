@@ -9,16 +9,15 @@ import ring4 from '../assets/ring4.jpg';
 import ring5 from '../assets/ring4.jpg';
 import bannerring from '../assets/Prong2.png';
 import model from '../assets/Wedding-rings.jpg';
-
-
+import demo from '../assets/demoringcarousel.png';
 
 function Home() {
   const rings = [
-    { id: 1, src: "/ring1.png", name: "Classic Solitaire", description: "A timeless beauty." },
-    { id: 2, src: "/ring2.png", name: "Halo Diamond", description: "Sparkling elegance." },
-    { id: 3, src: "/ring3.png", name: "Stackable Ring", description: "Modern & stylish." },
-    { id: 4, src: "/ring4.png", name: "Vintage Band", description: "Antique-inspired grace." },
-    { id: 5, src: "/ring5.png", name: "Twisted Diamond", description: "Unique & elegant." },
+    { id: 1, src: {demo}, name: "Classic Solitaire", description: "A timeless beauty." },
+    { id: 2, src: {demo}, name: "Halo Diamond", description: "Sparkling elegance." },
+    { id: 3, src: (demo), name: "Stackable Ring", description: "Modern & stylish." },
+    { id: 4, src: {demo}, name: "Vintage Band", description: "Antique-inspired grace." },
+    { id: 5, src: {demo}, name: "Twisted Diamond", description: "Unique & elegant." },
   ];
   const [currentIndex, setCurrentIndex] = useState(2); // Start with the middle ring
  
