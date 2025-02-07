@@ -9,24 +9,73 @@ import ring4 from '../assets/ring4.jpg';
 import ring5 from '../assets/ring4.jpg';
 import bannerring from '../assets/Prong2.png';
 import model from '../assets/Wedding-rings.jpg';
-import demo from '../assets/demoringcarousel.png';
+import bgImage from '../assets/twy_BG.png'; // Path to your background image
+import leftImage from '../assets/twy.png'; 
+
 
 function Home() {
-  const rings = [
-    { id: 1, src: {demo}, name: "Classic Solitaire", description: "A timeless beauty." },
-    { id: 2, src: {demo}, name: "Halo Diamond", description: "Sparkling elegance." },
-    { id: 3, src: (demo), name: "Stackable Ring", description: "Modern & stylish." },
-    { id: 4, src: {demo}, name: "Vintage Band", description: "Antique-inspired grace." },
-    { id: 5, src: {demo}, name: "Twisted Diamond", description: "Unique & elegant." },
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const diamonds = [
+    {
+      image: ring1,
+      title: "Round Cut Diamond",
+      description:
+        "A classic round cut diamond, known for its brilliance and timeless appeal.",
+    },
+    {
+      image: ring1,
+      title: "Princess Cut Diamond",
+      description:
+        "A square shape with pointed corners, offering a modern and sophisticated look.",
+    },
+    {
+      image: ring1,
+      title: "Emerald Cut Diamond",
+      description:
+        "An elegant cut with long lines and a sophisticated step cut appearance.",
+    },
+    {
+      image: ring1,
+      title: "Cushion Cut Diamond",
+      description:
+        "A blend of square and round cuts, offering a vintage-inspired yet romantic style.",
+    },
   ];
-  const [currentIndex, setCurrentIndex] = useState(2); // Start with the middle ring
- 
+  const nextSlide = () => {
+    setCurrentIndex((prevIndex) =>
+      prevIndex === diamonds.length - 1 ? 0 : prevIndex + 1
+    );
+  };
+
+  const prevSlide = () => {
+    setCurrentIndex((prevIndex) =>
+      prevIndex === 0 ? diamonds.length - 1 : prevIndex - 1
+    );
+  };
+  const rings = [
+    { img: ring1, text: 'Ring 1' },
+    { img: ring2, text: 'Ring 2' },
+    { img: ring3, text: 'Ring 3' },
+    { img: ring4, text: 'Ring 4' },
+    { img: ring5, text: 'Ring 5' },
+    { img: ring1, text: 'Ring 6' },
+    { img: ring2, text: 'Ring 7' },
+    { img: ring3, text: 'Ring 8' },
+    { img: ring4, text: 'Ring 9' },
+    { img: ring5, text: 'Ring 10' },
+  ];
+
+
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  // Autoplay functionality for the carousel
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentIndex((prevIndex) => (prevIndex + 1) % rings.length);
-    }, 3000);
-    return () => clearInterval(interval);
-  }, []);
+      setActiveIndex((prevIndex) => (prevIndex + 1) % rings.length); // Loop back to the first ring after the last one
+    }, 3000); // Change ring every 3 seconds
+
+    return () => clearInterval(interval); // Cleanup the interval on component unmount
+  }, [rings.length]);
   const brands = [
     "Nike", "Adidas", "Gucci", "Prada", "Rolex", "Versace", "Chanel", "Puma", "Reebok", "Fendi",
     "Louis Vuitton", "Zara", "Hermès", "Burberry", "Cartier"
@@ -121,7 +170,7 @@ function Home() {
         </button>
       </section>
 
-      <section className="px-4 py-8 bg-gray-100">
+      <section className="px-4 py-8 ">
   {/* Category List */}
   <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
     {[ring1, ring2, ring3, ring4, ring5].map((ring, index) => (
@@ -139,7 +188,7 @@ function Home() {
     ))}
   </div>
 </section>
-<section className="px-4 py-8 bg-gray-100">
+<section className="px-4 py-8 ">
   {/* Two-Column Layout */}
   <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
     {/* Left Side - Diamond Image */}
@@ -162,7 +211,7 @@ function Home() {
     </div>
   </div>
 </section>
-<section className="bg-gray-100 py-8">
+<section className=" py-8">
       <div className="overflow-hidden whitespace-nowrap">
         <motion.div
           className="flex gap-12 text-2xl font-bold text-gray-700 uppercase"
@@ -177,7 +226,7 @@ function Home() {
         </motion.div>
       </div>
     </section>
-    <section className="grid grid-cols-1 md:grid-cols-3 w-full h-[400px]">
+    <section className="grid grid-cols-1 md:grid-cols-3 w-full ">
       {/* Box 1 */}
       <div className="relative group">
         <img src={model} alt="Box 1" className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" />
@@ -202,49 +251,112 @@ function Home() {
         </div>
       </div>
     </section>
-    <section className="w-full bg-gray-100 py-16">
-      <div className="max-w-6xl mx-auto text-center">
-        <h2 className="text-3xl md:text-4xl font-bold text-gray-800">Our Exclusive Ring Collection</h2>
-        <p className="text-gray-600 mt-2">Discover timeless elegance with our handcrafted rings.</p>
-      </div>
 
-      {/* Ring Carousel */}
-      <div className="relative mt-10 flex justify-center overflow-hidden">
-        <div className="flex space-x-6">
-          {rings.map((ring, index) => {
-            const isActive = index === currentIndex;
-            return (
-              <motion.div
-                key={ring.id}
-                className="relative"
-                initial={{ scale: 0.8, opacity: 0.6 }}
-                animate={{ scale: isActive ? 1.2 : 0.8, opacity: isActive ? 1 : 0.6 }}
-                transition={{ type: "spring", stiffness: 200, damping: 15 }}
-              >
-                <img
-                  src={ring.src}
-                  alt={ring.name}
-                  className="w-40 md:w-52 mx-auto cursor-pointer transition-all duration-500"
-                />
-              </motion.div>
-            );
-          })}
+    <section className="py-12 ">
+      <div className="container mx-auto px-4">
+        {/* Title Section */}
+        <div className="text-center mb-8">
+          <h2 className="text-3xl font-semibold">Airnah's Best Selling</h2>
+          <h3 className="text-xl font-medium mt-2">Engagement Rings</h3>
+        </div>
+
+        <div className="relative">
+          {/* Carousel */}
+          <div className="overflow-hidden">
+            <div
+              className="flex transition-transform duration-1000 ease-in-out"
+              style={{ transform: `translateX(-${activeIndex * 100}%)` }}
+            >
+              {rings.map((ring, index) => (
+                <div key={index} className="flex-none w-full sm:w-1/5 px-2">
+                  <img
+                    src={ring.img}
+                    alt={`Ring ${index + 1}`}
+                    className="w-full h-auto object-cover rounded-lg"
+                  />
+                  <div className="mt-2 text-center text-sm font-medium">{ring.text}</div>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
+    </section>
+    <section  className="relative w-full">
+      <div className="flex w-full h-screen bg-cover bg-center"
+      style={{
+        backgroundImage: `url(${bgImage})`,
+        backgroundAttachment: 'fixed',
+      }}>
 
-      {/* Text Below Active Ring */}
-      <div className="text-center mt-6">
-        <motion.div
-          key={rings[currentIndex].id}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-        >
-          <h3 className="text-xl md:text-2xl font-semibold text-gray-800">{rings[currentIndex].name}</h3>
-          <p className="text-gray-600">{rings[currentIndex].description}</p>
-        </motion.div>
+        {/* Left Container - Background Image with its own image */}
+        <div className="relative w-1/2 h-full flex items-center justify-center">
+          <img
+            src={leftImage}
+            alt="Left Image"
+            className="absolute top-0 left-0 w-50 h-auto object-contain"
+          />
+        </div>
+
+        {/* Right Container - Text content */}
+        <div className="w-1/2 h-full flex flex-col justify-center text-black px-6 space-y-4">
+          <h2 className="text-4xl font-bold">REAL-TIME INTERACTIVE</h2>
+          <h3 className="text-3xl font-semibold">DIAMOND INSPECTION</h3>
+          <p className="text-lg mt-4">
+            Take a closer look at your favorite diamonds using our Real-Time Diamond Inspection service;
+            a one-on-one consultation with a non-commissioned certified gemologist. Share your screen and get expert guidance as you explore diamonds in 360° HD with up to 40x magnification.
+            Mark points of interest on the screen while chatting with your diamond expert in real time, and review everything from the specs to the grading certificate together.
+          </p>
+          <button className="mt-6 px-6 py-2 bg-yellow-500 text-black font-semibold rounded-md hover:bg-yellow-600 transition-all">
+            START YOUR DIAMOND INSPECTION NOW
+          </button>
+          <h4 className="text-2xl font-medium mt-4">EXPERIENCE THE DIAMOND REVOLUTION</h4>
+        </div>
+
       </div>
     </section>
+    <section className="relative w-full py-16">
+      <div className="flex justify-center items-center w-full px-6">
+        {/* Left Arrow Button */}
+        <button
+          onClick={prevSlide}
+          className="absolute left-0 p-4 bg-gray-800 text-white rounded-full hover:bg-gray-700 transition-all"
+        >
+          &#8592;
+        </button>
+
+        {/* Carousel Content */}
+        <div className="flex items-center justify-between w-full max-w-7xl overflow-hidden">
+          <div
+            className="flex transition-transform duration-300 ease-in-out"
+            style={{
+              transform: `translateX(-${currentIndex * 25}%)`,
+            }}
+          >
+            {diamonds.map((diamond, index) => (
+              <div key={index} className="w-1/4 px-4">
+                <img
+                  src={diamond.image}
+                  alt={`Diamond ${index + 1}`}
+                  className="object-cover w-full h-[300px] rounded-md"
+                />
+                <h3 className="text-lg font-semibold text-gray-800 mt-4 text-center">{diamond.title}</h3>
+                <p className="text-sm text-gray-600 mt-2 text-center">{diamond.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Right Arrow Button */}
+        <button
+          onClick={nextSlide}
+          className="absolute right-0 p-4 bg-gray-800 text-white hover:bg-gray-700 transition-all"
+        >
+          &#8594;
+        </button>
+      </div>
+    </section>
+      
     </div>
   );
 }

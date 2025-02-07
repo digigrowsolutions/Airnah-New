@@ -1,18 +1,15 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import './index.css'
-import App from './App'
+import React from "react";
+import ReactDOM from "react-dom/client";
 import { ClerkProvider } from "@clerk/clerk-react";
+import App from "./App";
+import "./styles/index.css";
 
-const PUBLISHABLE_KEY = process.env.REACT_APP_CLERK_PUBLISHABLE_KEY
+const PUBLISHABLE_KEY = process.env.REACT_APP_CLERK_PUBLISHABLE_KEY; // Accessing the environment variable
 
-if (!PUBLISHABLE_KEY) {
-	throw new Error('Missing Publishable Key')
-}
+const root = ReactDOM.createRoot(document.getElementById("root"));
 
-const root = ReactDOM.createRoot(document.getElementById('root'))
 root.render(
-	<ClerkProvider publishableKey={PUBLISHABLE_KEY} afterSignOutUrl="/">
-		<App />
-	</ClerkProvider>
-)
+  <ClerkProvider publishableKey={PUBLISHABLE_KEY}>
+    <App />
+  </ClerkProvider>
+);
