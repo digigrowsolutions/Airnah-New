@@ -25,10 +25,9 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "dev": "react-scripts start --env=development",
-    "prod": "react-scripts build --env=production"
+    "dev": "concurrently \"npm start\" \"npm run server\" \"npm run db\"",
+    "server": "cd backend && npm run dev",
+    "db": "cd backend && npm run db:studio"
   },
   "eslintConfig": {
     "extends": [
@@ -50,6 +49,7 @@
   },
   "devDependencies": {
     "autoprefixer": "^10.4.20",
+    "concurrently": "^9.1.2",
     "drizzle-kit": "^0.30.4",
     "postcss": "^8.4.47",
     "tailwindcss": "^3.4.14"
