@@ -3,54 +3,26 @@ import { Webhook } from 'svix'
 import bodyParser from 'body-parser'
 import dotenv from 'dotenv'
 import ngrok from '@ngrok/ngrok'
-import { insertUser, updateUser, deleteUser } from './drizzle/features/users.js'
-import { clerkClient, clerkMiddleware } from '@clerk/express'
+import {
+	insertUser,
+	updateUser,
+	deleteUser,
+	getUserFavorites,
+	getUserCart,
+	addToFavorites,
+	removeFromFavorites,
+	addToCart,
+	removeFromCart,
+} from './drizzle/features/users.js'
+import { clerkClient } from '@clerk/express'
 
 dotenv.config()
 
 const app = express()
 const port = process.env.PORT || 4000
 app.use(bodyParser.json())
-app.use(
-	clerkMiddleware({
-		publishableKey: process.env.CLERK_API_KEY,
-		secretKey: process.env.CLERK_SECRET_KEY,
-	})
-)
 
 const CLERK_WEBHOOK_SECRET = process.env.CLERK_WEBHOOK_KEY
-
-app.post('/api/users', async (req, res) => {
-	try {
-		const newUser = await insertUser(req.body)
-		res.status(201).json(newUser)
-	} catch (err) {
-		console.error('Insert User Error:', err)
-		res.status(500).json({ error: 'Failed to insert user' })
-	}
-})
-
-app.put('/api/users/:clerk_user_id', async (req, res) => {
-	try {
-		const { clerk_user_id } = req.params
-		const updatedUser = await updateUser({ clerk_user_id }, req.body)
-		res.json(updatedUser)
-	} catch (err) {
-		console.error('Update User Error:', err)
-		res.status(500).json({ error: 'Failed to update user' })
-	}
-})
-
-app.delete('/api/users/:clerk_user_id', async (req, res) => {
-	try {
-		const { clerk_user_id } = req.params
-		const deletedUser = await deleteUser({ clerk_user_id })
-		res.json(deletedUser)
-	} catch (err) {
-		console.error('Delete User Error:', err)
-		res.status(500).json({ error: 'Failed to delete user' })
-	}
-})
 
 app.post('/webhook', async (req, res) => {
 	const svixId = req.headers['svix-id']
@@ -92,32 +64,26 @@ app.post('/webhook', async (req, res) => {
 					name,
 					role: 'user',
 				})
-				// await clerkClient.users.updateUserMetadata(user.clerk_user_id, {
-				// 	publicMetadata: {
-				// 		dbId: user.user_id,
-				// 		role: user.role,
-				// 	},
-				// })
+				await clerkClient.users.updateUserMetadata(user.clerk_user_id, {
+					publicMetadata: {
+						dbId: user.user_id,
+						role: user.role,
+					},
+				})
 			} else {
-				const updatedUser = await updateUser(
-					{ clerkUserId: event.data.id },
+				await updateUser(
+					{ clerk_user_id: event.data.id },
 					{
 						email,
 						name,
 						role: event.data.public_metadata.role,
 					}
 				)
-				// await clerkClient.users.updateUserMetadata(updatedUser.clerk_user_id, {
-				// 	publicMetadata: {
-				// 		dbId: updatedUser.user_id,
-				// 		role: updatedUser.role,
-				// 	},
-				// })
 			}
 			break
 		case 'user.deleted':
 			if (event.data.id != null) {
-				await deleteUser({ clerkUserId: event.data.id })
+				await deleteUser({ clerk_user_id: event.data.id })
 			}
 			break
 		default:
@@ -126,6 +92,78 @@ app.post('/webhook', async (req, res) => {
 
 	res.status(200).send('Webhook handled successfully')
 })
+
+app.get('/api/users/getFavorites/:clerk_user_id', async (req, res) => {
+	try {
+		const { clerk_user_id } = req.params
+		const data = await getUserFavorites({ clerk_user_id })
+		res.json(data)
+	} catch (err) {
+		console.error('getFavorites User Error: ', err)
+		res.status(500).json({ error: 'Failed to get User Favorites' })
+	}
+})
+
+app.post('/api/users/addToFavorites', async (req, res) => {
+	try {
+		const { clerk_user_id, product_id } = req.body
+		await addToFavorites({ clerk_user_id, product_id })
+		res.json({ success: true })
+	} catch (err) {
+		console.error('addToFavorites Error:', err)
+		res.status(500).json({ error: 'Failed to add to Favorites' })
+	}
+})
+
+app.delete(
+	'/api/users/deleteFavorites/:clerk_user_id/:product_id',
+	async (req, res) => {
+		try {
+			const { clerk_user_id, product_id } = req.params
+			await removeFromFavorites({ clerk_user_id, product_id })
+			res.json({ success: true })
+		} catch (err) {
+			console.error('removeFromFavorites Error:', err)
+			res.status(500).json({ error: 'Failed to remove from Favorites' })
+		}
+	}
+)
+
+app.get('/api/users/getCart/:clerk_user_id', async (req, res) => {
+	try {
+		const { clerk_user_id } = req.params
+		const data = await getUserCart({ clerk_user_id })
+		res.json(data)
+	} catch (err) {
+		console.error('getCart User Error: ', err)
+		res.status(500).json({ error: 'Failed to get User Cart' })
+	}
+})
+
+app.post('/api/users/addToCart', async (req, res) => {
+	try {
+		const { clerk_user_id, product_id, quantity } = req.body
+		await addToCart({ clerk_user_id, product_id, quantity })
+		res.json({ success: true })
+	} catch (err) {
+		console.error('addToCart Error:', err)
+		res.status(500).json({ error: 'Failed to add to Cart' })
+	}
+})
+
+app.delete(
+	'/api/users/deleteCart/:clerk_user_id/:product_id',
+	async (req, res) => {
+		try {
+			const { clerk_user_id, product_id } = req.params
+			await removeFromCart({ clerk_user_id, product_id })
+			res.json({ success: true })
+		} catch (err) {
+			console.error('removeFromCart Error:', err)
+			res.status(500).json({ error: 'Failed to remove from Cart' })
+		}
+	}
+)
 
 app.listen(port, () => {
 	console.log(`Server running on port ${port}`)

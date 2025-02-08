@@ -85,6 +85,7 @@ function Home() {
 
 		// Clear interval on component unmount
 		return () => clearInterval(intervalId)
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [])
 
 	return (
