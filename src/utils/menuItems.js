@@ -63,14 +63,65 @@ export const menuItems = [
 	},
 	{
 		name: 'Fine Jewelry',
-		submenu: ['Earrings', 'Bracelets', 'Necklaces'],
+		submenu: [
+			{
+				heading: 'Earrings',
+				items: ['Stud Earrings', 'Hoop Earrings', 'Drop Earrings', 'Chandelier Earrings'],
+			},
+			{
+				heading: 'Bracelets',
+				items: ['Bangle Bracelets', 'Tennis Bracelets', 'Cuff Bracelets', 'Charm Bracelets'],
+			},
+			{
+				heading: 'Necklaces',
+				items: ['Pendant Necklaces', 'Choker Necklaces', 'Lariat Necklaces', 'Statement Necklaces'],
+			},
+			{
+				heading: 'Rings',
+				items: ['Stackable Rings', 'Birthstone Rings', 'Eternity Rings', 'Fashion Rings'],
+			},
+		],
 	},
 	{
 		name: 'Education',
-		submenu: ['Earrings', 'Bracelets', 'Necklaces'],
+		submenu: [
+			{
+				heading: 'Diamond Education',
+				items: ['The 4 Cs', 'Diamond Shapes', 'Diamond Certifications', 'Lab-Grown vs Natural'],
+			},
+			{
+				heading: 'Metal Education',
+				items: ['Gold vs Platinum', 'Rose Gold vs Yellow Gold', 'White Gold vs Silver'],
+			},
+			{
+				heading: 'Ring Sizing',
+				items: ['Find Your Ring Size', 'Resizing Guide', 'International Size Chart'],
+			},
+			{
+				heading: 'Jewelry Care',
+				items: ['Cleaning Guide', 'Storage Tips', 'Maintenance & Repair'],
+			},
+		],
 	},
 	{
 		name: 'FAQ',
-		submenu: ['Earrings', 'Bracelets', 'Necklaces'],
+		submenu: [
+			{
+				heading: 'Orders & Shipping',
+				items: ['Track Your Order', 'Shipping Policies', 'International Shipping'],
+			},
+			{
+				heading: 'Returns & Exchanges',
+				items: ['Return Policy', 'How to Return an Item', 'Exchanges & Store Credit'],
+			},
+			{
+				heading: 'Payment & Financing',
+				items: ['Accepted Payment Methods', 'Financing Options', 'Gift Cards'],
+			},
+			{
+				heading: 'Customization & Engraving',
+				items: ['Custom Jewelry', 'Engraving Services', 'Special Orders'],
+			},
+		],
 	},
-]
+];
