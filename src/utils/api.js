@@ -1,10 +1,12 @@
 import axios from 'axios'
-
-const API_URL = 'http://localhost:5000/api'
+const REACT_APP_API_URL = process.env.REACT_APP_API_URL
+console.log(REACT_APP_API_URL)
 
 export const fetchFavorites = async (userId) => {
 	try {
-		const response = await axios.get(`${API_URL}/favorites/${userId}`)
+		const response = await axios.get(
+			`${REACT_APP_API_URL}/users/getFavorites/${userId}`
+		)
 		return response.data
 	} catch (error) {
 		console.error('Error fetching favorites:', error)
@@ -14,7 +16,9 @@ export const fetchFavorites = async (userId) => {
 
 export const fetchCartItems = async (userId) => {
 	try {
-		const response = await axios.get(`${API_URL}/cart/${userId}`)
+		const response = await axios.get(
+			`${REACT_APP_API_URL}/users/getCart/${userId}`
+		)
 		return response.data
 	} catch (error) {
 		console.error('Error fetching cart items:', error)
@@ -24,7 +28,7 @@ export const fetchCartItems = async (userId) => {
 
 export const addToFavoritesAPI = async (userId, productId) => {
 	try {
-		const response = await axios.post(`${API_URL}/favorites`, {
+		const response = await axios.post(`${REACT_APP_API_URL}/favorites`, {
 			user_id: userId,
 			product_id: productId,
 		})
@@ -37,7 +41,7 @@ export const addToFavoritesAPI = async (userId, productId) => {
 
 export const removeFromFavoritesAPI = async (userId, productId) => {
 	try {
-		await axios.delete(`${API_URL}/favorites/${userId}/${productId}`)
+		await axios.delete(`${REACT_APP_API_URL}/favorites/${userId}/${productId}`)
 	} catch (error) {
 		console.error('Error removing from favorites:', error)
 		throw error
@@ -46,7 +50,7 @@ export const removeFromFavoritesAPI = async (userId, productId) => {
 
 export const addToCartAPI = async (userId, productId, quantity) => {
 	try {
-		const response = await axios.post(`${API_URL}/cart`, {
+		const response = await axios.post(`${REACT_APP_API_URL}/cart`, {
 			user_id: userId,
 			product_id: productId,
 			quantity,
@@ -60,7 +64,7 @@ export const addToCartAPI = async (userId, productId, quantity) => {
 
 export const removeFromCartAPI = async (userId, productId) => {
 	try {
-		await axios.delete(`${API_URL}/cart/${userId}/${productId}`)
+		await axios.delete(`${REACT_APP_API_URL}/cart/${userId}/${productId}`)
 	} catch (error) {
 		console.error('Error removing from cart:', error)
 		throw error

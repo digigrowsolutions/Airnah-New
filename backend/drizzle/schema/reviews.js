@@ -13,7 +13,6 @@ export const reviewsTable = pgTable('reviews', {
 		onDelete: 'cascade',
 	}),
 	rating: integer().notNull(),
-	// .check((rating) => rating.gte(1).lte(5)),
 	comment: text(),
 	created_at,
 })

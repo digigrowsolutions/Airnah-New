@@ -15,12 +15,14 @@ import {
 	removeFromCart,
 } from './drizzle/features/users.js'
 import { clerkClient } from '@clerk/express'
+import cors from 'cors'
 
 dotenv.config()
 
 const app = express()
 const port = process.env.PORT || 4000
 app.use(bodyParser.json())
+app.use(cors())
 
 const CLERK_WEBHOOK_SECRET = process.env.CLERK_WEBHOOK_KEY
 

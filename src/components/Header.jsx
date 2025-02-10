@@ -9,7 +9,6 @@ import {
 	useUser,
 } from '@clerk/clerk-react'
 import { useDispatch, useSelector } from 'react-redux'
-import { clearUser, setUser } from '../redux/authSlice'
 import { setCountry } from '../redux/localizationSlice'
 import { Link } from 'react-router-dom'
 import { menuItems } from '../utils/menuItems'
@@ -29,13 +28,8 @@ export default function Header() {
 
 	useEffect(() => {
 		if (isSignedIn) {
-			dispatch(
-				setUser({ id: user.id, email: user.emailAddresses[0].emailAddress })
-			)
 			dispatch(fetchUserFavorites(user.id))
 			dispatch(fetchUserCartItems(user.id))
-		} else {
-			dispatch(clearUser())
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [user, isSignedIn])
@@ -121,14 +115,20 @@ export default function Header() {
 					<SignedOut>
 						<SignInButton />
 					</SignedOut>
-					<button className="p-2 rounded-full hover:bg-gray-100 relative">
+					<Link
+						to="/favorites"
+						className="p-2 rounded-full hover:bg-gray-100 relative"
+					>
 						<Heart size={20} />
-					</button>
+					</Link>
 					{favorites ? favorites.length : '0'}
 
-					<button className="p-2 rounded-full hover:bg-gray-100 relative">
+					<Link
+						to="/cart"
+						className="p-2 rounded-full hover:bg-gray-100 relative"
+					>
 						<ShoppingCart size={20} />
-					</button>
+					</Link>
 					{cartItems ? cartItems.length : '(0)'}
 
 					{/* Mobile Menu */}
