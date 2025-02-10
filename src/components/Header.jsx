@@ -79,7 +79,7 @@ export default function Header() {
 
 								{/* Dropdown Menu */}
 								{dropdownOpen === index && item.submenu && (
-									<div className="fixed z-10 left-0 top-[113px] bg-white w-full grid grid-cols-3">
+									<div className="fixed z-10 left-0 top-[115px] bg-white w-full grid grid-cols-3">
 										{/* Submenu Items (Left Section) */}
 										<div className="col-span-2 grid grid-cols-3 gap-6 px-6">
 											{item.submenu.map((category, catIndex) => (
