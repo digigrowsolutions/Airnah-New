@@ -12,6 +12,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import { setCountry } from '../redux/localizationSlice'
 import { Link } from 'react-router-dom'
 import { menuItems } from '../utils/menuItems'
+import model from '../assets/Wedding-rings.jpg'
+
 import {
 	fetchUserCartItems,
 	fetchUserFavorites,
@@ -44,55 +46,77 @@ export default function Header() {
 
 	return (
 		<header className="bg-white shadow-md w-full p-4 sticky top-0 z-50">
-			<div className="max-w-7xl mx-auto flex items-center justify-between">
+			<div className="max-w-full mx-auto flex items-center justify-evenly">
 				{/* Logo */}
 				<div className="text-2xl font-bold text-gray-800 flex items-center space-x-2">
-					<img src={LOGO} alt="Brand Logo" className="h-20 w-auto" />
+					<Link to="/">
+						<img src={LOGO} alt="Brand Logo" className="h-20 w-auto cursor-pointer" />
+					</Link>
 				</div>
 
-				<Link to="/customize">Customize</Link>
+
 
 				{/* Navigation */}
 				<nav className="flex-1 flex justify-center space-x-6">
+					<Link
+						to="/customize"
+						className="relative text-gray-700 hover:text-gray-900 font-medium after:absolute after:left-0 after:bottom-0 after:h-[1px] after:bg-black after:w-0 after:transition-all after:duration-300 after:ease-in-out hover:after:w-full"
+					>
+						Customize
+					</Link>
 					{Array.isArray(menuItems) && menuItems.length > 0
 						? menuItems.map((item, index) => (
-								<div
-									key={index}
-									className="relative group cursor-pointer text-gray-700 hover:text-gray-900 font-medium"
-									onMouseEnter={() => setDropdownOpen(index)}
-									onMouseLeave={() => setDropdownOpen(null)}
-								>
+							<div
+								key={index}
+								className="relative group cursor-pointer text-gray-700 hover:text-gray-900 font-medium"
+								onMouseEnter={() => setDropdownOpen(index)}
+								onMouseLeave={() => setDropdownOpen(null)}
+							>
+								{/* Menu Item with Underline Animation */}
+								<span className="relative after:absolute after:left-0 after:bottom-0 after:h-[1px] after:bg-black after:w-0 after:transition-all after:duration-300 after:ease-in-out group-hover:after:w-full">
 									{item.name}
+								</span>
 
-									{/* Dropdown Menu */}
-									{dropdownOpen === index && item.submenu && (
-										<div className="fixed z-10 left-0 bg-white border rounded-lg shadow-lg w-full grid grid-cols-2">
-											<div className="max-w-7xl w-full grid grid-cols-3 gap-6 px-6">
-												{item.submenu.map((category, catIndex) => (
-													<div key={catIndex}>
-														<h3 className="text-gray-900 font-semibold mb-2">
-															{category.heading}
-														</h3>
-														<ul className="space-y-1">
-															{category.items &&
-																category.items.map((subitem, subIndex) => (
-																	<li
-																		key={subIndex}
-																		className="text-gray-700 hover:text-gray-900 cursor-pointer"
-																	>
-																		{subitem}
-																	</li>
-																))}
-														</ul>
-													</div>
-												))}
-											</div>
+								{/* Dropdown Menu */}
+								{dropdownOpen === index && item.submenu && (
+									<div className="fixed z-10 left-0 top-[113px] bg-white w-full grid grid-cols-3">
+										{/* Submenu Items (Left Section) */}
+										<div className="col-span-2 grid grid-cols-3 gap-6 px-6">
+											{item.submenu.map((category, catIndex) => (
+												<div key={catIndex}>
+													<h3 className="text-gray-900 font-semibold mb-2">
+														{category.heading}
+													</h3>
+													<ul className="space-y-1">
+														{category.items.map((subitem, subIndex) => (
+															<li
+																key={subIndex}
+																className="text-gray-700 hover:text-gray-900 cursor-pointer"
+															>
+																{subitem}
+															</li>
+														))}
+													</ul>
+												</div>
+											))}
 										</div>
-									)}
-								</div>
-						  ))
+
+										{/* Full-Size Image (Right Section) */}
+										<div className="col-span-1 flex justify-center items-center">
+											<img
+												src={model}
+												alt="Category Preview"
+												className="w-full h-auto"
+											/>
+										</div>
+									</div>
+								)}
+							</div>
+						))
 						: null}
 				</nav>
+
+
 
 				{/* Right Controls */}
 				<div className="flex items-center space-x-4">
@@ -142,11 +166,11 @@ export default function Header() {
 					<select
 						value={country}
 						onChange={handleCountryChange}
-						className="border border-gray-300 rounded-full py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-400"
+						className="  py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-400"
 					>
-						<option value="EN">🇬🇧 English</option>
-						<option value="FR">🇫🇷 French</option>
-						<option value="DE">🇩🇪 German</option>
+						<option value="EN">🇬🇧 EN</option>
+						<option value="FR">🇫🇷 FR</option>
+						<option value="DE">🇩🇪 GR</option>
 					</select>
 				</div>
 			</div>
