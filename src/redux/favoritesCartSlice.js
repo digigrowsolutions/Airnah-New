@@ -1,4 +1,3 @@
-// src/redux/favoritesCartSlice.js
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import {
 	fetchFavorites,
@@ -9,7 +8,6 @@ import {
 	removeFromCartAPI,
 } from '../utils/api'
 
-// Async thunks
 export const fetchUserFavorites = createAsyncThunk(
 	'favoritesCart/fetchFavorites',
 	async (userId, { rejectWithValue }) => {
@@ -78,7 +76,6 @@ export const removeFromCart = createAsyncThunk(
 	}
 )
 
-// Slice
 const favoritesCartSlice = createSlice({
 	name: 'favoritesCart',
 	initialState: {

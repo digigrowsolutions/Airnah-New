@@ -4,6 +4,7 @@ import { favoritesTable } from '../schema/favorites.js'
 import { productsTable } from '../schema/products.js'
 import { userTable } from '../schema/users.js'
 import { and, eq } from 'drizzle-orm'
+import { getUserByClerkId } from './helpers.js'
 
 export async function insertUser(data) {
 	const [newUser] = await db
@@ -49,6 +50,7 @@ export async function deleteUser({ clerk_user_id }) {
 }
 
 export async function getUserFavorites({ clerk_user_id }) {
+	const user = await getUserByClerkId(clerk_user_id)
 	const data = await db
 		.select({
 			favorite_id: favoritesTable.favourite_id,
@@ -60,7 +62,7 @@ export async function getUserFavorites({ clerk_user_id }) {
 			productsTable,
 			eq(favoritesTable.product_id, productsTable.product_id)
 		)
-		.where(eq(favoritesTable.user_id, clerk_user_id))
+		.where(eq(favoritesTable.user_id, user))
 
 	if (data == null) throw new Error('Failed to get User Favorites')
 
@@ -68,14 +70,7 @@ export async function getUserFavorites({ clerk_user_id }) {
 }
 
 export async function addToFavorites({ clerk_user_id, product_id }) {
-	const user = await db
-		.select({ user_id: userTable.user_id })
-		.from(userTable)
-		.where(eq(userTable.clerk_user_id, clerk_user_id))
-		.limit(1)
-
-	if (!user.length) throw new Error('User not found')
-
+	const user = await getUserByClerkId(clerk_user_id)
 	const result = await db.insert(favoritesTable).values({
 		user_id: user[0].user_id,
 		product_id: product_id,
@@ -87,14 +82,7 @@ export async function addToFavorites({ clerk_user_id, product_id }) {
 }
 
 export async function removeFromFavorites({ clerk_user_id, product_id }) {
-	const user = await db
-		.select({ user_id: userTable.user_id })
-		.from(userTable)
-		.where(eq(userTable.clerk_user_id, clerk_user_id))
-		.limit(1)
-
-	if (!user.length) throw new Error('User not found')
-
+	const user = await getUserByClerkId(clerk_user_id)
 	await db
 		.delete(favoritesTable)
 		.where(
@@ -108,6 +96,7 @@ export async function removeFromFavorites({ clerk_user_id, product_id }) {
 }
 
 export async function getUserCart({ clerk_user_id }) {
+	const user = await getUserByClerkId(clerk_user_id)
 	const data = await db
 		.select({
 			cart_id: cartTable.cart_id,
@@ -120,7 +109,7 @@ export async function getUserCart({ clerk_user_id }) {
 			productsTable,
 			eq(cartTable.product_id, productsTable.product_id)
 		)
-		.where(eq(cartTable.user_id, clerk_user_id))
+		.where(eq(cartTable.user_id, user))
 
 	if (data == null) throw new Error('Failed to get User Cart')
 
@@ -128,14 +117,7 @@ export async function getUserCart({ clerk_user_id }) {
 }
 
 export async function addToCart({ clerk_user_id, product_id, quantity }) {
-	const user = await db
-		.select({ user_id: userTable.user_id })
-		.from(userTable)
-		.where(eq(userTable.clerk_user_id, clerk_user_id))
-		.limit(1)
-
-	if (!user.length) throw new Error('User not found')
-
+	const user = await getUserByClerkId(clerk_user_id)
 	const result = await db.insert(cartTable).values({
 		user_id: user[0].user_id,
 		product_id: product_id,
@@ -148,14 +130,7 @@ export async function addToCart({ clerk_user_id, product_id, quantity }) {
 }
 
 export async function removeFromCart({ clerk_user_id, product_id }) {
-	const user = await db
-		.select({ user_id: userTable.user_id })
-		.from(userTable)
-		.where(eq(userTable.clerk_user_id, clerk_user_id))
-		.limit(1)
-
-	if (!user.length) throw new Error('User not found')
-
+	const user = await getUserByClerkId(clerk_user_id)
 	await db
 		.delete(cartTable)
 		.where(
