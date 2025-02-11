@@ -3,6 +3,7 @@ import {
 	updateCustomization,
 	setStep,
 } from '../../redux/ringCustomizationSlice'
+import Image from '../../assets/ring4.jpg'
 
 const StepOne = () => {
 	const dispatch = useDispatch()
@@ -15,57 +16,70 @@ const StepOne = () => {
 	}
 
 	return (
-		<div className="flex flex-col lg:flex-row items-center lg:items-start justify-center min-h-screen p-10 bg-gray-50 space-y-8 lg:space-y-0 lg:space-x-12">
-			{/* Product Image Section */}
-			<div className="max-w-md">
+		<div className="flex flex-col md:flex-row items-center gap-8">
+			{/* Left Side - Image Grid */}
+			<div className="w-full md:w-3/5 grid grid-cols-2 gap-4">
 				<img
-					src={productImages[metal] || productImages.gold}
-					alt={`${metal} ring`}
-					className="w-full rounded-lg shadow-md"
+					src={Image}
+					alt="Ring 1"
+					className="w-full h-auto rounded-lg shadow-md"
+				/>
+				<img
+					src={Image}
+					alt="Ring 2"
+					className="w-full h-auto rounded-lg shadow-md"
+				/>
+				<img
+					src={Image}
+					alt="Ring 3"
+					className="w-full h-auto rounded-lg shadow-md"
+				/>
+				<img
+					src={Image}
+					alt="Ring 4"
+					className="w-full h-auto rounded-lg shadow-md"
 				/>
 			</div>
 
-			{/* Selection Section */}
-			<div className="bg-white shadow-xl p-8 rounded-lg w-full max-w-lg">
-				<h2 className="text-2xl font-semibold mb-6 text-center">
-					Step 1: Choose Metal
-				</h2>
-
-				{/* Radio Buttons for Metal Selection */}
-				<div className="space-y-4">
-					{['gold', 'silver', 'platinum'].map((option) => (
-						<label
-							key={option}
-							className={`flex items-center p-4 border rounded-lg cursor-pointer hover:shadow-md ${
-								metal === option
-									? 'border-blue-500 bg-blue-50'
-									: 'border-gray-200'
-							}`}
-						>
-							<input
-								type="radio"
-								name="metal"
-								value={option}
-								checked={metal === option}
-								onChange={(e) =>
-									dispatch(
-										updateCustomization({ key: 'metal', value: e.target.value })
-									)
-								}
-								className="mr-3 accent-blue-500"
-							/>
-							<span className="text-lg capitalize">{option}</span>
-						</label>
-					))}
+			{/* Right Side - Content */}
+			<div className="w-full md:w-2/5 space-y-4">
+				<h2 className="text-2xl font-semibold">Solitaire Engagement Ring</h2>
+				<p className="text-gray-600">
+					Embellished With a Four Prong Signature Head
+				</p>
+				<div className="flex items-center space-x-1 text-yellow-500 text-lg">
+					<span>☆</span> <span>☆</span> <span>☆</span> <span>☆</span>{' '}
+					<span>☆</span>
+					<span className="text-gray-600 ml-2">(123)</span>
 				</div>
-
-				{/* Next Button */}
-				<button
-					className="w-full mt-6 bg-blue-600 text-white py-3 rounded-lg font-medium hover:bg-blue-700 transition"
-					onClick={() => dispatch(setStep(2))}
-				>
-					Next
-				</button>
+				<div className="text-xl font-bold text-gray-900">$870</div>
+				<div className="text-lg text-red-500 font-semibold">$435</div>
+				<p className="text-sm text-gray-500">(Setting Price)</p>
+				<div className="border-t pt-4 space-y-2 text-gray-700">
+					<p>
+						<strong>Flexible Payment Options:</strong> Buy now pay later with{' '}
+						<span className="text-blue-500 cursor-pointer">Klarna</span>{' '}
+						<span className="text-sm text-gray-500">Learn More</span>
+					</p>
+					<button
+						onClick={() => dispatch(setStep(2))}
+						className="px-6 py-2 bg-blue-600 text-white rounded-lg shadow-md hover:bg-blue-700"
+					>
+						Select This Setting
+					</button>
+				</div>
+				<div className="text-sm text-gray-600">
+					<p>
+						<strong>Real-Time Ring Inspection</strong>
+					</p>
+					<p>
+						<strong>Ships by:</strong> Friday, February 28
+					</p>
+				</div>
+				<div className="text-sm text-gray-700 border-t pt-4">
+					<p className="font-semibold">Risk-Free Retail</p>
+					<p>✔ Free 2-Day Shipping, Hassle-Free Returns</p>
+				</div>
 			</div>
 		</div>
 	)
