@@ -64,6 +64,13 @@ export default function Header() {
 					>
 						Customize
 					</Link>
+					<Link
+						to="/product"
+						className="relative text-gray-700 hover:text-gray-900 font-medium after:absolute after:left-0 after:bottom-0 after:h-[1px] after:bg-black after:w-0 after:transition-all after:duration-300 after:ease-in-out hover:after:w-full"
+					>
+						Products
+					</Link>
+
 					{Array.isArray(menuItems) && menuItems.length > 0
 						? menuItems.map((item, index) => (
 							<div

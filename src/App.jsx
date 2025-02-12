@@ -7,6 +7,10 @@ import store from './store'
 import CustomizeRing from './screens/CustomizeRing'
 import Favorites from './screens/Favorites'
 import Cart from './screens/Cart'
+import React from "react";
+import Product from './screens/ProductGrid'
+
+
 
 function App() {
 	return (
@@ -17,6 +21,8 @@ function App() {
 				<Route path="/customize" element={<CustomizeRing />} />
 				<Route path="/favorites" element={<Favorites />} />
 				<Route path="/cart" element={<Cart />} />
+				<Route path="/Product" element={<Product />} />
+
 			</Routes>
 			<Footer />
 		</Provider>
