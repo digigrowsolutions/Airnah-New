@@ -42,8 +42,8 @@ const CustomizeRing = () => {
 					</div>
 				))}
 			</div>
-			<div className="container mx-auto px-6 py-12">
-				{step === 1 && <StepOne />}
+			<div className="container items-center p-6" style={{ maxWidth: '100%' }}>
+			{step === 1 && <StepOne />}
 				{step === 2 && <StepTwo />}
 				{step === 3 && <StepThree />}
 			</div>
