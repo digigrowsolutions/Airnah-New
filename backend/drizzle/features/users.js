@@ -142,3 +142,11 @@ export async function removeFromCart({ clerk_user_id, product_id }) {
 
 	return { success: true }
 }
+
+export async function getAllUsers() {
+	const users = await db.select().from(userTable)
+
+	if (users == null) throw new Error('Failed to get products')
+
+	return users
+}

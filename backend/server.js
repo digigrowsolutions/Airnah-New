@@ -13,9 +13,15 @@ import {
 	removeFromFavorites,
 	addToCart,
 	removeFromCart,
+	getAllUsers,
 } from './drizzle/features/users.js'
 import { clerkClient } from '@clerk/express'
 import cors from 'cors'
+import {
+	addProduct,
+	getAllProducts,
+	updateProduct,
+} from './drizzle/features/products.js'
 
 dotenv.config()
 
@@ -166,6 +172,47 @@ app.delete(
 		}
 	}
 )
+
+app.post('/api/admin/addProduct', async (req, res) => {
+	try {
+		const data = req.body
+		await addProduct(data)
+		res.json({ success: true })
+	} catch (err) {
+		console.log('addProduct Error:', err)
+		res.status(500).json({ error: 'Failed to add product' })
+	}
+})
+
+app.get('/api/admin/getAllProducts', async (req, res) => {
+	try {
+		const data = await getAllProducts()
+		res.json(data)
+	} catch (err) {
+		console.log('addProduct Error: ' + err)
+		res.status(500).json({ error: 'Failed to get all products' })
+	}
+})
+
+app.put('/api/admin/updateProduct/:product_id', async (req, res) => {
+	try {
+		const updatedProduct = await updateProduct(req.params.product_id, req.body)
+		res.json(updatedProduct)
+	} catch (err) {
+		console.log('updateProduct Error: ' + err)
+		res.status(500).json({ error: 'Failed to update product' })
+	}
+})
+
+app.get('/api/admin/getAllUsers', async (req, res) => {
+	try {
+		const data = await getAllUsers()
+		res.json(data)
+	} catch (err) {
+		console.log('getAllUsers Error: ' + err)
+		res.status(500).json({ error: 'Failed to get all users' })
+	}
+})
 
 app.listen(port, () => {
 	console.log(`Server running on port ${port}`)

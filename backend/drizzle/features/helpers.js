@@ -11,7 +11,5 @@ export async function getUserByClerkId(clerk_user_id) {
 		.where(eq(userTable.clerk_user_id, clerk_user_id))
 		.limit(1)
 
-	if (!user.length) throw new Error('User not found')
-
-	return user[0].user_id
+	return user[0]?.user_id
 }
