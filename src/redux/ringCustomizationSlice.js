@@ -2,9 +2,17 @@ import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
 	step: 1,
-	metal: 'gold',
-	stone: 'diamond',
-	size: '6',
+	showProduct: false,
+	productDetails: [
+		{
+			diamond: {
+				product_id: null,
+				total_cost_INR: null,
+				total_cost_USD: null,
+				total_cost_GBP: null,
+			},
+		},
+	],
 }
 
 const ringCustomizationSlice = createSlice({
@@ -14,11 +22,15 @@ const ringCustomizationSlice = createSlice({
 		setStep: (state, action) => {
 			state.step = action.payload
 		},
-		updateCustomization: (state, action) => {
-			state[action.payload.key] = action.payload.value
+		updateDiamondDetails: (state, action) => {
+			Object.assign(state.productDetails[0].diamond, action.payload)
+		},
+		setShowProduct: (state, action) => {
+			state.showProduct = action.payload
 		},
 	},
 })
 
-export const { setStep, updateCustomization } = ringCustomizationSlice.actions
+export const { setStep, updateDiamondDetails, setShowProduct } =
+	ringCustomizationSlice.actions
 export default ringCustomizationSlice.reducer

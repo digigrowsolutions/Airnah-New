@@ -20,6 +20,7 @@ import cors from 'cors'
 import {
 	addProduct,
 	getAllProducts,
+	getProduct,
 	updateProduct,
 } from './drizzle/features/products.js'
 
@@ -211,6 +212,17 @@ app.get('/api/admin/getAllUsers', async (req, res) => {
 	} catch (err) {
 		console.log('getAllUsers Error: ' + err)
 		res.status(500).json({ error: 'Failed to get all users' })
+	}
+})
+
+app.get('/api/getProduct/:product_id', async (req, res) => {
+	try {
+		const { product_id } = req.params
+		const data = await getProduct(product_id)
+		res.json(data)
+	} catch (err) {
+		console.log('getProduct Error: ' + err)
+		res.status(500).json({ error: 'Failed to get product' })
 	}
 })
 

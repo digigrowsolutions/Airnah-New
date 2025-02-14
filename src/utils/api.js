@@ -95,10 +95,10 @@ export const getAllProducts = async () => {
 	}
 }
 
-export const updateProduct = async (product_id, data) => {
+export const updateProduct = async (productId, data) => {
 	try {
 		const response = await axios.put(
-			`${REACT_APP_API_URL}/admin/updateProduct/${product_id}`,
+			`${REACT_APP_API_URL}/admin/updateProduct/${productId}`,
 			data
 		)
 		return response
@@ -114,6 +114,18 @@ export const getAllUsers = async () => {
 		return response
 	} catch (error) {
 		console.log('Error getting all users', error)
+		throw error
+	}
+}
+
+export const getProduct = async (productId) => {
+	try {
+		const response = await axios.get(
+			`${REACT_APP_API_URL}/getProduct/${productId}`
+		)
+		return response
+	} catch (error) {
+		console.log('Error getting product details', error)
 		throw error
 	}
 }

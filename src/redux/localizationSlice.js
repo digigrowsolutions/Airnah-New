@@ -1,8 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
-	country: 'EN', // Default country
-	currency: 'USD', // Default currency
+	country: 'INR',
+	currency: '₹',
 }
 
 const localizationSlice = createSlice({
@@ -13,14 +13,14 @@ const localizationSlice = createSlice({
 			const country = action.payload
 			state.country = country
 			switch (country) {
-				case 'FR':
-					state.currency = 'EUR'
+				case 'USD':
+					state.currency = '$'
 					break
-				case 'DE':
-					state.currency = 'EUR'
+				case 'GBP':
+					state.currency = '€'
 					break
 				default:
-					state.currency = 'USD'
+					state.currency = '₹'
 			}
 		},
 	},

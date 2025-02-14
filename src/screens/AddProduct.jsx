@@ -42,7 +42,9 @@ const AddProduct = ({ initialData = null, onSuccess }) => {
 		misc_cost: '',
 		labour_cost: '',
 		other_cost: '',
-		total_cost: '',
+		total_cost_INR: '',
+		total_cost_GBP: '',
+		total_cost_USD: '',
 	})
 
 	// Pre-fill the form if initialData is provided
@@ -110,7 +112,9 @@ const AddProduct = ({ initialData = null, onSuccess }) => {
 				misc_cost: '',
 				labour_cost: '',
 				other_cost: '',
-				total_cost: '',
+				total_cost_INR: '',
+				total_cost_GBP: '',
+				total_cost_USD: '',
 			})
 			onSuccess?.() // Call callback function to refresh list
 		} catch (error) {
@@ -523,11 +527,33 @@ const AddProduct = ({ initialData = null, onSuccess }) => {
 					/>
 				</div>
 				<div>
-					<label className="block font-medium">Total Cost</label>
+					<label className="block font-medium">Total Cost INR</label>
 					<input
 						type="number"
-						name="total_cost"
-						value={formData.total_cost}
+						name="total_cost_INR"
+						value={formData.total_cost_INR}
+						onChange={handleChange}
+						className="border p-2 rounded w-full"
+						required
+					/>
+				</div>
+				<div>
+					<label className="block font-medium">Total Cost USD</label>
+					<input
+						type="number"
+						name="total_cost_USD"
+						value={formData.total_cost_USD}
+						onChange={handleChange}
+						className="border p-2 rounded w-full"
+						required
+					/>
+				</div>
+				<div>
+					<label className="block font-medium">Total Cost GBP</label>
+					<input
+						type="number"
+						name="total_cost_GBP"
+						value={formData.total_cost_GBP}
 						onChange={handleChange}
 						className="border p-2 rounded w-full"
 						required

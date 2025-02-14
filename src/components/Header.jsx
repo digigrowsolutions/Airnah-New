@@ -209,9 +209,9 @@ export default function Header() {
 								onChange={handleCountryChange}
 								className="  py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-400"
 							>
-								<option value="EN">🇬🇧 EN</option>
-								<option value="FR">🇫🇷 FR</option>
-								<option value="DE">🇩🇪 GR</option>
+								<option value="INR">INR</option>
+								<option value="USD">USD</option>
+								<option value="GBP">GBP</option>
 							</select>
 						</div>
 					</nav>

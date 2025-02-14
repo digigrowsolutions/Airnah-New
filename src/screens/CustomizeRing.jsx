@@ -1,16 +1,33 @@
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import StepOne from '../components/CustomizeRing/StepOne'
 import StepTwo from '../components/CustomizeRing/StepTwo'
 import StepThree from '../components/CustomizeRing/StepThree'
 import Image from '../assets/ring4.jpg'
+import { setStep } from '../redux/ringCustomizationSlice'
 
 const CustomizeRing = () => {
-	const step = useSelector((state) => state.ringCustomization.step)
+	const dispatch = useDispatch()
+	const { step, productDetails } = useSelector(
+		(state) => state.ringCustomization
+	)
+	const { currency, country } = useSelector((state) => state.localization)
 
 	const steps = [
-		{ id: 1, title: 'Choose a Diamond', price: '$2,500' },
-		{ id: 2, title: 'Choose a Setting', price: '$1,500' },
-		{ id: 3, title: 'Complete a Ring', price: '$4,000' },
+		{
+			id: 1,
+			title: 'Choose a Diamond',
+			price: currency + productDetails[0].diamond?.[`total_cost_${country}`],
+		},
+		{
+			id: 2,
+			title: 'Choose a Setting',
+			price: currency + productDetails[0].diamond?.[`total_cost_${country}`],
+		},
+		{
+			id: 3,
+			title: 'Complete a Ring',
+			price: currency + productDetails[0].diamond?.[`total_cost_${country}`],
+		},
 	]
 
 	return (
@@ -27,23 +44,27 @@ const CustomizeRing = () => {
 						</div>
 						<div className="flex items-center space-x-2">
 							<div className="flex flex-col items-center">
-								<span className="text-sm">{price}</span>
+								{productDetails[0].diamond?.[`total_cost_${country}`] !==
+									null && <span className="text-sm">{price}</span>}
 								<div className="flex space-x-2">
-									<a href="#" className="text-xs">
+									<button
+										onClick={() => dispatch(setStep(id))}
+										className="text-xs"
+									>
 										View
-									</a>
-									<a href="#" className="text-xs">
+									</button>
+									<button href="/" className="text-xs">
 										Remove
-									</a>
+									</button>
 								</div>
 							</div>
-							<img src={Image} className="h-20 w-20" />
+							<img src={Image} alt="something" className="h-20 w-20" />
 						</div>
 					</div>
 				))}
 			</div>
 			<div className="container items-center p-6" style={{ maxWidth: '100%' }}>
-			{step === 1 && <StepOne />}
+				{step === 1 && <StepOne />}
 				{step === 2 && <StepTwo />}
 				{step === 3 && <StepThree />}
 			</div>
