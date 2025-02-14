@@ -51,7 +51,9 @@ export const productsTable = pgTable('products', {
 	misc_cost: decimal(10, 2),
 	labour_cost: decimal(10, 2),
 	other_cost: decimal(10, 2),
-	total_cost: decimal(10, 2),
+	total_cost_INR: decimal(10, 2),
+	total_cost_GBP: decimal(10, 2),
+	total_cost_USD: decimal(10, 2),
 	created_at,
 	updated_at,
 })

@@ -8,11 +8,12 @@ import CustomizeRing from './screens/CustomizeRing'
 import Favorites from './screens/Favorites'
 import Cart from './screens/Cart'
 import React from 'react'
-import Product from './screens/ProductGrid'
+import ProductGrid from './screens/ProductGrid'
 import AddProduct from './screens/AddProduct'
 import ProductsList from './screens/ProductsList'
 import Dashboard from './screens/Dashboard'
 import UsersList from './screens/UsersList'
+import Product from './screens/Product'
 
 function App() {
 	return (
@@ -23,11 +24,12 @@ function App() {
 				<Route path="/customize" element={<CustomizeRing />} />
 				<Route path="/favorites" element={<Favorites />} />
 				<Route path="/cart" element={<Cart />} />
-				<Route path="/Product" element={<Product />} />
+				<Route path="/Product" element={<ProductGrid />} />
 				<Route path="/dashboard" element={<Dashboard />} />
 				<Route path="/addProducts" element={<AddProduct />} />
 				<Route path="/productsList" element={<ProductsList />} />
 				<Route path="/userList" element={<UsersList />} />
+				<Route path="/products/:id" element={<Product />} />
 			</Routes>
 			<Footer />
 		</Provider>

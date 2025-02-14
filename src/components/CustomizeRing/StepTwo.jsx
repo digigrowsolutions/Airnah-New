@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux'
 import {
-	updateCustomization,
+	updateDiamondDetails,
 	setStep,
 } from '../../redux/ringCustomizationSlice'
 import Image from '../../assets/ring1.jpg'
@@ -8,6 +8,8 @@ import Image from '../../assets/ring1.jpg'
 const StepTwo = () => {
 	const dispatch = useDispatch()
 	const stone = useSelector((state) => state.ringCustomization.stone)
+	const { productDetails } = useSelector((state) => state.ringCustomization)
+	console.log(productDetails)
 
 	const productImages = {
 		diamond: 'https://via.placeholder.com/300x300?text=Diamond',
@@ -50,7 +52,9 @@ const StepTwo = () => {
 						<label
 							key={option}
 							className={`flex items-center p-3 border rounded-lg cursor-pointer hover:shadow-md ${
-								stone === option ? 'border-blue-500 bg-blue-50' : 'border-gray-200'
+								stone === option
+									? 'border-blue-500 bg-blue-50'
+									: 'border-gray-200'
 							}`}
 						>
 							<input
@@ -59,7 +63,12 @@ const StepTwo = () => {
 								value={option}
 								checked={stone === option}
 								onChange={(e) =>
-									dispatch(updateCustomization({ key: 'stone', value: e.target.value }))
+									dispatch(
+										updateDiamondDetails({
+											key: 'stone',
+											value: e.target.value,
+										})
+									)
 								}
 								className="mr-3 accent-blue-500"
 							/>

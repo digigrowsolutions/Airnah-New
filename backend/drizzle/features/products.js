@@ -10,11 +10,31 @@ export async function addProduct(data) {
 }
 
 export async function getAllProducts() {
-	const products = await db.select().from(productsTable)
+	const products = await db
+		.select({
+			product_id: productsTable.product_id,
+			name: productsTable.name,
+			category: productsTable.category,
+			total_cost_INR: productsTable.total_cost_INR,
+			total_cost_GBP: productsTable.total_cost_GBP,
+			total_cost_USD: productsTable.total_cost_USD,
+		})
+		.from(productsTable)
 
 	if (products == null) throw new Error('Failed to get products')
 
 	return products
+}
+
+export async function getProduct(product_id) {
+	const product = await db
+		.select()
+		.from(productsTable)
+		.where(eq(productsTable.product_id, product_id))
+
+	if (product == null) throw new Error('Failed to get product')
+
+	return product
 }
 
 export async function updateProduct(product_id, updatedData) {
