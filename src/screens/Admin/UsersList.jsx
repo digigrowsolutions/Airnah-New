@@ -1,7 +1,17 @@
-import { useSelector } from 'react-redux'
+import { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { fetchUsers } from '../../redux/userProductsSlice'
 
 const UsersList = () => {
+	const dispatch = useDispatch()
 	const { users } = useSelector((state) => state.userProducts)
+
+	useEffect(() => {
+		if (users.length === 0) {
+			dispatch(fetchUsers())
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [])
 
 	return (
 		<div className="max-w-6xl mx-auto p-8">

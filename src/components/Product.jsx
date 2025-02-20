@@ -21,9 +21,9 @@ function Product() {
 	const handleClick = () => {
 		dispatch(
 			updateDiamondDetails({
-				total_cost_INR: product.total_cost_INR,
-				total_cost_USD: product.total_cost_USD,
-				total_cost_GBP: product.total_cost_GBP,
+				diamond_price_INR: +product.diamond_price_INR,
+				diamond_price_GBP: +product.diamond_price_GBP,
+				diamond_price_USD: +product.diamond_price_USD,
 			})
 		)
 		dispatch(setStep(2))
@@ -61,7 +61,7 @@ function Product() {
 				<p className="text-gray-600">{product?.description}</p>
 				<div className="text-xl font-bold text-gray-900">
 					{currency}
-					{product?.[`total_cost_${country}`]}
+					{product?.[`diamond_price_${country}`]}
 				</div>
 				{/* <div className="text-lg text-red-500 font-semibold">$435</div> */}
 				<p className="text-sm text-gray-500">(Setting Price)</p>

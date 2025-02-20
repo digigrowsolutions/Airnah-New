@@ -1,6 +1,7 @@
 const { Webhook } = require('svix')
 const { insertUser, updateUser, deleteUser } = require('../models/userModel')
 const { CLERK_WEBHOOK_SECRET } = require('../config')
+const { clerkClient } = require('@clerk/express')
 
 exports.handleWebhook = async (req, res) => {
 	const svixId = req.headers['svix-id']
@@ -42,6 +43,12 @@ exports.handleWebhook = async (req, res) => {
 					email,
 					name,
 					role: 'user',
+				})
+				await clerkClient.users.updateUserMetadata(user.clerk_user_id, {
+					publicMetadata: {
+						dbId: user.user_id,
+						role: user.role,
+					},
 				})
 			} else {
 				await updateUser(

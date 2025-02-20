@@ -2,22 +2,13 @@ import { useEffect, useState } from 'react'
 import diamondImage from '../assets/ring2.jpg'
 import diamondHoverImage from '../assets/Wedding-rings.jpg'
 import { useDispatch, useSelector } from 'react-redux'
-import { getAllProducts } from '../utils/api'
+import { getAllProductsByCategory } from '../utils/api'
 import {
-	setShowProduct,
+	setShowDiamond,
 	updateDiamondDetails,
 } from '../redux/ringCustomizationSlice'
 
-const filterOptions = [
-	{ label: 'Diamond Type', options: ['All', 'Natural', 'Lab Grown'] },
-	{ label: 'Budget', options: ['All Budgets'] },
-	{ label: 'Style', options: ['All Ring Styles'] },
-	{ label: 'Shape', options: ['All Diamond Shapes'] },
-	{ label: 'Metal', options: ['All Metal Types'] },
-	{ label: 'Total Carat', options: ['View All'] },
-]
-
-function ProductGrid() {
+function DiamondGrid() {
 	const dispatch = useDispatch()
 	const { currency, country } = useSelector((state) => state.localization)
 	const [diamonds, setDiamonds] = useState([])
@@ -28,18 +19,17 @@ function ProductGrid() {
 	const [carat, setCarat] = useState(50)
 	const [clarity, setClarity] = useState(50)
 	const [price, setPrice] = useState(50)
-	const [value, setValue] = useState(1)
 	const labels = ['M', 'L', 'K', 'J', 'I', 'H', 'G', 'F', 'E', 'D']
 
 	useEffect(() => {
-		getAllProducts().then((res) => {
+		getAllProductsByCategory('diamond').then((res) => {
 			setDiamonds(res.data)
 		})
 	}, [])
 
 	const handleClick = (product_id) => {
 		dispatch(updateDiamondDetails({ product_id: product_id }))
-		dispatch(setShowProduct(true))
+		dispatch(setShowDiamond(true))
 	}
 
 	return (
@@ -128,13 +118,13 @@ function ProductGrid() {
 							type="range"
 							min="1"
 							max="20"
-							value={value}
-							onChange={(e) => setValue(e.target.value)}
+							value={color}
+							onChange={(e) => setColor(e.target.value)}
 							className="w-full h-2 rounded-lg appearance-none cursor-pointer outline-none"
 							style={{
 								background: `linear-gradient(to right, #000000 0%, #000000 ${
-									value * 5
-								}%, #ffffff ${value * 5}%, #ffffff 100%)`,
+									color * 5
+								}%, #ffffff ${color * 5}%, #ffffff 100%)`,
 							}}
 						/>
 						<div className="flex justify-between mt-2 text-sm text-gray-700">
@@ -235,7 +225,7 @@ function ProductGrid() {
 									</h2>
 									<p className="text-[#be9080] mb-4 text-lg font-light">
 										{currency}
-										{product[`total_cost_${country}`]}
+										{product[`diamond_price_${country}`]}
 									</p>
 								</div>
 							</button>
@@ -247,4 +237,4 @@ function ProductGrid() {
 	)
 }
 
-export default ProductGrid
+export default DiamondGrid

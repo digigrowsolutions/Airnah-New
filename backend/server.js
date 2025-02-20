@@ -19,7 +19,9 @@ import { clerkClient } from '@clerk/express'
 import cors from 'cors'
 import {
 	addProduct,
+	getAllDiamonds,
 	getAllProducts,
+	getAllRings,
 	getProduct,
 	updateProduct,
 } from './drizzle/features/products.js'
@@ -192,6 +194,32 @@ app.get('/api/admin/getAllProducts', async (req, res) => {
 	} catch (err) {
 		console.log('addProduct Error: ' + err)
 		res.status(500).json({ error: 'Failed to get all products' })
+	}
+})
+
+app.get('/api/admin/getAllProductsByCategory/:category', async (req, res) => {
+	try {
+		const { category } = req.params
+		let data
+
+		const categoryHandlers = {
+			diamond: getAllDiamonds,
+			ring: getAllRings,
+		}
+
+		if (categoryHandlers[category]) {
+			data = await categoryHandlers[category]()
+		} else {
+			return res.status(400).json({ error: `Invalid category: ${category}` })
+		}
+
+		res.json(data)
+	} catch (err) {
+		console.error(
+			`Error fetching products for category "${req.params.category}":`,
+			err
+		)
+		res.status(500).json({ error: 'Failed to fetch products' })
 	}
 })
 

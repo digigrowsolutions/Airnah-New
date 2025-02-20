@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { fetchProducts, fetchUsers } from '../redux/userProductsSlice'
+import { fetchProducts, fetchUsers } from '../../redux/userProductsSlice'
 
 const AdminDashboard = () => {
 	const dispatch = useDispatch()

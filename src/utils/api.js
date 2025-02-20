@@ -95,6 +95,18 @@ export const getAllProducts = async () => {
 	}
 }
 
+export const getAllProductsByCategory = async (category) => {
+	try {
+		const response = await axios.get(
+			`${REACT_APP_API_URL}/admin/getAllProductsByCategory/${category}`
+		)
+		return response
+	} catch (error) {
+		console.log('Error getting all diamonds', error)
+		throw error
+	}
+}
+
 export const updateProduct = async (productId, data) => {
 	try {
 		const response = await axios.put(

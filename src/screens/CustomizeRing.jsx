@@ -16,17 +16,29 @@ const CustomizeRing = () => {
 		{
 			id: 1,
 			title: 'Choose a Diamond',
-			price: currency + productDetails[0].diamond?.[`total_cost_${country}`],
+			price:
+				currency +
+				(productDetails[0].diamond?.[`diamond_price_${country}`] === null
+					? 0
+					: productDetails[0].diamond?.[`diamond_price_${country}`]),
 		},
 		{
 			id: 2,
 			title: 'Choose a Setting',
-			price: currency + productDetails[0].diamond?.[`total_cost_${country}`],
+			price:
+				currency +
+				(productDetails[0].ring?.[`ring_price_${country}`] === null
+					? 0
+					: productDetails[0].ring?.[`ring_price_${country}`]),
 		},
 		{
 			id: 3,
 			title: 'Complete a Ring',
-			price: currency + productDetails[0].diamond?.[`total_cost_${country}`],
+			price:
+				currency +
+				(productDetails[0][`total_cost_${country}`] === null
+					? 0
+					: productDetails[0][`total_cost_${country}`]),
 		},
 	]
 
@@ -44,19 +56,20 @@ const CustomizeRing = () => {
 						</div>
 						<div className="flex items-center space-x-2">
 							<div className="flex flex-col items-center">
-								{productDetails[0].diamond?.[`total_cost_${country}`] !==
-									null && <span className="text-sm">{price}</span>}
-								<div className="flex space-x-2">
-									<button
-										onClick={() => dispatch(setStep(id))}
-										className="text-xs"
-									>
-										View
-									</button>
-									<button href="/" className="text-xs">
-										Remove
-									</button>
-								</div>
+								<span className="text-sm">{price}</span>
+								{id !== 3 && (
+									<div className="flex space-x-2">
+										<button
+											onClick={() => dispatch(setStep(id))}
+											className="text-xs"
+										>
+											View
+										</button>
+										<button href="/" className="text-xs">
+											Remove
+										</button>
+									</div>
+								)}
 							</div>
 							<img src={Image} alt="something" className="h-20 w-20" />
 						</div>

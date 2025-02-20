@@ -1,11 +1,20 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { fetchProducts } from '../../redux/userProductsSlice'
 import AddProduct from './AddProduct'
-import { useSelector } from 'react-redux'
 
-const ProductsList = () => {
+const Master = () => {
+	const dispatch = useDispatch()
 	const { products } = useSelector((state) => state.userProducts)
 	const [selectedProduct, setSelectedProduct] = useState(null)
 	const [showForm, setShowForm] = useState(false)
+
+	useEffect(() => {
+		if (products.length === 0) {
+			dispatch(fetchProducts())
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [])
 
 	const handleEditClick = (product) => {
 		setSelectedProduct(product)
@@ -19,14 +28,15 @@ const ProductsList = () => {
 
 	return (
 		<div className="max-w-6xl mx-auto p-8">
-			<h2 className="text-2xl font-bold mb-4">Products List</h2>
+			<h2 className="text-2xl font-bold mb-4">Masters List</h2>
 			<table className="min-w-full bg-white border border-gray-200">
 				<thead>
 					<tr className="bg-gray-100">
-						<th className="border px-4 py-2">Name</th>
-						<th className="border px-4 py-2">Category</th>
-						<th className="border px-4 py-2">Price</th>
-						<th className="border px-4 py-2">Actions</th>
+						<th className="border px-4 py-2">Date</th>
+						<th className="border px-4 py-2">GBP Rate</th>
+						<th className="border px-4 py-2">INR Rate</th>
+						<th className="border px-4 py-2">Gold Rate</th>
+						<th className="border px-4 py-2">Diamond Rate</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -69,4 +79,4 @@ const ProductsList = () => {
 	)
 }
 
-export default ProductsList
+export default Master

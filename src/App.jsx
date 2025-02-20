@@ -9,11 +9,12 @@ import Favorites from './screens/Favorites'
 import Cart from './screens/Cart'
 import React from 'react'
 import ProductGrid from './screens/ProductGrid'
-import AddProduct from './screens/AddProduct'
-import ProductsList from './screens/ProductsList'
-import Dashboard from './screens/Dashboard'
-import UsersList from './screens/UsersList'
-import Product from './screens/Product'
+import ProductsList from './screens/Admin/ProductsList'
+import Product from './components/Product'
+import AddProduct from './screens/Admin/AddProduct'
+import AdminDashboard from './screens/Admin/Dashboard'
+import UsersList from './screens/Admin/UsersList'
+import Master from './screens/Admin/Master'
 
 function App() {
 	return (
@@ -25,10 +26,11 @@ function App() {
 				<Route path="/favorites" element={<Favorites />} />
 				<Route path="/cart" element={<Cart />} />
 				<Route path="/Product" element={<ProductGrid />} />
-				<Route path="/dashboard" element={<Dashboard />} />
+				<Route path="/dashboard" element={<AdminDashboard />} />
 				<Route path="/addProducts" element={<AddProduct />} />
 				<Route path="/productsList" element={<ProductsList />} />
 				<Route path="/userList" element={<UsersList />} />
+				<Route path="/master" element={<Master />} />
 				<Route path="/products/:id" element={<Product />} />
 			</Routes>
 			<Footer />
