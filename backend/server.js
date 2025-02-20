@@ -13,9 +13,18 @@ import {
 	removeFromFavorites,
 	addToCart,
 	removeFromCart,
+	getAllUsers,
 } from './drizzle/features/users.js'
 import { clerkClient } from '@clerk/express'
 import cors from 'cors'
+import {
+	addProduct,
+	getAllDiamonds,
+	getAllProducts,
+	getAllRings,
+	getProduct,
+	updateProduct,
+} from './drizzle/features/products.js'
 
 dotenv.config()
 
@@ -166,6 +175,84 @@ app.delete(
 		}
 	}
 )
+
+app.post('/api/admin/addProduct', async (req, res) => {
+	try {
+		const data = req.body
+		await addProduct(data)
+		res.json({ success: true })
+	} catch (err) {
+		console.log('addProduct Error:', err)
+		res.status(500).json({ error: 'Failed to add product' })
+	}
+})
+
+app.get('/api/admin/getAllProducts', async (req, res) => {
+	try {
+		const data = await getAllProducts()
+		res.json(data)
+	} catch (err) {
+		console.log('addProduct Error: ' + err)
+		res.status(500).json({ error: 'Failed to get all products' })
+	}
+})
+
+app.get('/api/admin/getAllProductsByCategory/:category', async (req, res) => {
+	try {
+		const { category } = req.params
+		let data
+
+		const categoryHandlers = {
+			diamond: getAllDiamonds,
+			ring: getAllRings,
+		}
+
+		if (categoryHandlers[category]) {
+			data = await categoryHandlers[category]()
+		} else {
+			return res.status(400).json({ error: `Invalid category: ${category}` })
+		}
+
+		res.json(data)
+	} catch (err) {
+		console.error(
+			`Error fetching products for category "${req.params.category}":`,
+			err
+		)
+		res.status(500).json({ error: 'Failed to fetch products' })
+	}
+})
+
+app.put('/api/admin/updateProduct/:product_id', async (req, res) => {
+	try {
+		const updatedProduct = await updateProduct(req.params.product_id, req.body)
+		res.json(updatedProduct)
+	} catch (err) {
+		console.log('updateProduct Error: ' + err)
+		res.status(500).json({ error: 'Failed to update product' })
+	}
+})
+
+app.get('/api/admin/getAllUsers', async (req, res) => {
+	try {
+		const data = await getAllUsers()
+		res.json(data)
+	} catch (err) {
+		console.log('getAllUsers Error: ' + err)
+		res.status(500).json({ error: 'Failed to get all users' })
+	}
+})
+
+app.get('/api/getProduct/:product_id', async (req, res) => {
+	try {
+		const { product_id } = req.params
+		const data = await getProduct(product_id)
+		res.json(data)
+	} catch (err) {
+		console.log('getProduct Error: ' + err)
+		res.status(500).json({ error: 'Failed to get product' })
+	}
+})
 
 app.listen(port, () => {
 	console.log(`Server running on port ${port}`)

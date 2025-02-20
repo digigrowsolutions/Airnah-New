@@ -1,6 +1,5 @@
 import axios from 'axios'
 const REACT_APP_API_URL = process.env.REACT_APP_API_URL
-console.log(REACT_APP_API_URL)
 
 export const fetchFavorites = async (userId) => {
 	try {
@@ -67,6 +66,78 @@ export const removeFromCartAPI = async (userId, productId) => {
 		await axios.delete(`${REACT_APP_API_URL}/cart/${userId}/${productId}`)
 	} catch (error) {
 		console.error('Error removing from cart:', error)
+		throw error
+	}
+}
+
+export const addProduct = async (data) => {
+	try {
+		const response = await axios.post(
+			`${REACT_APP_API_URL}/admin/addProduct`,
+			data
+		)
+		return response
+	} catch (error) {
+		console.log('Error adding the product', error)
+		throw error
+	}
+}
+
+export const getAllProducts = async () => {
+	try {
+		const response = await axios.get(
+			`${REACT_APP_API_URL}/admin/getAllProducts`
+		)
+		return response
+	} catch (error) {
+		console.log('Error getting all products', error)
+		throw error
+	}
+}
+
+export const getAllProductsByCategory = async (category) => {
+	try {
+		const response = await axios.get(
+			`${REACT_APP_API_URL}/admin/getAllProductsByCategory/${category}`
+		)
+		return response
+	} catch (error) {
+		console.log('Error getting all diamonds', error)
+		throw error
+	}
+}
+
+export const updateProduct = async (productId, data) => {
+	try {
+		const response = await axios.put(
+			`${REACT_APP_API_URL}/admin/updateProduct/${productId}`,
+			data
+		)
+		return response
+	} catch (error) {
+		console.log('Error updating product', error)
+		throw error
+	}
+}
+
+export const getAllUsers = async () => {
+	try {
+		const response = await axios.get(`${REACT_APP_API_URL}/admin/getAllUsers`)
+		return response
+	} catch (error) {
+		console.log('Error getting all users', error)
+		throw error
+	}
+}
+
+export const getProduct = async (productId) => {
+	try {
+		const response = await axios.get(
+			`${REACT_APP_API_URL}/getProduct/${productId}`
+		)
+		return response
+	} catch (error) {
+		console.log('Error getting product details', error)
 		throw error
 	}
 }
