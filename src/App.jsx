@@ -9,6 +9,7 @@ import Favorites from './screens/Favorites'
 import Cart from './screens/Cart'
 import React from "react";
 import Product from './screens/ProductGrid'
+import Edu from './screens/Edu'
 
 
 
@@ -22,6 +23,7 @@ function App() {
 				<Route path="/favorites" element={<Favorites />} />
 				<Route path="/cart" element={<Cart />} />
 				<Route path="/Product" element={<Product />} />
+				<Route path="/Edu" element={<Edu />} />
 
 			</Routes>
 			<Footer />
