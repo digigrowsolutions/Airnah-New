@@ -7,7 +7,6 @@ import store from './store'
 import CustomizeRing from './screens/CustomizeRing'
 import Favorites from './screens/Favorites'
 import Cart from './screens/Cart'
-import React from 'react'
 import ProductGrid from './screens/ProductGrid'
 import ProductsList from './screens/Admin/ProductsList'
 import Product from './components/Product'
@@ -15,6 +14,7 @@ import AddProduct from './screens/Admin/AddProduct'
 import AdminDashboard from './screens/Admin/Dashboard'
 import UsersList from './screens/Admin/UsersList'
 import Master from './screens/Admin/Master'
+import Edu from './screens/Edu'
 
 function App() {
 	return (
@@ -32,6 +32,7 @@ function App() {
 				<Route path="/userList" element={<UsersList />} />
 				<Route path="/master" element={<Master />} />
 				<Route path="/products/:id" element={<Product />} />
+          <Route path="/Edu" element={<Edu />} />
 			</Routes>
 			<Footer />
 		</Provider>
