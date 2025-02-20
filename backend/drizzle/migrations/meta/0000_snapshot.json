@@ -1,5 +1,5 @@
 {
-  "id": "70642d98-8942-40c2-b6ec-cee70693da1a",
+  "id": "cc589804-30cb-4ea5-a766-fda03a3bdda3",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -401,206 +401,172 @@
           "notNull": false,
           "default": "'active'"
         },
-        "gold_quantity": {
-          "name": "gold_quantity",
+        "source": {
+          "name": "source",
+          "type": "source",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'natural'"
+        },
+        "shape": {
+          "name": "shape",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "cut": {
+          "name": "cut",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "color": {
+          "name": "color",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "clarity": {
+          "name": "clarity",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "carat": {
+          "name": "carat",
           "type": "numeric",
           "primaryKey": false,
           "notNull": false
         },
-        "gold_price": {
-          "name": "gold_price",
+        "diamond_price_INR": {
+          "name": "diamond_price_INR",
           "type": "numeric",
           "primaryKey": false,
           "notNull": false
         },
-        "gold_total": {
-          "name": "gold_total",
+        "diamond_price_GBP": {
+          "name": "diamond_price_GBP",
           "type": "numeric",
           "primaryKey": false,
           "notNull": false
         },
-        "round_quantity": {
-          "name": "round_quantity",
+        "diamond_price_USD": {
+          "name": "diamond_price_USD",
           "type": "numeric",
           "primaryKey": false,
           "notNull": false
         },
-        "round_price": {
-          "name": "round_price",
+        "head_style": {
+          "name": "head_style",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "head_style_price_INR": {
+          "name": "head_style_price_INR",
           "type": "numeric",
           "primaryKey": false,
           "notNull": false
         },
-        "round_total": {
-          "name": "round_total",
+        "head_style_price_GBP": {
+          "name": "head_style_price_GBP",
           "type": "numeric",
           "primaryKey": false,
           "notNull": false
         },
-        "oval_quantity": {
-          "name": "oval_quantity",
+        "head_style_price_USD": {
+          "name": "head_style_price_USD",
           "type": "numeric",
           "primaryKey": false,
           "notNull": false
         },
-        "oval_price": {
-          "name": "oval_price",
+        "head_metal": {
+          "name": "head_metal",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "head_metal_price_INR": {
+          "name": "head_metal_price_INR",
           "type": "numeric",
           "primaryKey": false,
           "notNull": false
         },
-        "oval_total": {
-          "name": "oval_total",
+        "head_metal_price_GBP": {
+          "name": "head_metal_price_GBP",
           "type": "numeric",
           "primaryKey": false,
           "notNull": false
         },
-        "marquise_quantity": {
-          "name": "marquise_quantity",
+        "head_metal_price_USD": {
+          "name": "head_metal_price_USD",
           "type": "numeric",
           "primaryKey": false,
           "notNull": false
         },
-        "marquise_price": {
-          "name": "marquise_price",
+        "shank_style": {
+          "name": "shank_style",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "shank_style_price_INR": {
+          "name": "shank_style_price_INR",
           "type": "numeric",
           "primaryKey": false,
           "notNull": false
         },
-        "marquise_total": {
-          "name": "marquise_total",
+        "shank_style_price_GBP": {
+          "name": "shank_style_price_GBP",
           "type": "numeric",
           "primaryKey": false,
           "notNull": false
         },
-        "emerald_quantity": {
-          "name": "emerald_quantity",
+        "shank_style_price_USD": {
+          "name": "shank_style_price_USD",
           "type": "numeric",
           "primaryKey": false,
           "notNull": false
         },
-        "emerald_price": {
-          "name": "emerald_price",
+        "shank_metal": {
+          "name": "shank_metal",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "shank_metal_price_INR": {
+          "name": "shank_metal_price_INR",
           "type": "numeric",
           "primaryKey": false,
           "notNull": false
         },
-        "emerald_total": {
-          "name": "emerald_total",
+        "shank_metal_price_GBP": {
+          "name": "shank_metal_price_GBP",
           "type": "numeric",
           "primaryKey": false,
           "notNull": false
         },
-        "princess_quantity": {
-          "name": "princess_quantity",
+        "shank_metal_price_USD": {
+          "name": "shank_metal_price_USD",
           "type": "numeric",
           "primaryKey": false,
           "notNull": false
         },
-        "princess_price": {
-          "name": "princess_price",
+        "total_cost_INR": {
+          "name": "total_cost_INR",
           "type": "numeric",
           "primaryKey": false,
           "notNull": false
         },
-        "princess_total": {
-          "name": "princess_total",
+        "total_cost_GBP": {
+          "name": "total_cost_GBP",
           "type": "numeric",
           "primaryKey": false,
           "notNull": false
         },
-        "pear_quantity": {
-          "name": "pear_quantity",
-          "type": "numeric",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "pear_price": {
-          "name": "pear_price",
-          "type": "numeric",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "pear_total": {
-          "name": "pear_total",
-          "type": "numeric",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "heart_quantity": {
-          "name": "heart_quantity",
-          "type": "numeric",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "heart_price": {
-          "name": "heart_price",
-          "type": "numeric",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "heart_total": {
-          "name": "heart_total",
-          "type": "numeric",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "other_diamond_quantity": {
-          "name": "other_diamond_quantity",
-          "type": "numeric",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "other_diamond_price": {
-          "name": "other_diamond_price",
-          "type": "numeric",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "other_diamond_total": {
-          "name": "other_diamond_total",
-          "type": "numeric",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "gemstone_quantity": {
-          "name": "gemstone_quantity",
-          "type": "numeric",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "gemstone_price": {
-          "name": "gemstone_price",
-          "type": "numeric",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "gemstone_total": {
-          "name": "gemstone_total",
-          "type": "numeric",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "misc_cost": {
-          "name": "misc_cost",
-          "type": "numeric",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "labour_cost": {
-          "name": "labour_cost",
-          "type": "numeric",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "other_cost": {
-          "name": "other_cost",
-          "type": "numeric",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "total_cost": {
-          "name": "total_cost",
+        "total_cost_USD": {
+          "name": "total_cost_USD",
           "type": "numeric",
           "primaryKey": false,
           "notNull": false
@@ -904,13 +870,22 @@
         "cancelled"
       ]
     },
+    "public.source": {
+      "name": "source",
+      "schema": "public",
+      "values": [
+        "natural",
+        "labgrown"
+      ]
+    },
     "public.product_category": {
       "name": "product_category",
       "schema": "public",
       "values": [
         "ring",
         "necklace",
-        "pendant"
+        "pendant",
+        "diamond"
       ]
     },
     "public.product_status": {
