@@ -25,6 +25,7 @@ import {
 	getProduct,
 	updateProduct,
 } from './drizzle/features/products.js'
+import { addMasterEntry, getMasterList } from './drizzle/features/master.js'
 
 dotenv.config()
 
@@ -251,6 +252,27 @@ app.get('/api/getProduct/:product_id', async (req, res) => {
 	} catch (err) {
 		console.log('getProduct Error: ' + err)
 		res.status(500).json({ error: 'Failed to get product' })
+	}
+})
+
+app.get('/api/admin/getMasterList', async (req, res) => {
+	try {
+		const data = await getMasterList()
+		res.json(data)
+	} catch (err) {
+		console.log('getMasterList Error: ' + err)
+		res.status(500).json({ error: 'Failed to get master list' })
+	}
+})
+
+app.post('/api/admin/addMasterEntry', async (req, res) => {
+	try {
+		const data = req.body
+		await addMasterEntry(data)
+		res.json({ success: true })
+	} catch (err) {
+		console.log('addMasterEntry Error:', err)
+		res.status(500).json({ error: 'Failed to add master entry' })
 	}
 })
 

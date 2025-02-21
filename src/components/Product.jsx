@@ -3,11 +3,14 @@ import { setStep, updateDiamondDetails } from '../redux/ringCustomizationSlice'
 import Image from '../assets/ring4.jpg'
 import { useEffect, useState } from 'react'
 import { getProduct } from '../utils/api'
+import { convertPrice } from '../utils/helpers'
 
 function Product() {
 	const dispatch = useDispatch()
 	const { productDetails } = useSelector((state) => state.ringCustomization)
-	const { currency, country } = useSelector((state) => state.localization)
+	const { currency, country, INR_rate, GBP_rate } = useSelector(
+		(state) => state.localization
+	)
 
 	const [product, setProduct] = useState(null)
 
@@ -21,9 +24,7 @@ function Product() {
 	const handleClick = () => {
 		dispatch(
 			updateDiamondDetails({
-				diamond_price_INR: +product.diamond_price_INR,
-				diamond_price_GBP: +product.diamond_price_GBP,
-				diamond_price_USD: +product.diamond_price_USD,
+				diamond_price: +product.diamond_price,
 			})
 		)
 		dispatch(setStep(2))
@@ -61,7 +62,7 @@ function Product() {
 				<p className="text-gray-600">{product?.description}</p>
 				<div className="text-xl font-bold text-gray-900">
 					{currency}
-					{product?.[`diamond_price_${country}`]}
+					{convertPrice(product?.diamond_price, country, INR_rate, GBP_rate)}
 				</div>
 				{/* <div className="text-lg text-red-500 font-semibold">$435</div> */}
 				<p className="text-sm text-gray-500">(Setting Price)</p>

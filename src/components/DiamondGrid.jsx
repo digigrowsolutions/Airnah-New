@@ -7,10 +7,13 @@ import {
 	setShowDiamond,
 	updateDiamondDetails,
 } from '../redux/ringCustomizationSlice'
+import { convertPrice } from '../utils/helpers'
 
 function DiamondGrid() {
 	const dispatch = useDispatch()
-	const { currency, country } = useSelector((state) => state.localization)
+	const { currency, country, INR_rate, GBP_rate } = useSelector(
+		(state) => state.localization
+	)
 	const [diamonds, setDiamonds] = useState([])
 	const [hoveredImage, setHoveredImage] = useState(null)
 	const [activeTab, setActiveTab] = useState('Natural')
@@ -225,7 +228,12 @@ function DiamondGrid() {
 									</h2>
 									<p className="text-[#be9080] mb-4 text-lg font-light">
 										{currency}
-										{product[`diamond_price_${country}`]}
+										{convertPrice(
+											product.diamond_price,
+											country,
+											INR_rate,
+											GBP_rate
+										)}
 									</p>
 								</div>
 							</button>

@@ -4,13 +4,16 @@ import StepTwo from '../components/CustomizeRing/StepTwo'
 import StepThree from '../components/CustomizeRing/StepThree'
 import Image from '../assets/ring4.jpg'
 import { setStep } from '../redux/ringCustomizationSlice'
+import { convertPrice } from '../utils/helpers'
 
 const CustomizeRing = () => {
 	const dispatch = useDispatch()
 	const { step, productDetails } = useSelector(
 		(state) => state.ringCustomization
 	)
-	const { currency, country } = useSelector((state) => state.localization)
+	const { currency, country, INR_rate, GBP_rate } = useSelector(
+		(state) => state.localization
+	)
 
 	const steps = [
 		{
@@ -18,27 +21,42 @@ const CustomizeRing = () => {
 			title: 'Choose a Diamond',
 			price:
 				currency +
-				(productDetails[0].diamond?.[`diamond_price_${country}`] === null
+				(productDetails[0].diamond?.diamond_price === null
 					? 0
-					: productDetails[0].diamond?.[`diamond_price_${country}`]),
+					: convertPrice(
+							productDetails[0].diamond?.diamond_price,
+							country,
+							INR_rate,
+							GBP_rate
+					  )),
 		},
 		{
 			id: 2,
 			title: 'Choose a Setting',
 			price:
 				currency +
-				(productDetails[0].ring?.[`ring_price_${country}`] === null
+				(productDetails[0].ring?.ring_price === null
 					? 0
-					: productDetails[0].ring?.[`ring_price_${country}`]),
+					: convertPrice(
+							productDetails[0].ring?.ring_price,
+							country,
+							INR_rate,
+							GBP_rate
+					  )),
 		},
 		{
 			id: 3,
 			title: 'Complete a Ring',
 			price:
 				currency +
-				(productDetails[0][`total_cost_${country}`] === null
+				(productDetails[0].total_cost === null
 					? 0
-					: productDetails[0][`total_cost_${country}`]),
+					: convertPrice(
+							productDetails[0].total_cost,
+							country,
+							INR_rate,
+							GBP_rate
+					  )),
 		},
 	]
 

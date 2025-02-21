@@ -5,15 +5,16 @@ import { fetchUserCartItems } from '../redux/favoritesCartSlice'
 
 const Cart = () => {
 	const { user, isSignedIn } = useUser()
+	const dbId = user?.publicMetadata?.dbId
 
 	const dispatch = useDispatch()
 	const { cartItems, loading } = useSelector((state) => state.favoritesCart)
 
 	useEffect(() => {
-		if (isSignedIn && user?.id) {
-			dispatch(fetchUserCartItems(user.id))
+		if (isSignedIn && dbId) {
+			dispatch(fetchUserCartItems(dbId))
 		}
-	}, [isSignedIn, user?.id, dispatch])
+	}, [isSignedIn, dbId, dispatch])
 
 	if (!isSignedIn) {
 		return (
@@ -51,7 +52,7 @@ const Cart = () => {
 								className="w-full h-40 object-cover rounded-lg mb-4"
 							/>
 							<h2 className="text-lg font-semibold text-gray-800">
-								{item.name}
+								{item.product_name}
 							</h2>
 							<p className="text-gray-600 mb-2">{item.description}</p>
 							<p className="text-xl font-bold text-blue-600">${item.price}</p>

@@ -1,5 +1,5 @@
 import { decimal, pgTable } from 'drizzle-orm/pg-core'
-import { created_at, id, updated_at } from '../schemaHelpers'
+import { created_at, id, updated_at } from '../schemaHelpers.js'
 
 export const masterTable = pgTable('master', {
 	master_id: id,

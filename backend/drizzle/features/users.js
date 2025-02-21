@@ -50,7 +50,7 @@ export async function deleteUser({ clerk_user_id }) {
 }
 
 export async function getUserFavorites({ clerk_user_id }) {
-	const user = await getUserByClerkId(clerk_user_id)
+	// const user = await getUserByClerkId(clerk_user_id)
 	const data = await db
 		.select({
 			favorite_id: favoritesTable.favourite_id,
@@ -62,7 +62,7 @@ export async function getUserFavorites({ clerk_user_id }) {
 			productsTable,
 			eq(favoritesTable.product_id, productsTable.product_id)
 		)
-		.where(eq(favoritesTable.user_id, user))
+		.where(eq(favoritesTable.user_id, clerk_user_id))
 
 	if (data == null) throw new Error('Failed to get User Favorites')
 
@@ -96,7 +96,7 @@ export async function removeFromFavorites({ clerk_user_id, product_id }) {
 }
 
 export async function getUserCart({ clerk_user_id }) {
-	const user = await getUserByClerkId(clerk_user_id)
+	// const user = await getUserByClerkId(clerk_user_id)
 	const data = await db
 		.select({
 			cart_id: cartTable.cart_id,
@@ -109,7 +109,7 @@ export async function getUserCart({ clerk_user_id }) {
 			productsTable,
 			eq(cartTable.product_id, productsTable.product_id)
 		)
-		.where(eq(cartTable.user_id, user))
+		.where(eq(cartTable.user_id, clerk_user_id))
 
 	if (data == null) throw new Error('Failed to get User Cart')
 
@@ -117,9 +117,10 @@ export async function getUserCart({ clerk_user_id }) {
 }
 
 export async function addToCart({ clerk_user_id, product_id, quantity }) {
-	const user = await getUserByClerkId(clerk_user_id)
+	// const user = await getUserByClerkId(clerk_user_id)
 	const result = await db.insert(cartTable).values({
-		user_id: user[0].user_id,
+		// user_id: user[0].user_id,
+		user_id: clerk_user_id,
 		product_id: product_id,
 		quantity: quantity,
 	})
