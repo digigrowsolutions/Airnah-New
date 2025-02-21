@@ -1,28 +1,38 @@
 import { useDispatch, useSelector } from 'react-redux'
-import { setStep, updateTotalCost } from '../../redux/ringCustomizationSlice'
+import { updateTotalCost } from '../../redux/ringCustomizationSlice'
 import Image from '../../assets/ring4.jpg'
 import { useEffect } from 'react'
+import { SignedIn, SignedOut, SignInButton, useUser } from '@clerk/clerk-react'
+import { addToCart } from '../../redux/favoritesCartSlice'
 
 const StepThree = () => {
 	const dispatch = useDispatch()
 	const { productDetails } = useSelector((state) => state.ringCustomization)
+	const { user } = useUser()
+	const dbId = user?.publicMetadata?.dbId
+
+	console.log(productDetails[0].diamond.product_id)
 
 	useEffect(() => {
 		dispatch(
 			updateTotalCost({
-				total_cost_INR:
-					+productDetails[0].ring?.ring_price_INR +
-					+productDetails[0].diamond?.diamond_price_INR,
-				total_cost_GBP:
-					+productDetails[0].ring?.ring_price_GBP +
-					+productDetails[0].diamond?.diamond_price_GBP,
-				total_cost_USD:
-					+productDetails[0].ring?.ring_price_USD +
-					+productDetails[0].diamond?.diamond_price_USD,
+				total_cost:
+					+productDetails[0].ring?.ring_price +
+					+productDetails[0].diamond?.diamond_price,
 			})
 		)
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [])
+
+	const handleClick = () => {
+		dispatch(
+			addToCart({
+				userId: dbId,
+				productId: productDetails[0].diamond?.product_id,
+				quantity: 1,
+			})
+		)
+	}
 
 	return (
 		<div className="flex flex-col md:flex-row items-center gap-8">
@@ -52,17 +62,26 @@ const StepThree = () => {
 
 			{/* Right Side - Content */}
 			<div className="w-full md:w-2/5 space-y-4">
-				<h2 className="text-2xl font-semibold">Select Your Ring Size</h2>
+				<h2 className="text-2xl font-semibold">Finalize</h2>
 				<p className="text-gray-600">
 					Ensure a perfect fit for your engagement ring.
 				</p>
 				<div className="border-t pt-4 space-y-2 text-gray-700">
-					<button
-						onClick={() => dispatch(setStep(4))}
-						className="px-6 py-2 bg-blue-600 text-white rounded-lg shadow-md hover:bg-blue-700"
-					>
-						Finish
-					</button>
+					<SignedIn>
+						<button
+							onClick={handleClick}
+							className="px-6 py-2 bg-blue-600 text-white rounded-lg shadow-md hover:bg-blue-700"
+						>
+							Add To Cart
+						</button>
+					</SignedIn>
+					<SignedOut>
+						<SignInButton>
+							<button className="px-6 py-2 bg-blue-600 text-white rounded-lg shadow-md hover:bg-blue-700">
+								Add To Cart
+							</button>
+						</SignInButton>
+					</SignedOut>
 				</div>
 			</div>
 		</div>

@@ -97,21 +97,21 @@ const AddProduct = ({ initialData = null, onSuccess }) => {
 						<option value="labgrown">Lab-Grown</option>
 					</select>
 				</div>
+				<div className="col-span-2">
+					<label className="block font-medium">Description</label>
+					<textarea
+						name="description"
+						value={formData.description}
+						onChange={handleChange}
+						className="border p-2 rounded w-full"
+					/>
+				</div>
 				<div>
 					<label className="block font-medium">Image URL</label>
 					<input
 						type="text"
 						name="image_URL"
 						value={formData.image_URL}
-						onChange={handleChange}
-						className="border p-2 rounded w-full"
-					/>
-				</div>
-				<div className="col-span-2">
-					<label className="block font-medium">Description</label>
-					<textarea
-						name="description"
-						value={formData.description}
 						onChange={handleChange}
 						className="border p-2 rounded w-full"
 					/>
@@ -167,31 +167,11 @@ const AddProduct = ({ initialData = null, onSuccess }) => {
 					/>
 				</div>
 				<div>
-					<label className="block font-medium">Diamond Price INR</label>
+					<label className="block font-medium">Diamond Price</label>
 					<input
 						type="number"
-						name="diamond_price_INR"
-						value={formData.diamond_price_INR}
-						onChange={handleChange}
-						className="border p-2 rounded w-full"
-					/>
-				</div>
-				<div>
-					<label className="block font-medium">Diamond Price GBP</label>
-					<input
-						type="number"
-						name="diamond_price_GBP"
-						value={formData.diamond_price_GBP}
-						onChange={handleChange}
-						className="border p-2 rounded w-full"
-					/>
-				</div>
-				<div>
-					<label className="block font-medium">Diamond Price USD</label>
-					<input
-						type="number"
-						name="diamond_price_USD"
-						value={formData.diamond_price_USD}
+						name="diamond_price"
+						value={formData.diamond_price}
 						onChange={handleChange}
 						className="border p-2 rounded w-full"
 					/>
@@ -207,31 +187,11 @@ const AddProduct = ({ initialData = null, onSuccess }) => {
 					/>
 				</div>
 				<div>
-					<label className="block font-medium">Head Style Price INR</label>
+					<label className="block font-medium">Head Style Price</label>
 					<input
 						type="number"
-						name="head_style_price_INR"
-						value={formData.head_style_price_INR}
-						onChange={handleChange}
-						className="border p-2 rounded w-full"
-					/>
-				</div>
-				<div>
-					<label className="block font-medium">Head Style Price GBP</label>
-					<input
-						type="number"
-						name="head_style_price_GBP"
-						value={formData.head_style_price_GBP}
-						onChange={handleChange}
-						className="border p-2 rounded w-full"
-					/>
-				</div>
-				<div>
-					<label className="block font-medium">Head Style Price USD</label>
-					<input
-						type="number"
-						name="head_style_price_USD"
-						value={formData.head_style_price_USD}
+						name="head_style_price"
+						value={formData.head_style_price}
 						onChange={handleChange}
 						className="border p-2 rounded w-full"
 					/>
@@ -247,31 +207,11 @@ const AddProduct = ({ initialData = null, onSuccess }) => {
 					/>
 				</div>
 				<div>
-					<label className="block font-medium">Head Metal Price INR</label>
+					<label className="block font-medium">Head Metal Price</label>
 					<input
 						type="number"
-						name="head_metal_price_INR"
-						value={formData.head_metal_price_INR}
-						onChange={handleChange}
-						className="border p-2 rounded w-full"
-					/>
-				</div>
-				<div>
-					<label className="block font-medium">Head Metal Price GBP</label>
-					<input
-						type="number"
-						name="head_metal_price_GBP"
-						value={formData.head_metal_price_GBP}
-						onChange={handleChange}
-						className="border p-2 rounded w-full"
-					/>
-				</div>
-				<div>
-					<label className="block font-medium">Head Metal Price USD</label>
-					<input
-						type="number"
-						name="head_metal_price_USD"
-						value={formData.head_metal_price_USD}
+						name="head_metal_price"
+						value={formData.head_metal_price}
 						onChange={handleChange}
 						className="border p-2 rounded w-full"
 					/>
@@ -287,31 +227,11 @@ const AddProduct = ({ initialData = null, onSuccess }) => {
 					/>
 				</div>
 				<div>
-					<label className="block font-medium">Shank Style Price INR</label>
+					<label className="block font-medium">Shank Style Price</label>
 					<input
 						type="number"
-						name="shank_style_price_INR"
-						value={formData.shank_style_price_INR}
-						onChange={handleChange}
-						className="border p-2 rounded w-full"
-					/>
-				</div>
-				<div>
-					<label className="block font-medium">Shank Style Price GBP</label>
-					<input
-						type="number"
-						name="shank_style_price_GBP"
-						value={formData.shank_style_price_GBP}
-						onChange={handleChange}
-						className="border p-2 rounded w-full"
-					/>
-				</div>
-				<div>
-					<label className="block font-medium">Shank Style Price USD</label>
-					<input
-						type="number"
-						name="shank_style_price_USD"
-						value={formData.shank_style_price_USD}
+						name="shank_style_price"
+						value={formData.shank_style_price}
 						onChange={handleChange}
 						className="border p-2 rounded w-full"
 					/>
@@ -327,61 +247,21 @@ const AddProduct = ({ initialData = null, onSuccess }) => {
 					/>
 				</div>
 				<div>
-					<label className="block font-medium">Shank Metal Price INR</label>
+					<label className="block font-medium">Shank Metal Price</label>
 					<input
 						type="number"
-						name="shank_metal_price_INR"
-						value={formData.shank_metal_price_INR}
+						name="shank_metal_price"
+						value={formData.shank_metal_price}
 						onChange={handleChange}
 						className="border p-2 rounded w-full"
 					/>
 				</div>
 				<div>
-					<label className="block font-medium">Shank Metal Price GBP</label>
+					<label className="block font-medium">Total Cost</label>
 					<input
 						type="number"
-						name="shank_metal_price_GBP"
-						value={formData.shank_metal_price_GBP}
-						onChange={handleChange}
-						className="border p-2 rounded w-full"
-					/>
-				</div>
-				<div>
-					<label className="block font-medium">Shank Metal Price USD</label>
-					<input
-						type="number"
-						name="shank_metal_price_USD"
-						value={formData.shank_metal_price_USD}
-						onChange={handleChange}
-						className="border p-2 rounded w-full"
-					/>
-				</div>
-				<div>
-					<label className="block font-medium">Total Cost INR</label>
-					<input
-						type="number"
-						name="total_cost_INR"
-						value={formData.total_cost_INR}
-						onChange={handleChange}
-						className="border p-2 rounded w-full"
-					/>
-				</div>
-				<div>
-					<label className="block font-medium">Total Cost USD</label>
-					<input
-						type="number"
-						name="total_cost_USD"
-						value={formData.total_cost_USD}
-						onChange={handleChange}
-						className="border p-2 rounded w-full"
-					/>
-				</div>
-				<div>
-					<label className="block font-medium">Total Cost GBP</label>
-					<input
-						type="number"
-						name="total_cost_GBP"
-						value={formData.total_cost_GBP}
+						name="total_cost"
+						value={formData.total_cost}
 						onChange={handleChange}
 						className="border p-2 rounded w-full"
 					/>

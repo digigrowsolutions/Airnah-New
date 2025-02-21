@@ -4,10 +4,13 @@ import diamondHoverImage from '../assets/Wedding-rings.jpg'
 import { useDispatch, useSelector } from 'react-redux'
 import { getAllProductsByCategory } from '../utils/api'
 import { setShowRing, updateRingDetails } from '../redux/ringCustomizationSlice'
+import { convertPrice } from '../utils/helpers'
 
 function RingGrid() {
 	const dispatch = useDispatch()
-	const { currency, country } = useSelector((state) => state.localization)
+	const { currency, country, INR_rate, GBP_rate } = useSelector(
+		(state) => state.localization
+	)
 	const [rings, setRings] = useState([])
 	const [hoveredImage, setHoveredImage] = useState(null)
 
@@ -48,10 +51,15 @@ function RingGrid() {
 									</h2>
 									<p className="text-[#be9080] mb-4 text-lg font-light">
 										{currency}
-										{+product[`head_style_price_${country}`] +
-											+product[`head_metal_price_${country}`] +
-											+product[`shank_style_price_${country}`] +
-											+product[`shank_metal_price_${country}`]}
+										{convertPrice(
+											Number(product.head_style_price) +
+												Number(product.head_metal_price) +
+												Number(product.shank_style_price) +
+												Number(product.shank_metal_price),
+											country,
+											INR_rate,
+											GBP_rate
+										)}
 									</p>
 								</div>
 							</button>

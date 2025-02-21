@@ -3,11 +3,14 @@ import { setStep, updateRingDetails } from '../redux/ringCustomizationSlice'
 import Image from '../assets/ring4.jpg'
 import { useEffect, useState } from 'react'
 import { getProduct } from '../utils/api'
+import { convertPrice } from '../utils/helpers'
 
 function Product2() {
 	const dispatch = useDispatch()
 	const { productDetails } = useSelector((state) => state.ringCustomization)
-	const { currency, country } = useSelector((state) => state.localization)
+	const { currency, country, INR_rate, GBP_rate } = useSelector(
+		(state) => state.localization
+	)
 
 	const [product, setProduct] = useState(null)
 
@@ -21,21 +24,11 @@ function Product2() {
 	const handleClick = () => {
 		dispatch(
 			updateRingDetails({
-				ring_price_INR:
-					+product.head_style_price_INR +
-					+product.head_metal_price_INR +
-					+product.shank_style_price_INR +
-					+product.shank_metal_price_INR,
-				ring_price_GBP:
-					+product.head_style_price_GBP +
-					+product.head_metal_price_GBP +
-					+product.shank_style_price_GBP +
-					+product.shank_metal_price_GBP,
-				ring_price_USD:
-					+product.head_style_price_USD +
-					+product.head_metal_price_USD +
-					+product.shank_style_price_USD +
-					+product.shank_metal_price_USD,
+				ring_price:
+					+product.head_style_price +
+					+product.head_metal_price +
+					+product.shank_style_price +
+					+product.shank_metal_price,
 			})
 		)
 		dispatch(setStep(3))
@@ -73,10 +66,15 @@ function Product2() {
 				<p className="text-gray-600">{product?.description}</p>
 				<div className="text-xl font-bold text-gray-900">
 					{currency}
-					{+product?.[`head_style_price_${country}`] +
-						+product?.[`head_metal_price_${country}`] +
-						+product?.[`shank_style_price_${country}`] +
-						+product?.[`shank_metal_price_${country}`]}
+					{convertPrice(
+						Number(product?.head_style_price) +
+							Number(product?.head_metal_price) +
+							Number(product?.shank_style_price) +
+							Number(product?.shank_metal_price),
+						country,
+						INR_rate,
+						GBP_rate
+					)}
 				</div>
 				{/* <div className="text-lg text-red-500 font-semibold">$435</div> */}
 				<p className="text-sm text-gray-500">(Setting Price)</p>

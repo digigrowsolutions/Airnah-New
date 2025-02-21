@@ -49,7 +49,7 @@ export const removeFromFavoritesAPI = async (userId, productId) => {
 
 export const addToCartAPI = async (userId, productId, quantity) => {
 	try {
-		const response = await axios.post(`${REACT_APP_API_URL}/cart`, {
+		const response = await axios.post(`${REACT_APP_API_URL}/users/addToCart`, {
 			user_id: userId,
 			product_id: productId,
 			quantity,
@@ -138,6 +138,29 @@ export const getProduct = async (productId) => {
 		return response
 	} catch (error) {
 		console.log('Error getting product details', error)
+		throw error
+	}
+}
+
+export const getMasterList = async () => {
+	try {
+		const response = await axios.get(`${REACT_APP_API_URL}/admin/getMasterList`)
+		return response.data
+	} catch (error) {
+		console.log('Error getting master list', error)
+		throw error
+	}
+}
+
+export const addMasterEntry = async (data) => {
+	try {
+		const response = await axios.post(
+			`${REACT_APP_API_URL}/admin/addMasterEntry`,
+			data
+		)
+		return response
+	} catch (error) {
+		console.log('Error adding master entry', error)
 		throw error
 	}
 }

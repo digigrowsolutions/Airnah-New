@@ -19,6 +19,12 @@ export const convertFormData = (data) => {
 	return updatedData
 }
 
+export const formatDate = (date) => {
+	const newDate = new Date(date)
+	const formattedDate = newDate.toLocaleDateString('en-GB')
+	return formattedDate
+}
+
 export const productJson = {
 	name: '',
 	category: 'ring',
@@ -31,26 +37,27 @@ export const productJson = {
 	color: '',
 	clarity: '',
 	carat: '',
-	diamond_price_INR: '',
-	diamond_price_GBP: '',
-	diamond_price_USD: '',
+	diamond_price: '',
 	head_style: '',
-	head_style_price_INR: '',
-	head_style_price_GBP: '',
-	head_style_price_USD: '',
+	head_style_price: '',
 	head_metal: '',
-	head_metal_price_INR: '',
-	head_metal_price_GBP: '',
-	head_metal_price_USD: '',
+	head_metal_price: '',
 	shank_style: '',
-	shank_style_price_INR: '',
-	shank_style_price_GBP: '',
-	shank_style_price_USD: '',
+	shank_style_price: '',
 	shank_metal: '',
-	shank_metal_price_INR: '',
-	shank_metal_price_GBP: '',
-	shank_metal_price_USD: '',
-	total_cost_INR: '',
-	total_cost_GBP: '',
-	total_cost_USD: '',
+	shank_metal_price: '',
+	total_cost: '',
+}
+
+export const convertPrice = (price, country, INR_rate, GBP_rate) => {
+	switch (country) {
+		case 'INR':
+			return price * INR_rate
+		case 'GBP':
+			return price * GBP_rate
+		case 'USD':
+			return price
+		default:
+			return price
+	}
 }

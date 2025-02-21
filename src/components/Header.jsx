@@ -9,7 +9,7 @@ import {
 	useUser,
 } from '@clerk/clerk-react'
 import { useDispatch, useSelector } from 'react-redux'
-import { setCountry } from '../redux/localizationSlice'
+import { fetchCurrencyRates, setCountry } from '../redux/localizationSlice'
 import { Link } from 'react-router-dom'
 import { menuItems } from '../utils/menuItems'
 import model from '../assets/Wedding-rings.jpg'
@@ -28,14 +28,20 @@ export default function Header() {
 	const { favorites, cartItems } = useSelector((state) => state.favoritesCart)
 	const { user, isSignedIn } = useUser()
 	const role = user?.publicMetadata?.role
+	const dbId = user?.publicMetadata?.dbId
 
 	useEffect(() => {
 		if (isSignedIn) {
-			dispatch(fetchUserFavorites(user.id))
-			dispatch(fetchUserCartItems(user.id))
+			dispatch(fetchUserFavorites(dbId))
+			dispatch(fetchUserCartItems(dbId))
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [user, isSignedIn])
+
+	useEffect(() => {
+		dispatch(fetchCurrencyRates())
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [])
 
 	const handleMobileMenuToggle = () => {
 		setMobileMenuOpen(!mobileMenuOpen)

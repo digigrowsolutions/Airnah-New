@@ -43,7 +43,7 @@ const ProductsList = () => {
 						<tr key={product.product_id} className="border">
 							<td className="border px-4 py-2">{product.name}</td>
 							<td className="border px-4 py-2">{product.category}</td>
-							<td className="border px-4 py-2">{product.total_cost_INR}</td>
+							<td className="border px-4 py-2">{product.total_cost}</td>
 							<td className="border px-4 py-2">
 								<button
 									onClick={() => handleEditClick(product)}
