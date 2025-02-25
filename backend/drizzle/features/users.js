@@ -4,7 +4,7 @@ import { favoritesTable } from '../schema/favorites.js'
 import { productsTable } from '../schema/products.js'
 import { userTable } from '../schema/users.js'
 import { and, eq } from 'drizzle-orm'
-import { getUserByClerkId } from './helpers.js'
+import { getUserByClerkId } from '../featureHelpers.js'
 
 export async function insertUser(data) {
 	const [newUser] = await db
@@ -50,6 +50,7 @@ export async function deleteUser({ clerk_user_id }) {
 }
 
 export async function getUserFavorites({ clerk_user_id }) {
+	// console.log(clerk_user_id)
 	// const user = await getUserByClerkId(clerk_user_id)
 	const data = await db
 		.select({
@@ -97,6 +98,7 @@ export async function removeFromFavorites({ clerk_user_id, product_id }) {
 
 export async function getUserCart({ clerk_user_id }) {
 	// const user = await getUserByClerkId(clerk_user_id)
+	// console.log(clerk_user_id)
 	const data = await db
 		.select({
 			cart_id: cartTable.cart_id,

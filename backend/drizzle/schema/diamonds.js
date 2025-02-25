@@ -1,10 +1,11 @@
 import { relations } from 'drizzle-orm'
-import { decimal, pgEnum, pgTable, text } from 'drizzle-orm/pg-core'
+import { pgEnum, pgTable, text } from 'drizzle-orm/pg-core'
 import { created_at, id, updated_at } from '../schemaHelpers.js'
 import { orderItemsTable } from './orderItems.js'
 import { favoritesTable } from './favorites.js'
 import { cartTable } from './cart.js'
 import { reviewsTable } from './reviews.js'
+import { description, price } from '../schemaHelpers.js'
 
 export const diamondSize = ['0.5', '1', '1.5', '2', '2.5', '3', '3.5', '4']
 export const diamondSizeEnum = pgEnum('size', diamondSize)
@@ -31,13 +32,14 @@ export const diamondCutEnum = pgEnum('cut', diamondCut)
 export const diamondsTable = pgTable('diamonds', {
 	diamond_id: id,
 	name: text().notNull(),
+	description,
 	size: diamondSizeEnum().default('0.5'),
 	image_URL: text(),
 	shape: diamondShapeEnum().default('round'),
 	cut: diamondCutEnum().default('regular'),
 	color: diamondColorEnum().default('D'),
 	clarity: diamondClarityEnum().default('IF'),
-	price: decimal(10, 2),
+	price,
 	created_at,
 	updated_at,
 })

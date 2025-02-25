@@ -6,7 +6,6 @@ import ngrok from '@ngrok/ngrok'
 import {
 	insertUser,
 	updateUser,
-	deleteUser,
 	getUserFavorites,
 	getUserCart,
 	addToFavorites,
@@ -19,13 +18,22 @@ import { clerkClient } from '@clerk/express'
 import cors from 'cors'
 import {
 	addProduct,
-	getAllDiamonds,
 	getAllProducts,
 	getAllRings,
 	getProduct,
 	updateProduct,
 } from './drizzle/features/products.js'
 import { addMasterEntry, getMasterList } from './drizzle/features/master.js'
+import {
+	addDiamond,
+	getAllDiamonds,
+	updateDiamond,
+} from './drizzle/features/diamonds.js'
+import {
+	addStyle,
+	getAllStyles,
+	updateStyle,
+} from './drizzle/features/styles.js'
 
 dotenv.config()
 
@@ -93,11 +101,11 @@ app.post('/webhook', async (req, res) => {
 				)
 			}
 			break
-		case 'user.deleted':
-			if (event.data.id != null) {
-				await deleteUser({ clerk_user_id: event.data.id })
-			}
-			break
+		// case 'user.deleted':
+		// 	if (event.data.id != null) {
+		// 		await deleteUser({ clerk_user_id: event.data.id })
+		// 	}
+		// 	break
 		default:
 			return res.status(400).send('Unhandled event')
 	}
@@ -198,6 +206,16 @@ app.get('/api/admin/getAllProducts', async (req, res) => {
 	}
 })
 
+app.put('/api/admin/updateProduct/:product_id', async (req, res) => {
+	try {
+		const updatedProduct = await updateProduct(req.params.product_id, req.body)
+		res.json(updatedProduct)
+	} catch (err) {
+		console.log('updateProduct Error: ' + err)
+		res.status(500).json({ error: 'Failed to update product' })
+	}
+})
+
 app.get('/api/admin/getAllProductsByCategory/:category', async (req, res) => {
 	try {
 		const { category } = req.params
@@ -221,16 +239,6 @@ app.get('/api/admin/getAllProductsByCategory/:category', async (req, res) => {
 			err
 		)
 		res.status(500).json({ error: 'Failed to fetch products' })
-	}
-})
-
-app.put('/api/admin/updateProduct/:product_id', async (req, res) => {
-	try {
-		const updatedProduct = await updateProduct(req.params.product_id, req.body)
-		res.json(updatedProduct)
-	} catch (err) {
-		console.log('updateProduct Error: ' + err)
-		res.status(500).json({ error: 'Failed to update product' })
 	}
 })
 
@@ -273,6 +281,68 @@ app.post('/api/admin/addMasterEntry', async (req, res) => {
 	} catch (err) {
 		console.log('addMasterEntry Error:', err)
 		res.status(500).json({ error: 'Failed to add master entry' })
+	}
+})
+
+app.post('/api/admin/addDiamond', async (req, res) => {
+	try {
+		const data = req.body
+		await addDiamond(data)
+		res.json({ success: true })
+	} catch (err) {
+		console.log('addDiamond Error:', err)
+		res.status(500).json({ error: 'Failed to add diamond' })
+	}
+})
+
+app.get('/api/admin/getAllDiamonds', async (req, res) => {
+	try {
+		const data = await getAllDiamonds()
+		res.json(data)
+	} catch (err) {
+		console.log('getAllDiamonds Error: ' + err)
+		res.status(500).json({ error: 'Failed to get all diamonds' })
+	}
+})
+
+app.put('/api/admin/updateDiamond/:product_id', async (req, res) => {
+	try {
+		const updatedProduct = await updateDiamond(req.params.product_id, req.body)
+		res.json(updatedProduct)
+	} catch (err) {
+		console.log('updateDiamond Error: ' + err)
+		res.status(500).json({ error: 'Failed to update diamond' })
+	}
+})
+
+app.post('/api/admin/addStyle', async (req, res) => {
+	try {
+		const data = req.body
+		await addStyle(data)
+		res.json({ success: true })
+	} catch (err) {
+		console.log('addStyle Error:', err)
+		res.status(500).json({ error: 'Failed to add style' })
+	}
+})
+
+app.get('/api/admin/getAllStyles', async (req, res) => {
+	try {
+		const data = await getAllStyles()
+		res.json(data)
+	} catch (err) {
+		console.log('getAllStyles Error: ' + err)
+		res.status(500).json({ error: 'Failed to get all styles' })
+	}
+})
+
+app.put('/api/admin/updateStyle/:product_id', async (req, res) => {
+	try {
+		const updatedProduct = await updateStyle(req.params.product_id, req.body)
+		res.json(updatedProduct)
+	} catch (err) {
+		console.log('updateStyle Error: ' + err)
+		res.status(500).json({ error: 'Failed to update style' })
 	}
 })
 

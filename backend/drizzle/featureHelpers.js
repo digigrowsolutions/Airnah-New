@@ -1,5 +1,5 @@
-import { db } from '../db.js'
-import { userTable } from '../schema/users.js'
+import { db } from './db.js'
+import { userTable } from './schema/users.js'
 import { eq } from 'drizzle-orm'
 
 export async function getUserByClerkId(clerk_user_id) {

@@ -6,8 +6,7 @@ export const convertFormData = (data) => {
 			key.includes('quantity') ||
 			key.includes('price') ||
 			key.includes('total') ||
-			key.includes('cost') ||
-			key.includes('carat')
+			key.includes('cost')
 		) {
 			updatedData[key] =
 				updatedData[key] === '' || updatedData[key] === null
@@ -47,6 +46,32 @@ export const productJson = {
 	shank_metal: '',
 	shank_metal_price: '',
 	total_cost: '',
+}
+
+export const diamondJson = {
+	name: '',
+	description: '',
+	image_URL: '',
+	size: '0.5',
+	shape: 'round',
+	cut: 'regular',
+	color: 'D',
+	clarity: 'IF',
+	price: '',
+}
+
+export const stylesJson = {
+	name: '',
+	description: '',
+	image_URL: '',
+	head_style: 'Four Prong',
+	head_style_price: '',
+	head_metal: '14K White Gold',
+	head_metal_price: '',
+	shank_style: 'Solitaire',
+	shank_style_price: '',
+	shank_metal: '14K White Gold',
+	shank_metal_price: '',
 }
 
 export const convertPrice = (price, country, INR_rate, GBP_rate) => {

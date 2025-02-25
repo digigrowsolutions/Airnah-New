@@ -16,6 +16,10 @@ import AdminDashboard from './screens/Admin/Dashboard'
 import UsersList from './screens/Admin/UsersList'
 import Master from './screens/Admin/Master'
 import Edu from './screens/Edu'
+import AddDiamond from './screens/Admin/AddDiamond'
+import AddStyle from './screens/Admin/AddStyle'
+import DiamondsList from './screens/Admin/DiamondsList'
+import StylesList from './screens/Admin/StylesList'
 
 function App() {
 	return (
@@ -35,6 +39,10 @@ function App() {
 					<Route path="/master" element={<Master />} />
 					<Route path="/products/:id" element={<Product />} />
 					<Route path="/Edu" element={<Edu />} />
+					<Route path="/addDiamonds" element={<AddDiamond />} />
+					<Route path="/addStyles" element={<AddStyle />} />
+					<Route path="/diamondsList" element={<DiamondsList />} />
+					<Route path="/stylesList" element={<StylesList />} />
 				</Routes>
 				<Footer />
 			</PersistGate>

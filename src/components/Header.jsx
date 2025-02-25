@@ -93,10 +93,34 @@ export default function Header() {
 							Product List
 						</Link>
 						<Link
+							to="/diamondsList"
+							className="relative text-gray-700 hover:text-gray-900 font-medium after:absolute after:left-0 after:bottom-0 after:h-[1px] after:bg-black after:w-0 after:transition-all after:duration-300 after:ease-in-out hover:after:w-full"
+						>
+							Diamond List
+						</Link>
+						<Link
+							to="/stylesList"
+							className="relative text-gray-700 hover:text-gray-900 font-medium after:absolute after:left-0 after:bottom-0 after:h-[1px] after:bg-black after:w-0 after:transition-all after:duration-300 after:ease-in-out hover:after:w-full"
+						>
+							Style List
+						</Link>
+						<Link
 							to="/addProducts"
 							className="relative text-gray-700 hover:text-gray-900 font-medium after:absolute after:left-0 after:bottom-0 after:h-[1px] after:bg-black after:w-0 after:transition-all after:duration-300 after:ease-in-out hover:after:w-full"
 						>
 							Add Products
+						</Link>
+						<Link
+							to="/addDiamonds"
+							className="relative text-gray-700 hover:text-gray-900 font-medium after:absolute after:left-0 after:bottom-0 after:h-[1px] after:bg-black after:w-0 after:transition-all after:duration-300 after:ease-in-out hover:after:w-full"
+						>
+							Add Diamonds
+						</Link>
+						<Link
+							to="/addStyles"
+							className="relative text-gray-700 hover:text-gray-900 font-medium after:absolute after:left-0 after:bottom-0 after:h-[1px] after:bg-black after:w-0 after:transition-all after:duration-300 after:ease-in-out hover:after:w-full"
+						>
+							Add Styles
 						</Link>
 						<div className="flex items-center space-x-4">
 							<SignedIn>
