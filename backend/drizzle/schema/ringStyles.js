@@ -1,6 +1,12 @@
 import { relations } from 'drizzle-orm'
 import { decimal, pgEnum, pgTable, text } from 'drizzle-orm/pg-core'
-import { created_at, id, updated_at } from '../schemaHelpers.js'
+import {
+	created_at,
+	description,
+	id,
+	image_URL,
+	updated_at,
+} from '../schemaHelpers.js'
 import { orderItemsTable } from './orderItems.js'
 import { favoritesTable } from './favorites.js'
 import { cartTable } from './cart.js'
@@ -22,7 +28,7 @@ export const headStyle = [
 	'French Pave Halo',
 	'Falling Edge Halo',
 ]
-export const headStyleEnum = pgEnum('product_status', headStyle)
+export const headStyleEnum = pgEnum('head_style', headStyle)
 export const metal = [
 	'14K White Gold',
 	'14K Yellow Gold',
@@ -52,7 +58,8 @@ export const shankStyleEnum = pgEnum('shank_style', shankStyle)
 export const ringStylesTable = pgTable('ringStyles', {
 	ring_style_id: id,
 	name: text().notNull(),
-	image_URL: text(),
+	image_URL,
+	description,
 	head_style: headStyleEnum().default('Four Prong'),
 	head_style_price: decimal(10, 2),
 	head_metal: metalEnum().default('14K White Gold'),

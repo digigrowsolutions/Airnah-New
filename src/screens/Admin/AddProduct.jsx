@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { addProduct, updateProduct } from '../../utils/api'
 import { convertFormData, productJson } from '../../utils/helpers'
 import { useDispatch } from 'react-redux'
-import { fetchProducts, fetchUsers } from '../../redux/userProductsSlice'
+import { fetchProducts } from '../../redux/userProductsSlice'
 
 const AddProduct = ({ initialData = null, onSuccess }) => {
 	const dispatch = useDispatch()
@@ -34,7 +34,6 @@ const AddProduct = ({ initialData = null, onSuccess }) => {
 				await addProduct(cleanedData)
 				alert('Product added successfully!')
 				dispatch(fetchProducts())
-				dispatch(fetchUsers())
 			}
 			setFormData(productJson)
 			onSuccess?.() // Call callback function to refresh list

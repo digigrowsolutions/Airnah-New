@@ -1,17 +1,17 @@
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { fetchProducts } from '../../redux/userProductsSlice'
-import AddProduct from './AddProduct'
+import { fetchStyles } from '../../redux/userProductsSlice'
+import AddStyle from './AddStyle'
 
-const ProductsList = () => {
+const StylesList = () => {
 	const dispatch = useDispatch()
-	const { products } = useSelector((state) => state.userProducts)
+	const { styles } = useSelector((state) => state.userProducts)
 	const [selectedProduct, setSelectedProduct] = useState(null)
 	const [showForm, setShowForm] = useState(false)
 
 	useEffect(() => {
-		if (products?.length === 0) {
-			dispatch(fetchProducts())
+		if (styles?.length === 0) {
+			dispatch(fetchStyles())
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [])
@@ -28,7 +28,7 @@ const ProductsList = () => {
 
 	return (
 		<div className="max-w-6xl mx-auto p-8">
-			<h2 className="text-2xl font-bold mb-4">Products List</h2>
+			<h2 className="text-2xl font-bold mb-4">Styles List</h2>
 			<table className="min-w-full bg-white border border-gray-200">
 				<thead>
 					<tr className="bg-gray-100">
@@ -39,7 +39,7 @@ const ProductsList = () => {
 					</tr>
 				</thead>
 				<tbody>
-					{products?.map((product) => (
+					{styles?.map((product) => (
 						<tr key={product.product_id} className="border">
 							<td className="border px-4 py-2">{product.name}</td>
 							<td className="border px-4 py-2">{product.category}</td>
@@ -61,7 +61,7 @@ const ProductsList = () => {
 			{showForm && (
 				<div className="fixed inset-0 flex items-center justify-center bg-gray-500 bg-opacity-50">
 					<div className="bg-white p-6 rounded-lg shadow-lg w-1/2 h-[40rem] overflow-y-auto">
-						<AddProduct
+						<AddStyle
 							initialData={selectedProduct}
 							onSuccess={handleCloseForm}
 						/>
@@ -78,4 +78,4 @@ const ProductsList = () => {
 	)
 }
 
-export default ProductsList
+export default StylesList

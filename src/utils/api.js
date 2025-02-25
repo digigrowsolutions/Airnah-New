@@ -164,3 +164,77 @@ export const addMasterEntry = async (data) => {
 		throw error
 	}
 }
+
+export const getAllDiamonds = async () => {
+	try {
+		const response = await axios.get(
+			`${REACT_APP_API_URL}/admin/getAllDiamonds`
+		)
+		return response
+	} catch (error) {
+		console.log('Error getting all diamonds', error)
+		throw error
+	}
+}
+
+export const getAllStyles = async () => {
+	try {
+		const response = await axios.get(`${REACT_APP_API_URL}/admin/getAllStyles`)
+		return response
+	} catch (error) {
+		console.log('Error getting all styles', error)
+		throw error
+	}
+}
+
+export const addDiamond = async (data) => {
+	try {
+		const response = await axios.post(
+			`${REACT_APP_API_URL}/admin/addDiamond`,
+			data
+		)
+		return response
+	} catch (error) {
+		console.log('Error adding the product', error)
+		throw error
+	}
+}
+
+export const updateDiamond = async (productId, data) => {
+	try {
+		const response = await axios.put(
+			`${REACT_APP_API_URL}/admin/updateDiamond/${productId}`,
+			data
+		)
+		return response
+	} catch (error) {
+		console.log('Error updating product', error)
+		throw error
+	}
+}
+
+export const addStyle = async (data) => {
+	try {
+		const response = await axios.post(
+			`${REACT_APP_API_URL}/admin/addStyle`,
+			data
+		)
+		return response
+	} catch (error) {
+		console.log('Error adding the product', error)
+		throw error
+	}
+}
+
+export const updateStyle = async (productId, data) => {
+	try {
+		const response = await axios.put(
+			`${REACT_APP_API_URL}/admin/updateStyle/${productId}`,
+			data
+		)
+		return response
+	} catch (error) {
+		console.log('Error updating product', error)
+		throw error
+	}
+}

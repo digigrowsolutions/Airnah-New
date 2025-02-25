@@ -1,15 +1,29 @@
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { fetchProducts, fetchUsers } from '../../redux/userProductsSlice'
+import {
+	fetchDiamonds,
+	fetchProducts,
+	fetchStyles,
+	fetchUsers,
+} from '../../redux/userProductsSlice'
 
 const AdminDashboard = () => {
 	const dispatch = useDispatch()
-	const { products, users } = useSelector((state) => state.userProducts)
+	const { products, users, diamonds, styles } = useSelector(
+		(state) => state.userProducts
+	)
 
 	useEffect(() => {
-		if (products.length === 0 && users.length === 0) {
+		if (
+			products.length === 0 &&
+			users.length === 0 &&
+			diamonds.length === 0 &&
+			styles.length === 0
+		) {
 			dispatch(fetchProducts())
 			dispatch(fetchUsers())
+			dispatch(fetchDiamonds())
+			dispatch(fetchStyles())
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [])
@@ -29,13 +43,34 @@ const AdminDashboard = () => {
 					</div>
 					<div className="text-blue-500 text-4xl">📦</div>
 				</div>
-
 				<div className="bg-white shadow-lg rounded-lg p-6 flex items-center justify-between">
 					<div>
 						<h2 className="text-xl font-semibold text-gray-700">Total Users</h2>
 						<p className="text-3xl font-bold text-green-600">{users?.length}</p>
 					</div>
 					<div className="text-green-500 text-4xl">👤</div>
+				</div>
+				<div className="bg-white shadow-lg rounded-lg p-6 flex items-center justify-between">
+					<div>
+						<h2 className="text-xl font-semibold text-gray-700">
+							Total Diamonds
+						</h2>
+						<p className="text-3xl font-bold text-green-600">
+							{diamonds?.length}
+						</p>
+					</div>
+					<div className="text-green-500 text-4xl">💎</div>
+				</div>
+				<div className="bg-white shadow-lg rounded-lg p-6 flex items-center justify-between">
+					<div>
+						<h2 className="text-xl font-semibold text-gray-700">
+							Total Styles
+						</h2>
+						<p className="text-3xl font-bold text-green-600">
+							{styles?.length}
+						</p>
+					</div>
+					<div className="text-green-500 text-4xl">💍</div>
 				</div>
 			</div>
 		</div>

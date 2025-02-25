@@ -1,5 +1,11 @@
-import { integer, pgTable, serial } from 'drizzle-orm/pg-core'
-import { created_at, id, updated_at } from '../schemaHelpers.js'
+import { pgTable, serial } from 'drizzle-orm/pg-core'
+import {
+	created_at,
+	id,
+	price,
+	quantity,
+	updated_at,
+} from '../schemaHelpers.js'
 import { productsTable } from './products.js'
 import { ordersTable } from './orders.js'
 import { relations } from 'drizzle-orm'
@@ -20,8 +26,8 @@ export const orderItemsTable = pgTable('order_items', {
 	ring_style_id: serial().references(() => ringStylesTable.ring_style_id, {
 		onDelete: 'cascade',
 	}),
-	quantity: integer().notNull(),
-	price: integer().notNull(),
+	quantity,
+	price,
 	created_at,
 	updated_at,
 })
