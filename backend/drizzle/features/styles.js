@@ -15,7 +15,10 @@ export async function getAllStyles() {
 			ring_style_id: ringStylesTable.ring_style_id,
 			name: ringStylesTable.name,
 			category: ringStylesTable.head_style,
-			total_cost: ringStylesTable.head_style_price,
+			head_style_price: ringStylesTable.head_style_price,
+			head_metal_price: ringStylesTable.head_metal_price,
+			shank_style_price: ringStylesTable.shank_style_price,
+			shank_metal_price: ringStylesTable.shank_metal_price,
 		})
 		.from(ringStylesTable)
 
@@ -40,4 +43,15 @@ export async function updateStyle(product_id, updatedData) {
 	if (updatedProduct == null) throw new Error('Failed to update style')
 
 	return { success: true }
+}
+
+export async function getStyle(product_id) {
+	const product = await db
+		.select()
+		.from(ringStylesTable)
+		.where(eq(ringStylesTable.ring_style_id, product_id))
+
+	if (product == null) throw new Error('Failed to get style')
+
+	return product
 }

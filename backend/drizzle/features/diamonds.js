@@ -41,3 +41,14 @@ export async function updateDiamond(product_id, updatedData) {
 
 	return { success: true }
 }
+
+export async function getDiamond(product_id) {
+	const product = await db
+		.select()
+		.from(diamondsTable)
+		.where(eq(diamondsTable.diamond_id, product_id))
+
+	if (product == null) throw new Error('Failed to get diamond')
+
+	return product
+}
