@@ -27,11 +27,13 @@ import { addMasterEntry, getMasterList } from './drizzle/features/master.js'
 import {
 	addDiamond,
 	getAllDiamonds,
+	getDiamond,
 	updateDiamond,
 } from './drizzle/features/diamonds.js'
 import {
 	addStyle,
 	getAllStyles,
+	getStyle,
 	updateStyle,
 } from './drizzle/features/styles.js'
 
@@ -94,8 +96,6 @@ app.post('/webhook', async (req, res) => {
 				await updateUser(
 					{ clerk_user_id: event.data.id },
 					{
-						email,
-						name,
 						role: event.data.public_metadata.role,
 					}
 				)
@@ -260,6 +260,28 @@ app.get('/api/getProduct/:product_id', async (req, res) => {
 	} catch (err) {
 		console.log('getProduct Error: ' + err)
 		res.status(500).json({ error: 'Failed to get product' })
+	}
+})
+
+app.get('/api/getDiamond/:product_id', async (req, res) => {
+	try {
+		const { product_id } = req.params
+		const data = await getDiamond(product_id)
+		res.json(data)
+	} catch (err) {
+		console.log('getDiamond Error: ' + err)
+		res.status(500).json({ error: 'Failed to get diamond' })
+	}
+})
+
+app.get('/api/getStyle/:product_id', async (req, res) => {
+	try {
+		const { product_id } = req.params
+		const data = await getStyle(product_id)
+		res.json(data)
+	} catch (err) {
+		console.log('getStyle Error: ' + err)
+		res.status(500).json({ error: 'Failed to get style' })
 	}
 })
 

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import diamondImage from '../assets/ring2.jpg'
 import diamondHoverImage from '../assets/Wedding-rings.jpg'
 import { useDispatch, useSelector } from 'react-redux'
-import { getAllProductsByCategory } from '../utils/api'
+import { getAllStyles } from '../utils/api'
 import { setShowRing, updateRingDetails } from '../redux/ringCustomizationSlice'
 import { convertPrice } from '../utils/helpers'
 
@@ -15,7 +15,7 @@ function RingGrid() {
 	const [hoveredImage, setHoveredImage] = useState(null)
 
 	useEffect(() => {
-		getAllProductsByCategory('ring').then((res) => {
+		getAllStyles().then((res) => {
 			setRings(res.data)
 		})
 	}, [])
@@ -32,8 +32,8 @@ function RingGrid() {
 					<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8">
 						{rings.map((product, index) => (
 							<button
-								onClick={() => handleClick(product.product_id)}
-								key={product.product_id}
+								onClick={() => handleClick(product.ring_style_id)}
+								key={product.ring_style_id}
 								className="bg-white shadow-lg text-center transition-transform transform hover:scale-105 hover:shadow-xl border border-[#be9080]"
 							>
 								<img

@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { setStep, updateRingDetails } from '../redux/ringCustomizationSlice'
 import Image from '../assets/ring4.jpg'
 import { useEffect, useState } from 'react'
-import { getProduct } from '../utils/api'
+import { getStyle } from '../utils/api'
 import { convertPrice } from '../utils/helpers'
 
 function Product2() {
@@ -15,7 +15,7 @@ function Product2() {
 	const [product, setProduct] = useState(null)
 
 	useEffect(() => {
-		getProduct(productDetails[0].ring?.product_id).then((res) => {
+		getStyle(productDetails[0].ring?.product_id).then((res) => {
 			setProduct(res.data[0])
 		})
 		// eslint-disable-next-line react-hooks/exhaustive-deps

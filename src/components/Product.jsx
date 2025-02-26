@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { setStep, updateDiamondDetails } from '../redux/ringCustomizationSlice'
 import Image from '../assets/ring4.jpg'
 import { useEffect, useState } from 'react'
-import { getProduct } from '../utils/api'
+import { getDiamond } from '../utils/api'
 import { convertPrice } from '../utils/helpers'
 
 function Product() {
@@ -15,7 +15,7 @@ function Product() {
 	const [product, setProduct] = useState(null)
 
 	useEffect(() => {
-		getProduct(productDetails[0].diamond?.product_id).then((res) => {
+		getDiamond(productDetails[0].diamond?.product_id).then((res) => {
 			setProduct(res.data[0])
 		})
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -24,7 +24,7 @@ function Product() {
 	const handleClick = () => {
 		dispatch(
 			updateDiamondDetails({
-				diamond_price: +product.diamond_price,
+				diamond_price: +product.price,
 			})
 		)
 		dispatch(setStep(2))
@@ -62,7 +62,7 @@ function Product() {
 				<p className="text-gray-600">{product?.description}</p>
 				<div className="text-xl font-bold text-gray-900">
 					{currency}
-					{convertPrice(product?.diamond_price, country, INR_rate, GBP_rate)}
+					{convertPrice(product?.price, country, INR_rate, GBP_rate)}
 				</div>
 				{/* <div className="text-lg text-red-500 font-semibold">$435</div> */}
 				<p className="text-sm text-gray-500">(Setting Price)</p>

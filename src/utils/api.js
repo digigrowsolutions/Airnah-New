@@ -142,6 +142,30 @@ export const getProduct = async (productId) => {
 	}
 }
 
+export const getDiamond = async (productId) => {
+	try {
+		const response = await axios.get(
+			`${REACT_APP_API_URL}/getDiamond/${productId}`
+		)
+		return response
+	} catch (error) {
+		console.log('Error getting diamond details', error)
+		throw error
+	}
+}
+
+export const getStyle = async (productId) => {
+	try {
+		const response = await axios.get(
+			`${REACT_APP_API_URL}/getStyle/${productId}`
+		)
+		return response
+	} catch (error) {
+		console.log('Error getting style details', error)
+		throw error
+	}
+}
+
 export const getMasterList = async () => {
 	try {
 		const response = await axios.get(`${REACT_APP_API_URL}/admin/getMasterList`)
