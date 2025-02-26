@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import diamondImage from '../assets/ring2.jpg'
 import diamondHoverImage from '../assets/Wedding-rings.jpg'
 import { useDispatch, useSelector } from 'react-redux'
-import { getAllProductsByCategory } from '../utils/api'
+import { getAllDiamonds } from '../utils/api'
 import {
 	setShowDiamond,
 	updateDiamondDetails,
@@ -24,7 +24,7 @@ function DiamondGrid() {
 	const labels = ['M', 'L', 'K', 'J', 'I', 'H', 'G', 'F', 'E', 'D']
 
 	useEffect(() => {
-		getAllProductsByCategory('diamond').then((res) => {
+		getAllDiamonds().then((res) => {
 			setDiamonds(res.data)
 		})
 	}, [])
