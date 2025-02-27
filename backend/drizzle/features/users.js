@@ -1,5 +1,4 @@
 import { db } from '../db.js'
-import { cartTable } from '../schema/cart.js'
 import { favoritesTable } from '../schema/favorites.js'
 import { productsTable } from '../schema/products.js'
 import { userTable } from '../schema/users.js'
@@ -90,56 +89,6 @@ export async function removeFromFavorites({ clerk_user_id, product_id }) {
 			and(
 				eq(favoritesTable.user_id, user[0].user_id),
 				eq(favoritesTable.product_id, product_id)
-			)
-		)
-
-	return { success: true }
-}
-
-export async function getUserCart({ clerk_user_id }) {
-	// const user = await getUserByClerkId(clerk_user_id)
-	// console.log(clerk_user_id)
-	const data = await db
-		.select({
-			cart_id: cartTable.cart_id,
-			product_id: cartTable.product_id,
-			product_name: productsTable.name,
-			quantity: cartTable.quantity,
-		})
-		.from(cartTable)
-		.innerJoin(
-			productsTable,
-			eq(cartTable.product_id, productsTable.product_id)
-		)
-		.where(eq(cartTable.user_id, clerk_user_id))
-
-	if (data == null) throw new Error('Failed to get User Cart')
-
-	return data
-}
-
-export async function addToCart({ clerk_user_id, product_id, quantity }) {
-	// const user = await getUserByClerkId(clerk_user_id)
-	const result = await db.insert(cartTable).values({
-		// user_id: user[0].user_id,
-		user_id: clerk_user_id,
-		product_id: product_id,
-		quantity: quantity,
-	})
-
-	if (!result) throw new Error('Failed to add to cart')
-
-	return { success: true }
-}
-
-export async function removeFromCart({ clerk_user_id, product_id }) {
-	const user = await getUserByClerkId(clerk_user_id)
-	await db
-		.delete(cartTable)
-		.where(
-			and(
-				eq(cartTable.user_id, user[0].user_id),
-				eq(cartTable.product_id, product_id)
 			)
 		)
 

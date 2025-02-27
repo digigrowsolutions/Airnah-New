@@ -7,11 +7,8 @@ import {
 	insertUser,
 	updateUser,
 	getUserFavorites,
-	getUserCart,
 	addToFavorites,
 	removeFromFavorites,
-	addToCart,
-	removeFromCart,
 	getAllUsers,
 } from './drizzle/features/users.js'
 import { clerkClient } from '@clerk/express'
@@ -36,6 +33,11 @@ import {
 	getStyle,
 	updateStyle,
 } from './drizzle/features/styles.js'
+import {
+	addToCart,
+	getUserCart,
+	removeFromCart,
+} from './drizzle/features/cart.js'
 
 dotenv.config()
 
@@ -162,8 +164,15 @@ app.get('/api/users/getCart/:clerk_user_id', async (req, res) => {
 
 app.post('/api/users/addToCart', async (req, res) => {
 	try {
-		const { clerk_user_id, product_id, quantity } = req.body
-		await addToCart({ clerk_user_id, product_id, quantity })
+		const { user_id, product_id, diamond_id, ring_style_id, quantity } =
+			req.body
+		await addToCart({
+			user_id,
+			product_id,
+			quantity,
+			diamond_id,
+			ring_style_id,
+		})
 		res.json({ success: true })
 	} catch (err) {
 		console.error('addToCart Error:', err)

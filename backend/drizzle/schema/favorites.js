@@ -1,5 +1,5 @@
 import { pgTable, serial } from 'drizzle-orm/pg-core'
-import { created_at, id, updated_at } from '../schemaHelpers.js'
+import { created_at, updated_at } from '../schemaHelpers.js'
 import { userTable } from './users.js'
 import { productsTable } from './products.js'
 import { relations } from 'drizzle-orm'
@@ -7,7 +7,7 @@ import { diamondsTable } from './diamonds.js'
 import { ringStylesTable } from './ringStyles.js'
 
 export const favoritesTable = pgTable('favorites', {
-	favourite_id: id,
+	favourite_id: serial('favourite_id').primaryKey(),
 	user_id: serial('user_id').references(() => userTable.user_id, {
 		onDelete: 'cascade',
 	}),

@@ -55,9 +55,18 @@ export const removeFromFavorites = createAsyncThunk(
 
 export const addToCart = createAsyncThunk(
 	'favoritesCart/addToCart',
-	async ({ userId, productId, quantity }, { rejectWithValue }) => {
+	async (
+		{ userId, productId, diamondId, ringStyleId, quantity },
+		{ rejectWithValue }
+	) => {
 		try {
-			return await addToCartAPI(userId, productId, quantity)
+			return await addToCartAPI(
+				userId,
+				productId,
+				diamondId,
+				ringStyleId,
+				quantity
+			)
 		} catch (error) {
 			return rejectWithValue(error.message)
 		}
@@ -69,7 +78,7 @@ export const removeFromCart = createAsyncThunk(
 	async ({ userId, productId }, { rejectWithValue }) => {
 		try {
 			await removeFromCartAPI(userId, productId)
-			return productId
+			return { cart_id: productId }
 		} catch (error) {
 			return rejectWithValue(error.message)
 		}
@@ -132,8 +141,9 @@ const favoritesCartSlice = createSlice({
 
 			// Remove from Cart
 			.addCase(removeFromCart.fulfilled, (state, action) => {
+				const cartId = action.payload.cart_id
 				state.cartItems = state.cartItems.filter(
-					(item) => item.product_id !== action.payload
+					(item) => item.cart_id !== cartId
 				)
 			})
 	},
