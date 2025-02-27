@@ -1,6 +1,6 @@
 import { relations } from 'drizzle-orm'
-import { pgEnum, pgTable, text } from 'drizzle-orm/pg-core'
-import { created_at, id, updated_at } from '../schemaHelpers.js'
+import { pgEnum, pgTable, serial, text } from 'drizzle-orm/pg-core'
+import { created_at, updated_at } from '../schemaHelpers.js'
 import { orderItemsTable } from './orderItems.js'
 import { favoritesTable } from './favorites.js'
 import { cartTable } from './cart.js'
@@ -30,7 +30,7 @@ export const diamondCut = ['regular', 'best', 'premium']
 export const diamondCutEnum = pgEnum('cut', diamondCut)
 
 export const diamondsTable = pgTable('diamonds', {
-	diamond_id: id,
+	diamond_id: serial('diamond_id').primaryKey(),
 	name: text().notNull(),
 	description,
 	size: diamondSizeEnum().default('0.5'),

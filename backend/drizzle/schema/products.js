@@ -1,9 +1,8 @@
 import { relations } from 'drizzle-orm'
-import { decimal, pgEnum, pgTable, text } from 'drizzle-orm/pg-core'
+import { decimal, pgEnum, pgTable, serial, text } from 'drizzle-orm/pg-core'
 import {
 	created_at,
 	description,
-	id,
 	image_URL,
 	updated_at,
 } from '../schemaHelpers.js'
@@ -20,7 +19,7 @@ export const diamondSourceEnum = pgEnum('source', diamondSource)
 export const productCategoryEnum = pgEnum('product_category', productCategory)
 
 export const productsTable = pgTable('products', {
-	product_id: id,
+	product_id: serial('product_id').primaryKey(),
 	name: text().notNull(),
 	category: productCategoryEnum().default('ring'),
 	description,

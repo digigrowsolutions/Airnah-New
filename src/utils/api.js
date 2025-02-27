@@ -47,11 +47,19 @@ export const removeFromFavoritesAPI = async (userId, productId) => {
 	}
 }
 
-export const addToCartAPI = async (userId, productId, quantity) => {
+export const addToCartAPI = async (
+	userId,
+	productId,
+	diamondId,
+	ringStyleId,
+	quantity
+) => {
 	try {
 		const response = await axios.post(`${REACT_APP_API_URL}/users/addToCart`, {
 			user_id: userId,
 			product_id: productId,
+			diamond_id: diamondId,
+			ring_style_id: ringStyleId,
 			quantity,
 		})
 		return response.data
@@ -63,7 +71,9 @@ export const addToCartAPI = async (userId, productId, quantity) => {
 
 export const removeFromCartAPI = async (userId, productId) => {
 	try {
-		await axios.delete(`${REACT_APP_API_URL}/cart/${userId}/${productId}`)
+		await axios.delete(
+			`${REACT_APP_API_URL}/users/deleteCart/${userId}/${productId}`
+		)
 	} catch (error) {
 		console.error('Error removing from cart:', error)
 		throw error

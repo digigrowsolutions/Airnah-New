@@ -1,11 +1,5 @@
 import { pgTable, serial } from 'drizzle-orm/pg-core'
-import {
-	created_at,
-	id,
-	price,
-	quantity,
-	updated_at,
-} from '../schemaHelpers.js'
+import { created_at, price, quantity, updated_at } from '../schemaHelpers.js'
 import { productsTable } from './products.js'
 import { ordersTable } from './orders.js'
 import { relations } from 'drizzle-orm'
@@ -13,7 +7,7 @@ import { diamondsTable } from './diamonds.js'
 import { ringStylesTable } from './ringStyles.js'
 
 export const orderItemsTable = pgTable('order_items', {
-	order_item_id: id,
+	order_item_id: serial('order_item_id').primaryKey(),
 	order_id: serial().references(() => ordersTable.order_id, {
 		onDelete: 'cascade',
 	}),
