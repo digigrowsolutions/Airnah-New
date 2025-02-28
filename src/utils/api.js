@@ -25,12 +25,15 @@ export const fetchCartItems = async (userId) => {
 	}
 }
 
-export const addToFavoritesAPI = async (userId, productId) => {
+export const addToFavoritesAPI = async (dbId, product_id) => {
 	try {
-		const response = await axios.post(`${REACT_APP_API_URL}/favorites`, {
-			user_id: userId,
-			product_id: productId,
-		})
+		const response = await axios.post(
+			`${REACT_APP_API_URL}/users/addToFavorites`,
+			{
+				user_id: dbId,
+				product_id: product_id,
+			}
+		)
 		return response.data
 	} catch (error) {
 		console.error('Error adding to favorites:', error)
@@ -40,7 +43,9 @@ export const addToFavoritesAPI = async (userId, productId) => {
 
 export const removeFromFavoritesAPI = async (userId, productId) => {
 	try {
-		await axios.delete(`${REACT_APP_API_URL}/favorites/${userId}/${productId}`)
+		await axios.delete(
+			`${REACT_APP_API_URL}/users/deleteFavorites/${userId}/${productId}`
+		)
 	} catch (error) {
 		console.error('Error removing from favorites:', error)
 		throw error
@@ -93,10 +98,10 @@ export const addProduct = async (data) => {
 	}
 }
 
-export const getAllProducts = async () => {
+export const getAllProducts = async (userId) => {
 	try {
 		const response = await axios.get(
-			`${REACT_APP_API_URL}/admin/getAllProducts`
+			`${REACT_APP_API_URL}/admin/getAllProducts/${userId}`
 		)
 		return response
 	} catch (error) {

@@ -14,6 +14,7 @@ export async function getUserCart({ clerk_user_id }) {
 			ring_style_id: cartTable.ring_style_id,
 			quantity: cartTable.quantity,
 			product_name: productsTable.name,
+			product_price: productsTable.total_cost,
 			diamond_name: diamondsTable.name,
 			diamond_price: diamondsTable.price,
 			ring_style_name: ringStylesTable.name,

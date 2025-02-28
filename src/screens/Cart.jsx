@@ -81,80 +81,126 @@ const Cart = () => {
 				<p className="text-gray-600">Your Cart is empty.</p>
 			) : (
 				<div className="grid grid-cols-1 gap-8">
-					{cartItems?.map((item) => (
-						<div
-							key={item.cart_id}
-							className="bg-white w-1/3 ms-16 shadow-md rounded-lg overflow-hidden transition hover:shadow-lg"
-						>
-							{/* Upper Part - Diamond */}
-							<div className="p-4 bg-gray-100 border-b">
-								<img
-									src={item.diamond_image}
-									alt="Diamond"
-									className="w-full h-40 object-cover rounded-md mb-2"
-								/>
-								<h2 className="text-lg font-semibold text-gray-800">
-									{item.diamond_name}
-								</h2>
-								<p className="text-xl font-bold text-blue-600">
-									{currency}
-									{convertPrice(
-										item.diamond_price,
-										country,
-										INR_rate,
-										GBP_rate
-									)}
-								</p>
-							</div>
-							{/* Lower Part - Ring */}
-							<div className="p-4 border-b">
-								<img
-									src={item.ring_image}
-									alt="Ring Style"
-									className="w-full h-40 object-cover rounded-md mb-2"
-								/>
-								<h2 className="text-lg font-semibold text-gray-800">
-									{item.ring_style_name}
-								</h2>
-								<p className="text-gray-600 text-sm">{item.ring_description}</p>
-								<p className="text-xl font-bold text-blue-600">
-									{currency}
-									{convertPrice(
-										item.ring_style_price,
-										country,
-										INR_rate,
-										GBP_rate
-									)}
-								</p>
-							</div>
-							<div className="p-4 border-b">
-								<p className="text-gray-600 text-sm">Total</p>
-								<p className="text-xl font-bold text-blue-600">
-									{currency}
-									{convertPrice(
-										+item.ring_style_price + +item.diamond_price,
-										country,
-										INR_rate,
-										GBP_rate
-									)}
-								</p>
-								<div className="flex justify-center">
-									<button
-										onClick={() => handleView(item)}
-										className="mt-4 w-1/2 mx-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition"
-									>
-										View
-									</button>
-									<button
-										onClick={() => handleRemove(item.cart_id)}
-										className="mt-4 w-1/2 mx-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition"
-									>
-										Remove from Cart
-									</button>
+					{cartItems?.map((item) =>
+						item.product_id !== null ? (
+							<div
+								key={item.product_id}
+								className="bg-white w-1/3 ms-16 shadow-md rounded-lg overflow-hidden transition hover:shadow-lg"
+							>
+								<div className="p-4 bg-gray-100 border-b">
+									<img
+										src={item.product_image}
+										alt="Product"
+										className="w-full h-40 object-cover rounded-md mb-2"
+									/>
+									<h2 className="text-lg font-semibold text-gray-800">
+										{item.product_name}
+									</h2>
+								</div>
+								<div className="p-4 border-b">
+									<p className="text-gray-600 text-sm">Total</p>
+									<p className="text-xl font-bold text-blue-600">
+										{currency}
+										{convertPrice(
+											item.product_price,
+											country,
+											INR_rate,
+											GBP_rate
+										)}
+									</p>
+									<div className="flex justify-center">
+										<button
+											onClick={() => handleView(item)}
+											className="mt-4 w-1/2 mx-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition"
+										>
+											View
+										</button>
+										<button
+											onClick={() => handleRemove(item.cart_id)}
+											className="mt-4 w-1/2 mx-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition"
+										>
+											Remove from Cart
+										</button>
+									</div>
 								</div>
 							</div>
-						</div>
-					))}
+						) : (
+							<div
+								key={item.cart_id}
+								className="bg-white w-1/3 ms-16 shadow-md rounded-lg overflow-hidden transition hover:shadow-lg"
+							>
+								{/* Upper Part - Diamond */}
+								<div className="p-4 bg-gray-100 border-b">
+									<img
+										src={item.diamond_image}
+										alt="Diamond"
+										className="w-full h-40 object-cover rounded-md mb-2"
+									/>
+									<h2 className="text-lg font-semibold text-gray-800">
+										{item.diamond_name}
+									</h2>
+									<p className="text-xl font-bold text-blue-600">
+										{currency}
+										{convertPrice(
+											item.diamond_price,
+											country,
+											INR_rate,
+											GBP_rate
+										)}
+									</p>
+								</div>
+								{/* Lower Part - Ring */}
+								<div className="p-4 border-b">
+									<img
+										src={item.ring_image}
+										alt="Ring Style"
+										className="w-full h-40 object-cover rounded-md mb-2"
+									/>
+									<h2 className="text-lg font-semibold text-gray-800">
+										{item.ring_style_name}
+									</h2>
+									<p className="text-gray-600 text-sm">
+										{item.ring_description}
+									</p>
+									<p className="text-xl font-bold text-blue-600">
+										{currency}
+										{convertPrice(
+											item.ring_style_price,
+											country,
+											INR_rate,
+											GBP_rate
+										)}
+									</p>
+								</div>
+								<div className="p-4 border-b">
+									<p className="text-gray-600 text-sm">Total</p>
+									<p className="text-xl font-bold text-blue-600">
+										{currency}
+										{convertPrice(
+											+item.ring_style_price + +item.diamond_price,
+											country,
+											INR_rate,
+											GBP_rate
+										)}
+									</p>
+									<div className="flex justify-center">
+										<button
+											onClick={() => handleView(item)}
+											className="mt-4 w-1/2 mx-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition"
+										>
+											View
+										</button>
+										<button
+											onClick={() => handleRemove(item.cart_id)}
+											className="mt-4 w-1/2 mx-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition"
+										>
+											Remove from Cart
+										</button>
+									</div>
+								</div>
+							</div>
+						)
+					)}
 				</div>
 			)}
 		</div>

@@ -13,9 +13,9 @@ export const cartTable = pgTable('cart', {
 	}),
 	product_id: integer('product_id')
 		.references(() => productsTable.product_id, {
-			onDelete: 'set null', // Allow NULL when the product is deleted
+			onDelete: 'set null',
 		})
-		.default(null), // Explicitly make it nullable
+		.default(null),
 	diamond_id: integer('diamond_id')
 		.references(() => diamondsTable.diamond_id, {
 			onDelete: 'set null',

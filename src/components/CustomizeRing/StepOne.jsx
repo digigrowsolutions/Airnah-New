@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux'
 import { setShowDiamond } from '../../redux/ringCustomizationSlice'
 import DiamondGrid from '../DiamondGrid'
-import Product from '../Product'
+import Diamond from '../Diamond'
 
 const StepOne = () => {
 	const dispatch = useDispatch()
@@ -18,7 +18,7 @@ const StepOne = () => {
 						{'< '}
 						Go back to diamonds
 					</button>
-					<Product />
+					<Diamond />
 				</>
 			) : (
 				<>

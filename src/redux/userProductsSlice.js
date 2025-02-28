@@ -20,9 +20,9 @@ export const fetchUsers = createAsyncThunk(
 
 export const fetchProducts = createAsyncThunk(
 	'products/fetchProducts',
-	async (_, { rejectWithValue }) => {
+	async (dbId, { rejectWithValue }) => {
 		try {
-			const response = await getAllProducts()
+			const response = await getAllProducts(dbId)
 			return response.data
 		} catch (error) {
 			return rejectWithValue(error.message)

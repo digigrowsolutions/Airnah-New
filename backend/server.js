@@ -6,9 +6,6 @@ import ngrok from '@ngrok/ngrok'
 import {
 	insertUser,
 	updateUser,
-	getUserFavorites,
-	addToFavorites,
-	removeFromFavorites,
 	getAllUsers,
 } from './drizzle/features/users.js'
 import { clerkClient } from '@clerk/express'
@@ -38,6 +35,11 @@ import {
 	getUserCart,
 	removeFromCart,
 } from './drizzle/features/cart.js'
+import {
+	addToFavorites,
+	getUserFavorites,
+	removeFromFavorites,
+} from './drizzle/features/favorites.js'
 
 dotenv.config()
 
@@ -103,11 +105,12 @@ app.post('/webhook', async (req, res) => {
 				)
 			}
 			break
-		// case 'user.deleted':
-		// 	if (event.data.id != null) {
-		// 		await deleteUser({ clerk_user_id: event.data.id })
-		// 	}
-		// 	break
+		case 'user.deleted':
+			console.log('user.deleted')
+			// if (event.data.id != null) {
+			// 	await deleteUser({ clerk_user_id: event.data.id })
+			// }
+			break
 		default:
 			return res.status(400).send('Unhandled event')
 	}
@@ -128,8 +131,8 @@ app.get('/api/users/getFavorites/:clerk_user_id', async (req, res) => {
 
 app.post('/api/users/addToFavorites', async (req, res) => {
 	try {
-		const { clerk_user_id, product_id } = req.body
-		await addToFavorites({ clerk_user_id, product_id })
+		const { user_id, product_id } = req.body
+		await addToFavorites({ user_id, product_id })
 		res.json({ success: true })
 	} catch (err) {
 		console.error('addToFavorites Error:', err)
@@ -205,12 +208,13 @@ app.post('/api/admin/addProduct', async (req, res) => {
 	}
 })
 
-app.get('/api/admin/getAllProducts', async (req, res) => {
+app.get('/api/admin/getAllProducts/:clerk_user_id', async (req, res) => {
 	try {
-		const data = await getAllProducts()
+		const { clerk_user_id } = req.params
+		const data = await getAllProducts(clerk_user_id)
 		res.json(data)
 	} catch (err) {
-		console.log('addProduct Error: ' + err)
+		console.log('getAllProducts Error: ' + err)
 		res.status(500).json({ error: 'Failed to get all products' })
 	}
 })
