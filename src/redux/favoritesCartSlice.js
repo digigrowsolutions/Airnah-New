@@ -32,9 +32,9 @@ export const fetchUserCartItems = createAsyncThunk(
 
 export const addToFavorites = createAsyncThunk(
 	'favoritesCart/addToFavorites',
-	async ({ userId, productId }, { rejectWithValue }) => {
+	async ({ dbId, product_id }, { rejectWithValue }) => {
 		try {
-			return await addToFavoritesAPI(userId, productId)
+			return await addToFavoritesAPI(dbId, product_id)
 		} catch (error) {
 			return rejectWithValue(error.message)
 		}
@@ -45,8 +45,9 @@ export const removeFromFavorites = createAsyncThunk(
 	'favoritesCart/removeFromFavorites',
 	async ({ userId, productId }, { rejectWithValue }) => {
 		try {
+			console.log({ userId, productId })
 			await removeFromFavoritesAPI(userId, productId)
-			return productId
+			return { favorite_id: productId }
 		} catch (error) {
 			return rejectWithValue(error.message)
 		}
@@ -129,8 +130,9 @@ const favoritesCartSlice = createSlice({
 
 			// Remove from Favorites
 			.addCase(removeFromFavorites.fulfilled, (state, action) => {
+				const favoriteId = action.payload.favorite_id
 				state.favorites = state.favorites.filter(
-					(item) => item.product_id !== action.payload
+					(item) => item.favorite_id !== favoriteId
 				)
 			})
 

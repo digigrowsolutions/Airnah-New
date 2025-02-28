@@ -1,6 +1,8 @@
-import { eq } from 'drizzle-orm'
+import { and, avg, count, eq } from 'drizzle-orm'
 import { db } from '../db.js'
 import { productsTable } from '../schema/products.js'
+import { reviewsTable } from '../schema/reviews.js'
+import { favoritesTable } from '../schema/favorites.js'
 
 export async function addProduct(data) {
 	const newProduct = await db.insert(productsTable).values(data).returning()
@@ -9,17 +11,32 @@ export async function addProduct(data) {
 	return { success: true }
 }
 
-export async function getAllProducts() {
+export async function getAllProducts(clerk_user_id) {
 	const products = await db
 		.select({
 			product_id: productsTable.product_id,
 			name: productsTable.name,
 			category: productsTable.category,
 			total_cost: productsTable.total_cost,
+			average_rating: avg(reviewsTable.rating).as('average_rating'),
+			review_count: count(reviewsTable.review_id).as('review_count'),
+			favorite_id: favoritesTable.favourite_id,
 		})
 		.from(productsTable)
+		.leftJoin(
+			reviewsTable,
+			eq(productsTable.product_id, reviewsTable.product_id)
+		)
+		.leftJoin(
+			favoritesTable,
+			and(
+				eq(productsTable.product_id, favoritesTable.product_id),
+				eq(favoritesTable.user_id, clerk_user_id)
+			)
+		)
+		.groupBy(productsTable.product_id, favoritesTable.favourite_id)
 
-	if (products == null) throw new Error('Failed to get all products')
+	if (!products) throw new Error('Failed to get all products')
 
 	return products
 }

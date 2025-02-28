@@ -2,16 +2,19 @@ import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchProducts } from '../../redux/userProductsSlice'
 import AddProduct from './AddProduct'
+import { useUser } from '@clerk/clerk-react'
 
 const ProductsList = () => {
 	const dispatch = useDispatch()
 	const { products } = useSelector((state) => state.userProducts)
 	const [selectedProduct, setSelectedProduct] = useState(null)
 	const [showForm, setShowForm] = useState(false)
+	const { user } = useUser()
+	const dbId = user?.publicMetadata?.dbId
 
 	useEffect(() => {
 		if (products?.length === 0) {
-			dispatch(fetchProducts())
+			dispatch(fetchProducts(dbId))
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [])

@@ -7,9 +7,11 @@ import Image from '../../assets/ring4.jpg'
 import { useEffect } from 'react'
 import { SignedIn, SignedOut, SignInButton, useUser } from '@clerk/clerk-react'
 import { addToCart } from '../../redux/favoritesCartSlice'
+import { useNavigate } from 'react-router-dom'
 
 const StepThree = () => {
 	const dispatch = useDispatch()
+	const navigate = useNavigate()
 	const { productDetails } = useSelector((state) => state.ringCustomization)
 	const { user } = useUser()
 	const dbId = user?.publicMetadata?.dbId
@@ -38,6 +40,7 @@ const StepThree = () => {
 			})
 		)
 		dispatch(resetCustomization())
+		navigate('/cart')
 	}
 
 	return (

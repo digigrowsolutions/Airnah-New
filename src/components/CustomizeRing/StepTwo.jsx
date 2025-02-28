@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux'
 import { setShowRing } from '../../redux/ringCustomizationSlice'
-import Product2 from '../Product2'
+import Ring from '../Ring'
 import RingGrid from '../RingGrid'
 
 const StepTwo = () => {
@@ -18,7 +18,7 @@ const StepTwo = () => {
 						{'< '}
 						Go back to rings
 					</button>
-					<Product2 />
+					<Ring />
 				</>
 			) : (
 				<>
