@@ -196,11 +196,11 @@ function DiamondGrid() {
 							  onMouseEnter={() => setHoveredImage(index)}
 							  onMouseLeave={() => setHoveredImage(null)}
 							/>
-							<div className="p-6">
-							  <h2 className="text-2xl font-semibold mb-2 text-[#be9080]">
+							<div className="pt-2">
+							  <h2 className="text-lg font-light  text-[#be9080]">
 								{product.name}
 							  </h2>
-							  <p className="text-[#be9080] mb-4 text-xl font-normal">
+							  <p className="text-[#be9080] text-xl pt-2 font-light mb-2">
 								{currency}
 								{convertPrice(product.price, country, INR_rate, GBP_rate)}
 							  </p>

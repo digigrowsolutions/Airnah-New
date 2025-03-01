@@ -72,7 +72,7 @@ function Diamond() {
             onClick={handleClick}
             className="px-6 py-2 text-lg w-full h-16 bg-[#c9a992] text-white rounded-sm shadow-md hover:bg-[#bf927f] active:bg-[#a8826c]"
           >
-            Select This Setting
+            Select This Diamond
           </button>
         </div>
         <div className="text-sm text-gray-600">
@@ -104,7 +104,7 @@ function Diamond() {
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"
-              width="20"
+              width="30"
               height="20"
               fill="none"
               stroke="currentColor"
