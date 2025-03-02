@@ -3,6 +3,7 @@ import { db } from '../db.js'
 import { favoritesTable } from '../schema/favorites.js'
 import { productsTable } from '../schema/products.js'
 import { ringStylesTable } from '../schema/ringStyles.js'
+import { diamondsTable } from '../schema/diamonds.js'
 
 export async function getUserFavorites({ clerk_user_id }) {
 	const data = await db
@@ -10,6 +11,7 @@ export async function getUserFavorites({ clerk_user_id }) {
 			favorite_id: favoritesTable.favourite_id,
 			product_id: favoritesTable.product_id,
 			ring_style_id: favoritesTable.ring_style_id,
+			diamond_id: favoritesTable.diamond_id,
 			product_name: productsTable.name,
 			product_price: productsTable.total_cost,
 			ring_style_name: ringStylesTable.name,
@@ -19,6 +21,8 @@ export async function getUserFavorites({ clerk_user_id }) {
                 ${ringStylesTable.head_metal_price} +
                 ${ringStylesTable.shank_metal_price}
             `.as('ring_style_price'),
+			diamond_name: diamondsTable.name,
+			diamond_price: diamondsTable.price,
 		})
 		.from(favoritesTable)
 		.leftJoin(
@@ -29,6 +33,10 @@ export async function getUserFavorites({ clerk_user_id }) {
 			ringStylesTable,
 			eq(favoritesTable.ring_style_id, ringStylesTable.ring_style_id)
 		)
+		.leftJoin(
+			diamondsTable,
+			eq(favoritesTable.diamond_id, diamondsTable.diamond_id)
+		)
 		.where(eq(favoritesTable.user_id, clerk_user_id))
 
 	if (data == null) throw new Error('Failed to get User Favorites')
@@ -36,10 +44,17 @@ export async function getUserFavorites({ clerk_user_id }) {
 	return data
 }
 
-export async function addToFavorites({ user_id, product_id }) {
+export async function addToFavorites({
+	user_id,
+	product_id,
+	diamond_id,
+	ring_style_id,
+}) {
 	const result = await db.insert(favoritesTable).values({
 		user_id: user_id,
 		product_id: product_id,
+		diamond_id: diamond_id,
+		ring_style_id: ring_style_id,
 	})
 
 	if (!result) throw new Error('Failed to add to favorites')
@@ -47,16 +62,23 @@ export async function addToFavorites({ user_id, product_id }) {
 	return { success: true }
 }
 
-export async function removeFromFavorites({ clerk_user_id, product_id }) {
-	console.log({ clerk_user_id, product_id })
-	await db
-		.delete(favoritesTable)
-		.where(
-			and(
-				eq(favoritesTable.user_id, clerk_user_id),
-				eq(favoritesTable.favourite_id, product_id)
-			)
-		)
+export async function removeFromFavorites({
+	user_id,
+	product_id,
+	diamond_id,
+	ring_style_id,
+}) {
+	// Start with the required user condition
+	let conditions = [eq(favoritesTable.user_id, user_id)]
+
+	// Add conditions only if the respective values are provided
+	if (product_id) conditions.push(eq(favoritesTable.favourite_id, product_id))
+	if (diamond_id) conditions.push(eq(favoritesTable.favourite_id, diamond_id))
+	if (ring_style_id)
+		conditions.push(eq(favoritesTable.favourite_id, ring_style_id))
+
+	// Perform the delete operation
+	await db.delete(favoritesTable).where(and(...conditions))
 
 	return { success: true }
 }

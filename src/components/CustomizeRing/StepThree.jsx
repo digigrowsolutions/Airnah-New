@@ -16,8 +16,6 @@ const StepThree = () => {
 	const { user } = useUser()
 	const dbId = user?.publicMetadata?.dbId
 
-	console.log(productDetails[0].diamond.product_id)
-
 	useEffect(() => {
 		dispatch(
 			updateTotalCost({

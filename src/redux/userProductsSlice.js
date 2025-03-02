@@ -32,9 +32,9 @@ export const fetchProducts = createAsyncThunk(
 
 export const fetchDiamonds = createAsyncThunk(
 	'products/fetchDiamonds',
-	async (_, { rejectWithValue }) => {
+	async (dbId, { rejectWithValue }) => {
 		try {
-			const response = await getAllDiamonds()
+			const response = await getAllDiamonds(dbId)
 			return response.data
 		} catch (error) {
 			return rejectWithValue(error.message)
@@ -44,9 +44,9 @@ export const fetchDiamonds = createAsyncThunk(
 
 export const fetchStyles = createAsyncThunk(
 	'products/fetchStyles',
-	async (_, { rejectWithValue }) => {
+	async (dbId, { rejectWithValue }) => {
 		try {
-			const response = await getAllStyles()
+			const response = await getAllStyles(dbId)
 			return response.data
 		} catch (error) {
 			return rejectWithValue(error.message)

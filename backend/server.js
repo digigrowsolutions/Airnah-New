@@ -131,8 +131,8 @@ app.get('/api/users/getFavorites/:clerk_user_id', async (req, res) => {
 
 app.post('/api/users/addToFavorites', async (req, res) => {
 	try {
-		const { user_id, product_id } = req.body
-		await addToFavorites({ user_id, product_id })
+		const { user_id, product_id, diamond_id, ring_style_id } = req.body
+		await addToFavorites({ user_id, product_id, diamond_id, ring_style_id })
 		res.json({ success: true })
 	} catch (err) {
 		console.error('addToFavorites Error:', err)
@@ -140,19 +140,21 @@ app.post('/api/users/addToFavorites', async (req, res) => {
 	}
 })
 
-app.delete(
-	'/api/users/deleteFavorites/:clerk_user_id/:product_id',
-	async (req, res) => {
-		try {
-			const { clerk_user_id, product_id } = req.params
-			await removeFromFavorites({ clerk_user_id, product_id })
-			res.json({ success: true })
-		} catch (err) {
-			console.error('removeFromFavorites Error:', err)
-			res.status(500).json({ error: 'Failed to remove from Favorites' })
-		}
+app.delete('/api/users/deleteFavorites', async (req, res) => {
+	try {
+		const { user_id, product_id, diamond_id, ring_style_id } = req.body
+		await removeFromFavorites({
+			user_id,
+			product_id,
+			diamond_id,
+			ring_style_id,
+		})
+		res.json({ success: true })
+	} catch (err) {
+		console.error('removeFromFavorites Error:', err)
+		res.status(500).json({ error: 'Failed to remove from Favorites' })
 	}
-)
+})
 
 app.get('/api/users/getCart/:clerk_user_id', async (req, res) => {
 	try {
@@ -330,9 +332,10 @@ app.post('/api/admin/addDiamond', async (req, res) => {
 	}
 })
 
-app.get('/api/admin/getAllDiamonds', async (req, res) => {
+app.get('/api/admin/getAllDiamonds/:clerk_user_id', async (req, res) => {
 	try {
-		const data = await getAllDiamonds()
+		const { clerk_user_id } = req.params
+		const data = await getAllDiamonds(clerk_user_id)
 		res.json(data)
 	} catch (err) {
 		console.log('getAllDiamonds Error: ' + err)
@@ -361,9 +364,10 @@ app.post('/api/admin/addStyle', async (req, res) => {
 	}
 })
 
-app.get('/api/admin/getAllStyles', async (req, res) => {
+app.get('/api/admin/getAllStyles/:clerk_user_id', async (req, res) => {
 	try {
-		const data = await getAllStyles()
+		const { clerk_user_id } = req.params
+		const data = await getAllStyles(clerk_user_id)
 		res.json(data)
 	} catch (err) {
 		console.log('getAllStyles Error: ' + err)
