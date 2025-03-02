@@ -7,7 +7,6 @@ import { fetchDiamonds } from '../../redux/userProductsSlice'
 const AddDiamond = ({ initialData = null, onSuccess }) => {
 	const dispatch = useDispatch()
 	const [formData, setFormData] = useState(diamondJson)
-	console.log(initialData)
 
 	// Pre-fill the form if initialData is provided
 	useEffect(() => {

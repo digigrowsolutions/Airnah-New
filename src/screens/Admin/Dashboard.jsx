@@ -6,25 +6,21 @@ import {
 	fetchStyles,
 	fetchUsers,
 } from '../../redux/userProductsSlice'
+import { useUser } from '@clerk/clerk-react'
 
 const AdminDashboard = () => {
 	const dispatch = useDispatch()
 	const { products, users, diamonds, styles } = useSelector(
 		(state) => state.userProducts
 	)
+	const { user } = useUser()
+	const dbId = user?.publicMetadata?.dbId
 
 	useEffect(() => {
-		if (
-			products.length === 0 &&
-			users.length === 0 &&
-			diamonds.length === 0 &&
-			styles.length === 0
-		) {
-			dispatch(fetchProducts())
-			dispatch(fetchUsers())
-			dispatch(fetchDiamonds())
-			dispatch(fetchStyles())
-		}
+		dispatch(fetchProducts(dbId))
+		dispatch(fetchUsers())
+		dispatch(fetchDiamonds())
+		dispatch(fetchStyles())
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [])
 

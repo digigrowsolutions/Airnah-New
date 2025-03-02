@@ -1,17 +1,20 @@
 import { useDispatch, useSelector } from 'react-redux'
-import { updateTotalCost } from '../../redux/ringCustomizationSlice'
+import {
+	resetCustomization,
+	updateTotalCost,
+} from '../../redux/ringCustomizationSlice'
 import Image from '../../assets/ring4.jpg'
 import { useEffect } from 'react'
 import { SignedIn, SignedOut, SignInButton, useUser } from '@clerk/clerk-react'
 import { addToCart } from '../../redux/favoritesCartSlice'
+import { useNavigate } from 'react-router-dom'
 
 const StepThree = () => {
 	const dispatch = useDispatch()
+	const navigate = useNavigate()
 	const { productDetails } = useSelector((state) => state.ringCustomization)
 	const { user } = useUser()
 	const dbId = user?.publicMetadata?.dbId
-
-	console.log(productDetails[0].diamond.product_id)
 
 	useEffect(() => {
 		dispatch(
@@ -28,10 +31,14 @@ const StepThree = () => {
 		dispatch(
 			addToCart({
 				userId: dbId,
-				productId: productDetails[0].diamond?.product_id,
+				productId: null,
+				diamondId: productDetails[0].diamond?.product_id,
+				ringStyleId: productDetails[0].ring?.product_id,
 				quantity: 1,
 			})
 		)
+		dispatch(resetCustomization())
+		navigate('/cart')
 	}
 
 	return (

@@ -1,8 +1,7 @@
-import { pgTable, text, integer, date } from 'drizzle-orm/pg-core'
-import { id } from '../schemaHelpers.js'
+import { pgTable, text, integer, date, serial } from 'drizzle-orm/pg-core'
 
 export const couponsTable = pgTable('coupons', {
-	coupon_id: id,
+	coupon_id: serial('coupon_id').primaryKey(),
 	code: text().notNull().unique(),
 	discount_percentage: integer().notNull(),
 	expiry_date: date().notNull(),

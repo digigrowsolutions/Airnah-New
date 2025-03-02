@@ -1,6 +1,4 @@
-import { decimal, integer, serial, text, timestamp } from 'drizzle-orm/pg-core'
-
-export const id = serial().primaryKey()
+import { decimal, integer, text, timestamp } from 'drizzle-orm/pg-core'
 
 export const created_at = timestamp('created_at', { withTimezone: true })
 	.notNull()

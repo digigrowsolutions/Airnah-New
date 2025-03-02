@@ -2,64 +2,90 @@ import { useEffect, useState } from 'react'
 import diamondImage from '../assets/ring2.jpg'
 import diamondHoverImage from '../assets/Wedding-rings.jpg'
 import { useDispatch, useSelector } from 'react-redux'
-import { getAllProductsByCategory } from '../utils/api'
 import {
 	setShowDiamond,
 	updateDiamondDetails,
 } from '../redux/ringCustomizationSlice'
 import { convertPrice } from '../utils/helpers'
+import {
+	addToFavorites,
+	fetchUserFavorites,
+	removeFromFavorites,
+} from '../redux/favoritesCartSlice'
+import { FaHeart, FaRegHeart } from 'react-icons/fa'
+import { useUser } from '@clerk/clerk-react'
+import { fetchDiamonds } from '../redux/userProductsSlice'
 
 function DiamondGrid() {
 	const dispatch = useDispatch()
+	const { diamonds } = useSelector((state) => state.userProducts)
 	const { currency, country, INR_rate, GBP_rate } = useSelector(
 		(state) => state.localization
 	)
-	const [diamonds, setDiamonds] = useState([])
+	const { user } = useUser()
+	const dbId = user?.publicMetadata?.dbId
 	const [hoveredImage, setHoveredImage] = useState(null)
-	const [activeTab, setActiveTab] = useState('Natural')
 	const [cut, setCut] = useState(50)
 	const [color, setColor] = useState(50)
 	const [carat, setCarat] = useState(50)
 	const [clarity, setClarity] = useState(50)
 	const [price, setPrice] = useState(50)
+	const [favoriteStatus, setFavoriteStatus] = useState({})
 	const labels = ['M', 'L', 'K', 'J', 'I', 'H', 'G', 'F', 'E', 'D']
 
 	useEffect(() => {
-		getAllProductsByCategory('diamond').then((res) => {
-			setDiamonds(res.data)
+		if (dbId) {
+			dispatch(fetchDiamonds(dbId))
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [dbId, dispatch])
+
+	useEffect(() => {
+		const favStatus = {}
+		diamonds.forEach((product) => {
+			favStatus[product.diamond_id] = product.favorite_id !== null
 		})
-	}, [])
+		setFavoriteStatus(favStatus)
+	}, [diamonds])
 
 	const handleClick = (product_id) => {
 		dispatch(updateDiamondDetails({ product_id: product_id }))
 		dispatch(setShowDiamond(true))
 	}
 
+	const handleFavorite = (e, product_id, favorite_id) => {
+		e.stopPropagation()
+
+		const isCurrentlyFavorite = favoriteStatus[product_id]
+
+		if (isCurrentlyFavorite) {
+			dispatch(
+				removeFromFavorites({
+					userId: dbId,
+					productId: null,
+					diamond_id: favorite_id,
+					ring_style_id: null,
+				})
+			).then(() => {
+				dispatch(fetchDiamonds(dbId)) // ✅ Re-fetch products after updating favorites
+				dispatch(fetchUserFavorites(dbId))
+			})
+		} else {
+			dispatch(
+				addToFavorites({
+					dbId,
+					product_id: null,
+					diamond_id: product_id,
+					ring_style_id: null,
+				})
+			).then(() => {
+				dispatch(fetchDiamonds(dbId)) // ✅ Re-fetch products after adding to favorites
+			})
+		}
+	}
+
 	return (
 		<>
-			{/* Tabs */}
-			<div className="flex space-x-4 mb-4">
-				<button
-					onClick={() => setActiveTab('Natural')}
-					className={`px-4 py-2 border border-black shadow-md ${
-						activeTab === 'Natural'
-							? 'bg-black text-white'
-							: 'bg-white text-black'
-					}`}
-				>
-					Natural
-				</button>
-				<button
-					onClick={() => setActiveTab('Lab Grown')}
-					className={`px-4 py-2 border border-black shadow-md ${
-						activeTab === 'Lab Grown'
-							? 'bg-black text-white'
-							: 'bg-white text-black'
-					}`}
-				>
-					Lab Grown
-				</button>
-			</div>
 			{/* Filters */}
 			<div className="grid grid-cols-1 md:grid-cols-3 gap-4 w-full text-center">
 				<div className="p-4">
@@ -209,10 +235,22 @@ function DiamondGrid() {
 					<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8">
 						{diamonds.map((product, index) => (
 							<button
-								onClick={() => handleClick(product.product_id)}
-								key={product.product_id}
+								onClick={() => handleClick(product.diamond_id)}
+								key={product.diamond_id}
 								className="bg-white shadow-lg text-center transition-transform transform hover:scale-105 hover:shadow-xl border border-[#be9080]"
 							>
+								<div
+									className="absolute bottom-20 right-4 text-2xl cursor-pointer text-[#be9080]"
+									onClick={(e) =>
+										handleFavorite(e, product.diamond_id, product.favorite_id)
+									}
+								>
+									{favoriteStatus[product.diamond_id] ? (
+										<FaHeart className="text-red-500" />
+									) : (
+										<FaRegHeart />
+									)}
+								</div>
 								<img
 									src={
 										hoveredImage === index ? diamondHoverImage : diamondImage
@@ -228,12 +266,7 @@ function DiamondGrid() {
 									</h2>
 									<p className="text-[#be9080] mb-4 text-lg font-light">
 										{currency}
-										{convertPrice(
-											product.diamond_price,
-											country,
-											INR_rate,
-											GBP_rate
-										)}
+										{convertPrice(product.price, country, INR_rate, GBP_rate)}
 									</p>
 								</div>
 							</button>

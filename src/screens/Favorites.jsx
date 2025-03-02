@@ -1,19 +1,32 @@
 import { useEffect } from 'react'
 import { useUser, SignInButton } from '@clerk/clerk-react'
 import { useDispatch, useSelector } from 'react-redux'
-import { fetchUserFavorites } from '../redux/favoritesCartSlice'
+import {
+	fetchUserFavorites,
+	removeFromFavorites,
+} from '../redux/favoritesCartSlice'
+import { convertPrice } from '../utils/helpers'
 
 const Favorites = () => {
 	const { user, isSignedIn } = useUser()
-
+	const dbId = user?.publicMetadata?.dbId
 	const dispatch = useDispatch()
 	const { favorites, loading } = useSelector((state) => state.favoritesCart)
+	const { currency, country, INR_rate, GBP_rate } = useSelector(
+		(state) => state.localization
+	)
 
 	useEffect(() => {
 		if (isSignedIn && user?.id) {
-			dispatch(fetchUserFavorites(user.id))
+			dispatch(fetchUserFavorites(dbId))
 		}
-	}, [isSignedIn, user?.id, dispatch])
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [])
+
+	const handleRemove = (productId) => {
+		dispatch(removeFromFavorites({ userId: dbId, productId }))
+		dispatch(fetchUserFavorites(dbId))
+	}
 
 	if (!isSignedIn) {
 		return (
@@ -42,20 +55,25 @@ const Favorites = () => {
 				<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
 					{favorites.map((item) => (
 						<div
-							key={item.id}
+							key={item.favorite_id}
 							className="bg-white shadow-md rounded-lg p-6 hover:shadow-lg transition"
 						>
 							<img
 								src={item.image}
-								alt={item.name}
+								alt={item.product_name}
 								className="w-full h-40 object-cover rounded-lg mb-4"
 							/>
 							<h2 className="text-lg font-semibold text-gray-800">
-								{item.name}
+								{item.product_name}
 							</h2>
-							<p className="text-gray-600 mb-2">{item.description}</p>
-							<p className="text-xl font-bold text-blue-600">${item.price}</p>
-							<button className="mt-4 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition">
+							<p className="text-xl font-bold text-blue-600">
+								{currency}
+								{convertPrice(item.product_price, country, INR_rate, GBP_rate)}
+							</p>
+							<button
+								onClick={() => handleRemove(item.favorite_id)}
+								className="mt-4 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition"
+							>
 								Remove from Favorites
 							</button>
 						</div>

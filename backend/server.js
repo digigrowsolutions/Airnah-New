@@ -6,12 +6,6 @@ import ngrok from '@ngrok/ngrok'
 import {
 	insertUser,
 	updateUser,
-	getUserFavorites,
-	getUserCart,
-	addToFavorites,
-	removeFromFavorites,
-	addToCart,
-	removeFromCart,
 	getAllUsers,
 } from './drizzle/features/users.js'
 import { clerkClient } from '@clerk/express'
@@ -27,13 +21,25 @@ import { addMasterEntry, getMasterList } from './drizzle/features/master.js'
 import {
 	addDiamond,
 	getAllDiamonds,
+	getDiamond,
 	updateDiamond,
 } from './drizzle/features/diamonds.js'
 import {
 	addStyle,
 	getAllStyles,
+	getStyle,
 	updateStyle,
 } from './drizzle/features/styles.js'
+import {
+	addToCart,
+	getUserCart,
+	removeFromCart,
+} from './drizzle/features/cart.js'
+import {
+	addToFavorites,
+	getUserFavorites,
+	removeFromFavorites,
+} from './drizzle/features/favorites.js'
 
 dotenv.config()
 
@@ -94,18 +100,17 @@ app.post('/webhook', async (req, res) => {
 				await updateUser(
 					{ clerk_user_id: event.data.id },
 					{
-						email,
-						name,
 						role: event.data.public_metadata.role,
 					}
 				)
 			}
 			break
-		// case 'user.deleted':
-		// 	if (event.data.id != null) {
-		// 		await deleteUser({ clerk_user_id: event.data.id })
-		// 	}
-		// 	break
+		case 'user.deleted':
+			console.log('user.deleted')
+			// if (event.data.id != null) {
+			// 	await deleteUser({ clerk_user_id: event.data.id })
+			// }
+			break
 		default:
 			return res.status(400).send('Unhandled event')
 	}
@@ -126,8 +131,8 @@ app.get('/api/users/getFavorites/:clerk_user_id', async (req, res) => {
 
 app.post('/api/users/addToFavorites', async (req, res) => {
 	try {
-		const { clerk_user_id, product_id } = req.body
-		await addToFavorites({ clerk_user_id, product_id })
+		const { user_id, product_id, diamond_id, ring_style_id } = req.body
+		await addToFavorites({ user_id, product_id, diamond_id, ring_style_id })
 		res.json({ success: true })
 	} catch (err) {
 		console.error('addToFavorites Error:', err)
@@ -135,19 +140,21 @@ app.post('/api/users/addToFavorites', async (req, res) => {
 	}
 })
 
-app.delete(
-	'/api/users/deleteFavorites/:clerk_user_id/:product_id',
-	async (req, res) => {
-		try {
-			const { clerk_user_id, product_id } = req.params
-			await removeFromFavorites({ clerk_user_id, product_id })
-			res.json({ success: true })
-		} catch (err) {
-			console.error('removeFromFavorites Error:', err)
-			res.status(500).json({ error: 'Failed to remove from Favorites' })
-		}
+app.delete('/api/users/deleteFavorites', async (req, res) => {
+	try {
+		const { user_id, product_id, diamond_id, ring_style_id } = req.body
+		await removeFromFavorites({
+			user_id,
+			product_id,
+			diamond_id,
+			ring_style_id,
+		})
+		res.json({ success: true })
+	} catch (err) {
+		console.error('removeFromFavorites Error:', err)
+		res.status(500).json({ error: 'Failed to remove from Favorites' })
 	}
-)
+})
 
 app.get('/api/users/getCart/:clerk_user_id', async (req, res) => {
 	try {
@@ -162,8 +169,15 @@ app.get('/api/users/getCart/:clerk_user_id', async (req, res) => {
 
 app.post('/api/users/addToCart', async (req, res) => {
 	try {
-		const { clerk_user_id, product_id, quantity } = req.body
-		await addToCart({ clerk_user_id, product_id, quantity })
+		const { user_id, product_id, diamond_id, ring_style_id, quantity } =
+			req.body
+		await addToCart({
+			user_id,
+			product_id,
+			quantity,
+			diamond_id,
+			ring_style_id,
+		})
 		res.json({ success: true })
 	} catch (err) {
 		console.error('addToCart Error:', err)
@@ -196,12 +210,13 @@ app.post('/api/admin/addProduct', async (req, res) => {
 	}
 })
 
-app.get('/api/admin/getAllProducts', async (req, res) => {
+app.get('/api/admin/getAllProducts/:clerk_user_id', async (req, res) => {
 	try {
-		const data = await getAllProducts()
+		const { clerk_user_id } = req.params
+		const data = await getAllProducts(clerk_user_id)
 		res.json(data)
 	} catch (err) {
-		console.log('addProduct Error: ' + err)
+		console.log('getAllProducts Error: ' + err)
 		res.status(500).json({ error: 'Failed to get all products' })
 	}
 })
@@ -263,6 +278,28 @@ app.get('/api/getProduct/:product_id', async (req, res) => {
 	}
 })
 
+app.get('/api/getDiamond/:product_id', async (req, res) => {
+	try {
+		const { product_id } = req.params
+		const data = await getDiamond(product_id)
+		res.json(data)
+	} catch (err) {
+		console.log('getDiamond Error: ' + err)
+		res.status(500).json({ error: 'Failed to get diamond' })
+	}
+})
+
+app.get('/api/getStyle/:product_id', async (req, res) => {
+	try {
+		const { product_id } = req.params
+		const data = await getStyle(product_id)
+		res.json(data)
+	} catch (err) {
+		console.log('getStyle Error: ' + err)
+		res.status(500).json({ error: 'Failed to get style' })
+	}
+})
+
 app.get('/api/admin/getMasterList', async (req, res) => {
 	try {
 		const data = await getMasterList()
@@ -295,9 +332,10 @@ app.post('/api/admin/addDiamond', async (req, res) => {
 	}
 })
 
-app.get('/api/admin/getAllDiamonds', async (req, res) => {
+app.get('/api/admin/getAllDiamonds/:clerk_user_id', async (req, res) => {
 	try {
-		const data = await getAllDiamonds()
+		const { clerk_user_id } = req.params
+		const data = await getAllDiamonds(clerk_user_id)
 		res.json(data)
 	} catch (err) {
 		console.log('getAllDiamonds Error: ' + err)
@@ -326,9 +364,10 @@ app.post('/api/admin/addStyle', async (req, res) => {
 	}
 })
 
-app.get('/api/admin/getAllStyles', async (req, res) => {
+app.get('/api/admin/getAllStyles/:clerk_user_id', async (req, res) => {
 	try {
-		const data = await getAllStyles()
+		const { clerk_user_id } = req.params
+		const data = await getAllStyles(clerk_user_id)
 		res.json(data)
 	} catch (err) {
 		console.log('getAllStyles Error: ' + err)

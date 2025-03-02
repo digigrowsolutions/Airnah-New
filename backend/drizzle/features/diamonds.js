@@ -1,6 +1,7 @@
-import { eq } from 'drizzle-orm'
+import { and, eq } from 'drizzle-orm'
 import { db } from '../db.js'
 import { diamondsTable } from '../schema/diamonds.js'
+import { favoritesTable } from '../schema/favorites.js'
 
 export async function addDiamond(data) {
 	const newProduct = await db.insert(diamondsTable).values(data).returning()
@@ -9,15 +10,24 @@ export async function addDiamond(data) {
 	return { success: true }
 }
 
-export async function getAllDiamonds() {
+export async function getAllDiamonds(clerk_user_id) {
 	const products = await db
 		.select({
 			diamond_id: diamondsTable.diamond_id,
 			name: diamondsTable.name,
 			category: diamondsTable.clarity,
 			price: diamondsTable.price,
+			favorite_id: favoritesTable.favourite_id,
 		})
 		.from(diamondsTable)
+		.leftJoin(
+			favoritesTable,
+			and(
+				eq(diamondsTable.diamond_id, favoritesTable.diamond_id),
+				eq(favoritesTable.user_id, clerk_user_id)
+			)
+		)
+		.groupBy(diamondsTable.diamond_id, favoritesTable.favourite_id)
 
 	if (products == null) throw new Error('Failed to get all diamonds')
 
@@ -40,4 +50,15 @@ export async function updateDiamond(product_id, updatedData) {
 	if (updatedProduct == null) throw new Error('Failed to update diamond')
 
 	return { success: true }
+}
+
+export async function getDiamond(product_id) {
+	const product = await db
+		.select()
+		.from(diamondsTable)
+		.where(eq(diamondsTable.diamond_id, product_id))
+
+	if (product == null) throw new Error('Failed to get diamond')
+
+	return product
 }

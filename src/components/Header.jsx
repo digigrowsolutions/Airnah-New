@@ -31,7 +31,7 @@ export default function Header() {
 	const dbId = user?.publicMetadata?.dbId
 
 	useEffect(() => {
-		if (isSignedIn) {
+		if (isSignedIn && !role === 'admin') {
 			dispatch(fetchUserFavorites(dbId))
 			dispatch(fetchUserCartItems(dbId))
 		}
