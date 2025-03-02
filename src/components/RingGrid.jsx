@@ -12,16 +12,7 @@ import {
 	fetchUserFavorites,
 	removeFromFavorites,
 } from '../redux/favoritesCartSlice'
-import { useEffect, useState } from "react";
-import diamondImage from "../assets/ring2.jpg";
-import diamondHoverImage from "../assets/Wedding-rings.jpg";
-import { useDispatch, useSelector } from "react-redux";
-import { getAllStyles } from "../utils/api";
-import {
-  setShowRing,
-  updateRingDetails,
-} from "../redux/ringCustomizationSlice";
-import { convertPrice } from "../utils/helpers";
+
 
 function RingGrid() {
   const dispatch = useDispatch();
@@ -41,11 +32,7 @@ function RingGrid() {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [dbId, dispatch])
 
-  useEffect(() => {
-    getAllStyles().then((res) => {
-      setRings(res.data);
-    });
-  }, []);
+  
 	useEffect(() => {
 		const favStatus = {}
 		styles.forEach((product) => {
