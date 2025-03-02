@@ -1,6 +1,7 @@
-import { eq } from 'drizzle-orm'
+import { and, eq } from 'drizzle-orm'
 import { db } from '../db.js'
 import { ringStylesTable } from '../schema/ringStyles.js'
+import { favoritesTable } from '../schema/favorites.js'
 
 export async function addStyle(data) {
 	const newProduct = await db.insert(ringStylesTable).values(data).returning()
@@ -9,7 +10,7 @@ export async function addStyle(data) {
 	return { success: true }
 }
 
-export async function getAllStyles() {
+export async function getAllStyles(clerk_user_id) {
 	const products = await db
 		.select({
 			ring_style_id: ringStylesTable.ring_style_id,
@@ -19,8 +20,17 @@ export async function getAllStyles() {
 			head_metal_price: ringStylesTable.head_metal_price,
 			shank_style_price: ringStylesTable.shank_style_price,
 			shank_metal_price: ringStylesTable.shank_metal_price,
+			favorite_id: favoritesTable.favourite_id,
 		})
 		.from(ringStylesTable)
+		.leftJoin(
+			favoritesTable,
+			and(
+				eq(ringStylesTable.ring_style_id, favoritesTable.ring_style_id),
+				eq(favoritesTable.user_id, clerk_user_id)
+			)
+		)
+		.groupBy(ringStylesTable.ring_style_id, favoritesTable.favourite_id)
 
 	if (products == null) throw new Error('Failed to get all styles')
 

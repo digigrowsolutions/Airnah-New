@@ -5,6 +5,7 @@ import { orderItemsTable } from './orderItems.js'
 import { cartTable } from './cart.js'
 import { reviewsTable } from './reviews.js'
 import { description, price } from '../schemaHelpers.js'
+import { favoritesTable } from './favorites.js'
 
 export const diamondSize = ['0.5', '1', '1.5', '2', '2.5', '3', '3.5', '4']
 export const diamondSizeEnum = pgEnum('size', diamondSize)

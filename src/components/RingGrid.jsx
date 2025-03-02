@@ -2,27 +2,77 @@ import { useEffect, useState } from 'react'
 import diamondImage from '../assets/ring2.jpg'
 import diamondHoverImage from '../assets/Wedding-rings.jpg'
 import { useDispatch, useSelector } from 'react-redux'
-import { getAllStyles } from '../utils/api'
 import { setShowRing, updateRingDetails } from '../redux/ringCustomizationSlice'
 import { convertPrice } from '../utils/helpers'
+import { useUser } from '@clerk/clerk-react'
+import { fetchStyles } from '../redux/userProductsSlice'
+import { FaHeart, FaRegHeart } from 'react-icons/fa'
+import {
+	addToFavorites,
+	fetchUserFavorites,
+	removeFromFavorites,
+} from '../redux/favoritesCartSlice'
 
 function RingGrid() {
 	const dispatch = useDispatch()
+	const { styles } = useSelector((state) => state.userProducts)
 	const { currency, country, INR_rate, GBP_rate } = useSelector(
 		(state) => state.localization
 	)
-	const [rings, setRings] = useState([])
+	const { user } = useUser()
+	const dbId = user?.publicMetadata?.dbId
 	const [hoveredImage, setHoveredImage] = useState(null)
+	const [favoriteStatus, setFavoriteStatus] = useState({})
 
 	useEffect(() => {
-		getAllStyles().then((res) => {
-			setRings(res.data)
+		if (dbId) {
+			dispatch(fetchStyles(dbId))
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [dbId, dispatch])
+
+	useEffect(() => {
+		const favStatus = {}
+		styles.forEach((product) => {
+			favStatus[product.ring_style_id] = product.favorite_id !== null
 		})
-	}, [])
+		setFavoriteStatus(favStatus)
+	}, [styles])
 
 	const handleClick = (product_id) => {
 		dispatch(updateRingDetails({ product_id: product_id }))
 		dispatch(setShowRing(true))
+	}
+
+	const handleFavorite = (e, product_id, favorite_id) => {
+		e.stopPropagation()
+
+		const isCurrentlyFavorite = favoriteStatus[product_id]
+
+		if (isCurrentlyFavorite) {
+			dispatch(
+				removeFromFavorites({
+					userId: dbId,
+					productId: null,
+					diamond_id: null,
+					ring_style_id: favorite_id,
+				})
+			).then(() => {
+				dispatch(fetchStyles(dbId)) // ✅ Re-fetch products after updating favorites
+				dispatch(fetchUserFavorites(dbId))
+			})
+		} else {
+			dispatch(
+				addToFavorites({
+					dbId,
+					product_id: null,
+					diamond_id: null,
+					ring_style_id: product_id,
+				})
+			).then(() => {
+				dispatch(fetchStyles(dbId)) // ✅ Re-fetch products after adding to favorites
+			})
+		}
 	}
 
 	return (
@@ -30,12 +80,28 @@ function RingGrid() {
 			<div className="min-h-screen flex flex-col items-center">
 				<main className="flex-1 w-full  p-8">
 					<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8">
-						{rings.map((product, index) => (
+						{styles.map((product, index) => (
 							<button
 								onClick={() => handleClick(product.ring_style_id)}
 								key={product.ring_style_id}
 								className="bg-white shadow-lg text-center transition-transform transform hover:scale-105 hover:shadow-xl border border-[#be9080]"
 							>
+								<div
+									className="absolute bottom-20 right-4 text-2xl cursor-pointer text-[#be9080]"
+									onClick={(e) =>
+										handleFavorite(
+											e,
+											product.ring_style_id,
+											product.favorite_id
+										)
+									}
+								>
+									{favoriteStatus[product.ring_style_id] ? (
+										<FaHeart className="text-red-500" />
+									) : (
+										<FaRegHeart />
+									)}
+								</div>
 								<img
 									src={
 										hoveredImage === index ? diamondHoverImage : diamondImage
