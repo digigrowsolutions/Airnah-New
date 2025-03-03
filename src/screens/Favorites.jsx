@@ -53,31 +53,96 @@ const Favorites = () => {
 				<p className="text-gray-600">Your favorites list is empty.</p>
 			) : (
 				<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-					{favorites.map((item) => (
-						<div
-							key={item.favorite_id}
-							className="bg-white shadow-md rounded-lg p-6 hover:shadow-lg transition"
-						>
-							<img
-								src={item.image}
-								alt={item.product_name}
-								className="w-full h-40 object-cover rounded-lg mb-4"
-							/>
-							<h2 className="text-lg font-semibold text-gray-800">
-								{item.product_name}
-							</h2>
-							<p className="text-xl font-bold text-blue-600">
-								{currency}
-								{convertPrice(item.product_price, country, INR_rate, GBP_rate)}
-							</p>
-							<button
-								onClick={() => handleRemove(item.favorite_id)}
-								className="mt-4 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition"
+					{favorites.map((item) =>
+						item.product_type === 1 ? (
+							<div
+								key={item.favorite_id}
+								className="bg-white shadow-md rounded-lg p-6 hover:shadow-lg transition"
 							>
-								Remove from Favorites
-							</button>
-						</div>
-					))}
+								<img
+									src={item.image}
+									alt={item.product_name}
+									className="w-full h-40 object-cover rounded-lg mb-4"
+								/>
+								<h2 className="text-lg font-semibold text-gray-800">
+									{item.product_name}
+								</h2>
+								<p className="text-xl font-bold text-blue-600">
+									{currency}
+									{convertPrice(
+										item.product_price,
+										country,
+										INR_rate,
+										GBP_rate
+									)}
+								</p>
+								<button
+									onClick={() => handleRemove(item.favorite_id)}
+									className="mt-4 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition"
+								>
+									Remove from Favorites
+								</button>
+							</div>
+						) : item.product_type === 2 ? (
+							<div
+								key={item.favorite_id}
+								className="bg-white shadow-md rounded-lg p-6 hover:shadow-lg transition"
+							>
+								<img
+									src={item.image}
+									alt={item.diamond_name}
+									className="w-full h-40 object-cover rounded-lg mb-4"
+								/>
+								<h2 className="text-lg font-semibold text-gray-800">
+									{item.diamond_name}
+								</h2>
+								<p className="text-xl font-bold text-blue-600">
+									{currency}
+									{convertPrice(
+										item.diamond_price,
+										country,
+										INR_rate,
+										GBP_rate
+									)}
+								</p>
+								<button
+									onClick={() => handleRemove(item.favorite_id)}
+									className="mt-4 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition"
+								>
+									Remove from Favorites
+								</button>
+							</div>
+						) : (
+							<div
+								key={item.favorite_id}
+								className="bg-white shadow-md rounded-lg p-6 hover:shadow-lg transition"
+							>
+								<img
+									src={item.image}
+									alt={item.ring_style_name}
+									className="w-full h-40 object-cover rounded-lg mb-4"
+								/>
+								<h2 className="text-lg font-semibold text-gray-800">
+									{item.ring_style_name}
+								</h2>
+								<p className="text-xl font-bold text-blue-600">
+									{currency}
+									{convertPrice(
+										item.ring_style_price,
+										country,
+										INR_rate,
+										GBP_rate
+									)}
+								</p>
+								<button
+									onClick={() => handleRemove(item.favorite_id)}
+									className="mt-4 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition"
+								>
+									Remove from Favorites
+								</button>
+							</div>
+						)
+					)}
 				</div>
 			)}
 		</div>

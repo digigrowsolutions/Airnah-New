@@ -23,6 +23,14 @@ export async function getUserFavorites({ clerk_user_id }) {
             `.as('ring_style_price'),
 			diamond_name: diamondsTable.name,
 			diamond_price: diamondsTable.price,
+			product_type: sql`
+                CASE 
+                    WHEN ${favoritesTable.product_id} IS NOT NULL THEN 1
+                    WHEN ${favoritesTable.diamond_id} IS NOT NULL THEN 2
+                    WHEN ${favoritesTable.ring_style_id} IS NOT NULL THEN 3
+                    ELSE NULL 
+                END
+            `.as('product_type'),
 		})
 		.from(favoritesTable)
 		.leftJoin(
