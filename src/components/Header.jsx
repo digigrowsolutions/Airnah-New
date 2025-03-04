@@ -10,7 +10,7 @@ import {
 } from '@clerk/clerk-react'
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchCurrencyRates, setCountry } from '../redux/localizationSlice'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { menuItems } from '../utils/menuItems'
 import model from '../assets/Wedding-rings.jpg'
 
@@ -22,8 +22,9 @@ import {
 export default function Header() {
 	const [dropdownOpen, setDropdownOpen] = useState(null)
 	const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-
+	const [query, setQuery] = useState('')
 	const dispatch = useDispatch()
+	const navigate = useNavigate()
 	const { country } = useSelector((state) => state.localization)
 	const { favorites, cartItems } = useSelector((state) => state.favoritesCart)
 	const { user, isSignedIn } = useUser()
@@ -49,6 +50,10 @@ export default function Header() {
 
 	const handleCountryChange = (event) => {
 		dispatch(setCountry(event.target.value))
+	}
+
+	const handleSearch = () => {
+		navigate('/search', { state: query })
 	}
 
 	return (
@@ -202,9 +207,15 @@ export default function Header() {
 								<input
 									type="text"
 									placeholder="Search"
+									value={query}
+									onChange={(e) => setQuery(e.target.value)}
 									className="border border-gray-300 rounded-full py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-400 w-48"
 								/>
-								<Search className="text-gray-500 cursor-pointer" size={18} />
+								<Search
+									onClick={handleSearch}
+									className="text-gray-500 cursor-pointer"
+									size={18}
+								/>
 							</div>
 
 							{/* Icons */}

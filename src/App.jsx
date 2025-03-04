@@ -10,7 +10,6 @@ import Favorites from './screens/Favorites'
 import Cart from './screens/Cart'
 import ProductGrid from './screens/ProductGrid'
 import ProductsList from './screens/Admin/ProductsList'
-import Product from './components/Product'
 import AddProduct from './screens/Admin/AddProduct'
 import AdminDashboard from './screens/Admin/Dashboard'
 import UsersList from './screens/Admin/UsersList'
@@ -20,6 +19,8 @@ import AddDiamond from './screens/Admin/AddDiamond'
 import AddStyle from './screens/Admin/AddStyle'
 import DiamondsList from './screens/Admin/DiamondsList'
 import StylesList from './screens/Admin/StylesList'
+import Product from './screens/Product'
+import SearchGrid from './screens/SearchGrid'
 
 function App() {
 	return (
@@ -43,6 +44,7 @@ function App() {
 					<Route path="/addStyles" element={<AddStyle />} />
 					<Route path="/diamondsList" element={<DiamondsList />} />
 					<Route path="/stylesList" element={<StylesList />} />
+					<Route path="/search" element={<SearchGrid />} />
 				</Routes>
 				<Footer />
 			</PersistGate>

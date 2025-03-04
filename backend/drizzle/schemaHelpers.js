@@ -1,4 +1,4 @@
-import { decimal, integer, text, timestamp } from 'drizzle-orm/pg-core'
+import { decimal, integer, jsonb, text, timestamp } from 'drizzle-orm/pg-core'
 
 export const created_at = timestamp('created_at', { withTimezone: true })
 	.notNull()
@@ -15,4 +15,4 @@ export const price = decimal(10, 2).notNull()
 
 export const description = text().notNull()
 
-export const image_URL = text()
+export const image_URL = jsonb('image_URL').default([]).notNull()

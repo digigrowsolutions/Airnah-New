@@ -17,7 +17,11 @@ import {
 	getProduct,
 	updateProduct,
 } from './drizzle/features/products.js'
-import { addMasterEntry, getMasterList } from './drizzle/features/master.js'
+import {
+	addMasterEntry,
+	getMasterList,
+	searchProducts,
+} from './drizzle/features/master.js'
 import {
 	addDiamond,
 	getAllDiamonds,
@@ -382,6 +386,20 @@ app.put('/api/admin/updateStyle/:product_id', async (req, res) => {
 	} catch (err) {
 		console.log('updateStyle Error: ' + err)
 		res.status(500).json({ error: 'Failed to update style' })
+	}
+})
+
+app.get('/api/search', async (req, res) => {
+	try {
+		const { search } = req.query
+		if (!search) {
+			return res.status(400).json({ error: 'Search query is required' })
+		}
+		const data = await searchProducts(search)
+		res.json(data)
+	} catch (err) {
+		console.log('searchProducts Error: ' + err)
+		res.status(500).json({ error: 'Failed to get results' })
 	}
 })
 

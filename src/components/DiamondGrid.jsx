@@ -62,9 +62,7 @@ function DiamondGrid() {
 			dispatch(
 				removeFromFavorites({
 					userId: dbId,
-					productId: null,
 					diamond_id: favorite_id,
-					ring_style_id: null,
 				})
 			).then(() => {
 				dispatch(fetchDiamonds(dbId)) // ✅ Re-fetch products after updating favorites
@@ -74,9 +72,7 @@ function DiamondGrid() {
 			dispatch(
 				addToFavorites({
 					dbId,
-					product_id: null,
 					diamond_id: product_id,
-					ring_style_id: null,
 				})
 			).then(() => {
 				dispatch(fetchDiamonds(dbId)) // ✅ Re-fetch products after adding to favorites

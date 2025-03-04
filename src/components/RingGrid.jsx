@@ -53,8 +53,6 @@ function RingGrid() {
 			dispatch(
 				removeFromFavorites({
 					userId: dbId,
-					productId: null,
-					diamond_id: null,
 					ring_style_id: favorite_id,
 				})
 			).then(() => {
@@ -65,8 +63,6 @@ function RingGrid() {
 			dispatch(
 				addToFavorites({
 					dbId,
-					product_id: null,
-					diamond_id: null,
 					ring_style_id: product_id,
 				})
 			).then(() => {

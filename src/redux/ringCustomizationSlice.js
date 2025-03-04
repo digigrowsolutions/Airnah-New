@@ -42,6 +42,16 @@ const ringCustomizationSlice = createSlice({
 			Object.assign(state.productDetails[0], action.payload)
 		},
 		resetCustomization: () => initialState,
+		resetDiamond: (state) => {
+			state.productDetails[0].diamond = {
+				...initialState.productDetails[0].diamond,
+			}
+			state.productDetails[0].total_cost = null
+		},
+		resetRing: (state) => {
+			state.productDetails[0].ring = { ...initialState.productDetails[0].ring }
+			state.productDetails[0].total_cost = null
+		},
 		setCustomization: (state, action) => {
 			state.productDetails[0] = action.payload
 		},
@@ -57,5 +67,7 @@ export const {
 	updateTotalCost,
 	resetCustomization,
 	setCustomization,
+	resetDiamond,
+	resetRing,
 } = ringCustomizationSlice.actions
 export default ringCustomizationSlice.reducer
