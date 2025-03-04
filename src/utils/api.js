@@ -296,3 +296,15 @@ export const updateStyle = async (productId, data) => {
 		throw error
 	}
 }
+
+export const searchResult = async (text) => {
+	try {
+		const response = await axios.get(
+			`${REACT_APP_API_URL}/search?search=${text}`
+		)
+		return response
+	} catch (error) {
+		console.log('Error fetching search results', error)
+		throw error
+	}
+}

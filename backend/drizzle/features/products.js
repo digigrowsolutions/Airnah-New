@@ -21,6 +21,7 @@ export async function getAllProducts(clerk_user_id) {
 			average_rating: avg(reviewsTable.rating).as('average_rating'),
 			review_count: count(reviewsTable.review_id).as('review_count'),
 			favorite_id: favoritesTable.favourite_id,
+			image_URL: productsTable.image_URL,
 		})
 		.from(productsTable)
 		.leftJoin(

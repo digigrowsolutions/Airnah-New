@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import diamondImage from '../assets/ring2.jpg'
-import diamondHoverImage from '../assets/Wedding-rings.jpg'
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchProducts } from '../redux/userProductsSlice'
 import { convertPrice } from '../utils/helpers'
@@ -32,7 +30,8 @@ export default function ProductGrid() {
 	)
 	const { user } = useUser()
 	const dbId = user?.publicMetadata?.dbId
-	const [hoveredImage, setHoveredImage] = useState(null)
+	const [hoveredProduct, setHoveredProduct] = useState(null)
+	const [imageIndex, setImageIndex] = useState({})
 	const [favoriteStatus, setFavoriteStatus] = useState({})
 
 	useEffect(() => {
@@ -47,8 +46,6 @@ export default function ProductGrid() {
 		products.forEach((product) => {
 			favStatus[product.product_id] = product.favorite_id !== null
 		})
-		console.log(products)
-		console.log(favStatus)
 		setFavoriteStatus(favStatus)
 	}, [products])
 
@@ -75,24 +72,25 @@ export default function ProductGrid() {
 		}
 	}
 
-	// const handleFavorite = (e, product_id, favorite_id) => {
-	// 	e.stopPropagation()
+	// Function to start cycling images
+	const startImageCycle = (productId, images) => {
+		if (!images || images.length === 0) return
+		let index = 0
 
-	// 	const isCurrentlyFavorite = favoriteStatus[product_id]
+		const interval = setInterval(() => {
+			setImageIndex((prev) => ({ ...prev, [productId]: index }))
+			index = (index + 1) % images.length
+		}, 500)
 
-	// 	if (isCurrentlyFavorite) {
-	// 		dispatch(removeFromFavorites({ userId: dbId, productId: favorite_id }))
-	// 		dispatch(fetchUserFavorites(dbId))
-	// 	} else {
-	// 		dispatch(addToFavorites({ dbId, product_id }))
-	// 	}
+		setHoveredProduct((prev) => ({ ...prev, [productId]: interval }))
+	}
 
-	// 	// Toggle favorite status locally
-	// 	setFavoriteStatus((prev) => ({
-	// 		...prev,
-	// 		[product_id]: !isCurrentlyFavorite,
-	// 	}))
-	// }
+	// Function to stop cycling images
+	const stopImageCycle = (productId) => {
+		clearInterval(hoveredProduct?.[productId])
+		setHoveredProduct((prev) => ({ ...prev, [productId]: null }))
+		setImageIndex((prev) => ({ ...prev, [productId]: 0 }))
+	}
 
 	return (
 		<div className="min-h-screen bg-white flex flex-col items-center">
@@ -119,7 +117,7 @@ export default function ProductGrid() {
 
 			<main className="flex-1 w-full  p-8">
 				<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8">
-					{products.map((product, index) => (
+					{products.map((product) => (
 						<button
 							onClick={() => handleClick(product.product_id)}
 							key={product.product_id}
@@ -137,13 +135,23 @@ export default function ProductGrid() {
 									<FaRegHeart />
 								)}
 							</div>
+							{/* Image section with hover effect */}
 							<img
+								src={product.image_URL?.[imageIndex[product.product_id] || 0]}
+								alt={product.name}
+								className="w-full h-72 object-cover border-b border-[#be9080] transition duration-500 ease-in-out"
+								onMouseEnter={() =>
+									startImageCycle(product.product_id, product.image_URL)
+								}
+								onMouseLeave={() => stopImageCycle(product.product_id)}
+							/>
+							{/* <img
 								src={hoveredImage === index ? diamondHoverImage : diamondImage}
 								alt={product.name}
 								className="w-full h-72 object-cover border-b border-[#be9080] transition duration-1000 ease-in-out"
 								onMouseEnter={() => setHoveredImage(index)}
 								onMouseLeave={() => setHoveredImage(null)}
-							/>
+							/> */}
 							<div className="p-4">
 								<h2 className="text-xl font-light mb-2 text-[#be9080]">
 									{product.name}

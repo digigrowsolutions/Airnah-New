@@ -3,7 +3,11 @@ import { useUser, SignInButton } from '@clerk/clerk-react'
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchUserCartItems, removeFromCart } from '../redux/favoritesCartSlice'
 import { convertPrice } from '../utils/helpers'
-import { setCustomization } from '../redux/ringCustomizationSlice'
+import {
+	setCustomization,
+	setShowDiamond,
+	setShowRing,
+} from '../redux/ringCustomizationSlice'
 import { useNavigate } from 'react-router-dom'
 
 const Cart = () => {
@@ -34,20 +38,26 @@ const Cart = () => {
 	}
 
 	const handleView = (item) => {
-		dispatch(
-			setCustomization({
-				diamond: {
-					product_id: item.diamond_id,
-					diamond_price: item.diamond_price,
-				},
-				ring: {
-					product_id: item.ring_style_id,
-					ring_price: item.ring_style_price,
-				},
-				total_cost: +item.diamond_price + +item.ring_style_price,
-			})
-		)
-		navigate('/customize')
+		if (item.product_id !== null) {
+			navigate(`/products/${item.product_id}`)
+		} else {
+			dispatch(
+				setCustomization({
+					diamond: {
+						product_id: item.diamond_id,
+						diamond_price: item.diamond_price,
+					},
+					ring: {
+						product_id: item.ring_style_id,
+						ring_price: item.ring_style_price,
+					},
+					total_cost: +item.diamond_price + +item.ring_style_price,
+				})
+			)
+			dispatch(setShowDiamond(true))
+			dispatch(setShowRing(true))
+			navigate('/customize')
+		}
 	}
 
 	if (!isSignedIn) {
