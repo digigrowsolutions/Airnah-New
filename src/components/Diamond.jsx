@@ -1,99 +1,150 @@
-import { useDispatch, useSelector } from 'react-redux'
-import { setStep, updateDiamondDetails } from '../redux/ringCustomizationSlice'
-import Image from '../assets/ring4.jpg'
-import { useEffect, useState } from 'react'
-import { getDiamond } from '../utils/api'
-import { convertPrice } from '../utils/helpers'
+import { useDispatch, useSelector } from 'react-redux';
+import { setStep, updateDiamondDetails } from '../redux/ringCustomizationSlice';
+import Image from '../assets/ring4.jpg';
+import { useEffect, useState } from 'react';
+import { getDiamond } from '../utils/api';
+import { convertPrice } from '../utils/helpers';
 
 function Diamond() {
-	const dispatch = useDispatch()
-	const { productDetails } = useSelector((state) => state.ringCustomization)
-	const { currency, country, INR_rate, GBP_rate } = useSelector(
-		(state) => state.localization
-	)
+  const dispatch = useDispatch();
+  const { productDetails } = useSelector((state) => state.ringCustomization);
+  const { currency, country, INR_rate, GBP_rate } = useSelector(
+    (state) => state.localization
+  );
 
-	const [product, setProduct] = useState(null)
+  const [product, setProduct] = useState(null);
 
-	useEffect(() => {
-		getDiamond(productDetails[0].diamond?.product_id).then((res) => {
-			setProduct(res.data[0])
-		})
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [])
+  useEffect(() => {
+    getDiamond(productDetails[0].diamond?.product_id).then((res) => {
+      setProduct(res.data[0]);
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-	const handleClick = () => {
-		dispatch(
-			updateDiamondDetails({
-				diamond_price: +product.price,
-			})
-		)
-		dispatch(setStep(2))
-	}
+  const handleClick = () => {
+    dispatch(
+      updateDiamondDetails({
+        diamond_price: +product.price,
+      })
+    );
+    dispatch(setStep(2));
+  };
 
-	return (
-		<div className="flex flex-col md:flex-row items-center gap-8">
-			{/* Left Side - Image Grid */}
-			<div className="w-full md:w-3/5 grid grid-cols-2 gap-4">
-				<img
-					src={Image}
-					alt="Ring 1"
-					className="w-full h-auto rounded-lg shadow-md"
-				/>
-				<img
-					src={Image}
-					alt="Ring 2"
-					className="w-full h-auto rounded-lg shadow-md"
-				/>
-				<img
-					src={Image}
-					alt="Ring 3"
-					className="w-full h-auto rounded-lg shadow-md"
-				/>
-				<img
-					src={Image}
-					alt="Ring 4"
-					className="w-full h-auto rounded-lg shadow-md"
-				/>
-			</div>
+  return (
+    <div className="flex flex-col md:flex-row items-start gap-2  ">
+      {/* Left Side - Image Grid */}
+      <div className="w-full md:w-3/5 grid grid-cols-2 gap-4">
+        <img
+          src={Image}
+          alt="Ring 1"
+          className="w-full h-100 "
+        />
+        <img
+          src={Image}
+          alt="Ring 2"
+          className="w-full h-100 "
+        />
+        <img
+          src={Image}
+          alt="Ring 3"
+          className="w-full h-100 "
+        />
+        <img
+          src={Image}
+          alt="Ring 4"
+		  className="w-full h-100 "
 
-			{/* Right Side - Content */}
-			<div className="w-full md:w-2/5 space-y-4">
-				<h2 className="text-2xl font-semibold">{product?.name}</h2>
-				<p className="text-gray-600">{product?.description}</p>
-				<div className="text-xl font-bold text-gray-900">
-					{currency}
-					{convertPrice(product?.price, country, INR_rate, GBP_rate)}
-				</div>
-				{/* <div className="text-lg text-red-500 font-semibold">$435</div> */}
-				<p className="text-sm text-gray-500">(Setting Price)</p>
-				<div className="border-t pt-4 space-y-2 text-gray-700">
-					<p>
-						<strong>Flexible Payment Options:</strong> Buy now pay later with{' '}
-						<span className="text-blue-500 cursor-pointer">Klarna</span>{' '}
-						<span className="text-sm text-gray-500">Learn More</span>
-					</p>
-					<button
-						onClick={handleClick}
-						className="px-6 py-2 bg-blue-600 text-white rounded-lg shadow-md hover:bg-blue-700"
-					>
-						Select This Setting
-					</button>
-				</div>
-				<div className="text-sm text-gray-600">
-					<p>
-						<strong>Real-Time Ring Inspection</strong>
-					</p>
-					<p>
-						<strong>Ships by:</strong> Friday, February 28
-					</p>
-				</div>
-				<div className="text-sm text-gray-700 border-t pt-4">
-					<p className="font-semibold">Risk-Free Retail</p>
-					<p>✔ Free 2-Day Shipping, Hassle-Free Returns</p>
-				</div>
-			</div>
-		</div>
-	)
+        />
+      </div>
+
+      {/* Right Side - Content */}
+      <div className="w-full md:w-2/5 border border-[#bf927f] p-8 space-y-4 bg-white flex flex-col max-h-fit">
+        <h2 className="text-4xl special">{product?.name}</h2>
+        <p className="text-lg">{product?.description}</p>
+        <div className="text-2xl font-light text-green-900">
+          {currency}
+          {convertPrice(product?.price, country, INR_rate, GBP_rate)}
+          <p className="text-sm text-gray-500">(Setting Price)</p>
+        </div>
+
+        <div className=" pt-4 space-y-2">
+          <div className="bg-gray-100 p-4">
+            <div className="text-base text-gray-700">
+              Flexible Payment Options:
+            </div>
+            <div className="text-base text-gray-700">
+              3 Interest-Free Payments of $600
+            </div>
+            <div className="text-sm text-blue-500 cursor-pointer">
+              Learn More
+            </div>
+          </div>
+
+          <button
+            onClick={handleClick}
+            className="px-6 py-2 text-lg w-full h-16 bg-[#c9a992] text-white rounded-sm shadow-md hover:bg-[#bf927f] active:bg-[#a8826c]"
+          >
+            Select This Setting
+          </button>
+        </div>
+
+        <div className="text-sm text-gray-600">
+          <p>
+            <strong>Ships by:</strong> Friday, February 28
+          </p>
+        </div>
+
+        <div className="text-sm text-gray-900 space-y-2">
+          <div className="flex items-center space-x-2">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              width="20"
+              height="20"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M12 2l7 4v6c0 5-4 9-7 10-3-1-7-5-7-10V6l7-4z" />
+              <path d="M9 12l2 2 4-4" />
+            </svg>
+            <span>Risk-Free Retail</span>
+          </div>
+
+          <div className="flex items-center space-x-2">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              width="30"
+              height="20"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M3 16v-8h13v8" />
+              <path d="M16 16h2.5l3.5-3.5v-4.5h-6" />
+              <circle cx="6.5" cy="16.5" r="2.5" />
+              <circle cx="16.5" cy="16.5" r="2.5" />
+            </svg>
+            <span className="underline">
+              Free Overnight Shipping, Hassle-Free Returns
+            </span>
+          </div>
+        </div>
+
+        {/* Advertisement / Customization Box */}
+        <div className="w-full h-32 bg-gray-200 flex items-center justify-center mt-6 border border-gray-300">
+          <p className="text-gray-600 text-center">
+            Your Ad / Customization Box
+          </p>
+        </div>
+      </div>
+    </div>
+  );
 }
 
-export default Diamond
+export default Diamond;
