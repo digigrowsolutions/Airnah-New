@@ -62,7 +62,9 @@ function DiamondGrid() {
 			dispatch(
 				removeFromFavorites({
 					userId: dbId,
+					productId: null,
 					diamond_id: favorite_id,
+					ring_style_id: null,
 				})
 			).then(() => {
 				dispatch(fetchDiamonds(dbId)) // ✅ Re-fetch products after updating favorites
@@ -72,7 +74,9 @@ function DiamondGrid() {
 			dispatch(
 				addToFavorites({
 					dbId,
+					product_id: null,
 					diamond_id: product_id,
+					ring_style_id: null,
 				})
 			).then(() => {
 				dispatch(fetchDiamonds(dbId)) // ✅ Re-fetch products after adding to favorites
@@ -231,10 +235,10 @@ function DiamondGrid() {
 					<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8">
 						{diamonds.map((product, index) => (
 							<button
-								onClick={() => handleClick(product.diamond_id)}
-								key={product.diamond_id}
-								className="bg-white shadow-lg text-center transition-transform transform hover:scale-105 hover:shadow-xl border border-[#be9080]"
-							>
+							onClick={() => handleClick(product.diamond_id)}
+							key={product.diamond_id}
+							className="bg-white shadow-lg text-center transition-transform transform hover:scale-110 hover:shadow-xl border border-[#be9080] w-96 h-128 rounded-lg overflow-hidden"
+						  >
 								<div
 									className="absolute bottom-20 right-4 text-2xl cursor-pointer text-[#be9080]"
 									onClick={(e) =>
@@ -247,25 +251,23 @@ function DiamondGrid() {
 										<FaRegHeart />
 									)}
 								</div>
-								<img
-									src={
-										hoveredImage === index ? diamondHoverImage : diamondImage
-									}
-									alt={product.name}
-									className="w-full h-72 object-cover border-b border-[#be9080] transition duration-1000 ease-in-out"
-									onMouseEnter={() => setHoveredImage(index)}
-									onMouseLeave={() => setHoveredImage(null)}
-								/>
-								<div className="p-4">
-									<h2 className="text-xl font-light mb-2 text-[#be9080]">
-										{product.name}
-									</h2>
-									<p className="text-[#be9080] mb-4 text-lg font-light">
-										{currency}
-										{convertPrice(product.price, country, INR_rate, GBP_rate)}
-									</p>
-								</div>
-							</button>
+							<img
+							  src={hoveredImage === index ? diamondHoverImage : diamondImage}
+							  alt={product.name}
+							  className="w-full h-96 object-cover border-b border-[#be9080] transition duration-1000 ease-in-out"
+							  onMouseEnter={() => setHoveredImage(index)}
+							  onMouseLeave={() => setHoveredImage(null)}
+							/>
+							<div className="pt-2">
+							  <h2 className="text-lg font-light  text-[#be9080]">
+								{product.name}
+							  </h2>
+							  <p className="text-[#be9080] text-xl pt-2 font-light mb-2">
+								{currency}
+								{convertPrice(product.price, country, INR_rate, GBP_rate)}
+							  </p>
+							</div>
+						  </button>
 						))}
 					</div>
 				</main>
