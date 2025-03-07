@@ -6,6 +6,7 @@ import { convertPrice } from '../utils/helpers'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useUser } from '@clerk/clerk-react'
 import { addToCart } from '../redux/favoritesCartSlice'
+import ReviewsList from '../components/ReviewsList'
 
 function Product() {
 	const dispatch = useDispatch()
@@ -109,6 +110,7 @@ function Product() {
 					</div>
 				</div>
 			</div>
+			<ReviewsList product_id={product?.product_id} />
 		</>
 	)
 }
