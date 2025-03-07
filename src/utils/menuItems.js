@@ -82,27 +82,7 @@ export const menuItems = [
 			},
 		],
 	},
-	{
-		name: 'Education',
-		submenu: [
-			{
-				heading: 'Diamond Education',
-				items: ['The 4 Cs', 'Diamond Shapes', 'Diamond Certifications', 'Lab-Grown vs Natural'],
-			},
-			{
-				heading: 'Metal Education',
-				items: ['Gold vs Platinum', 'Rose Gold vs Yellow Gold', 'White Gold vs Silver'],
-			},
-			{
-				heading: 'Ring Sizing',
-				items: ['Find Your Ring Size', 'Resizing Guide', 'International Size Chart'],
-			},
-			{
-				heading: 'Jewelry Care',
-				items: ['Cleaning Guide', 'Storage Tips', 'Maintenance & Repair'],
-			},
-		],
-	},
+	
 	{
 		name: 'FAQ',
 		submenu: [
