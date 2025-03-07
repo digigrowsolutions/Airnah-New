@@ -44,6 +44,7 @@ import {
 	getUserFavorites,
 	removeFromFavorites,
 } from './drizzle/features/favorites.js'
+import { getProductReviews } from './drizzle/features/reviews.js'
 
 dotenv.config()
 
@@ -400,6 +401,40 @@ app.get('/api/search', async (req, res) => {
 	} catch (err) {
 		console.log('searchProducts Error: ' + err)
 		res.status(500).json({ error: 'Failed to get results' })
+	}
+})
+
+app.get('/api/reviews', async (req, res) => {
+	try {
+		const {
+			product_id,
+			page,
+			limit,
+			sortBy,
+			sortOrder,
+			rating,
+			hasImage,
+			fromDate,
+			toDate,
+		} = req.query
+		if (!product_id) {
+			return res.status(400).json({ error: 'product_id is required' })
+		}
+		const data = await getProductReviews({
+			product_id,
+			page,
+			limit,
+			sortBy,
+			sortOrder,
+			rating,
+			hasImage,
+			fromDate,
+			toDate,
+		})
+		res.json(data)
+	} catch (error) {
+		console.error(error)
+		res.status(500).json({ error: 'Internal Server Error' })
 	}
 })
 

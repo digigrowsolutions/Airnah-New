@@ -308,3 +308,35 @@ export const searchResult = async (text) => {
 		throw error
 	}
 }
+
+export const fetchReviews = async ({
+	product_id,
+	page,
+	limit,
+	sortBy,
+	sortOrder,
+	rating,
+	hasImage,
+	fromDate,
+	toDate,
+}) => {
+	try {
+		const response = await axios.get(`${REACT_APP_API_URL}/reviews`, {
+			params: {
+				product_id,
+				page,
+				limit,
+				sortBy,
+				sortOrder,
+				rating,
+				hasImage,
+				fromDate,
+				toDate,
+			},
+		})
+		return response.data
+	} catch (error) {
+		console.error('Error fetching reviews:', error)
+		return null
+	}
+}
