@@ -35,11 +35,20 @@ export default function ProductGrid() {
 	const [favoriteStatus, setFavoriteStatus] = useState({})
 
 	useEffect(() => {
+		console.log('useEffect triggered!');
+		console.log('dbId value:', dbId); // Log dbId to check its value
+	
 		if (dbId) {
-			dispatch(fetchProducts(dbId))
+			console.log('Dispatching fetchProducts with dbId:', dbId);
+			dispatch(fetchProducts(dbId));
+		} else {
+			console.log('dbId is missing or undefined, not dispatching.');
 		}
+	
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [dbId, dispatch])
+	}, [dbId, dispatch]);
+	
+	
 
 	useEffect(() => {
 		const favStatus = {}
