@@ -21,12 +21,14 @@ import DiamondsList from './screens/Admin/DiamondsList'
 import StylesList from './screens/Admin/StylesList'
 import Product from './screens/Product'
 import SearchGrid from './screens/SearchGrid'
+import AdvertisementStrip from './components/addstrip' // Importing Ad Strip
 
 function App() {
 	return (
 		<Provider store={store}>
 			<PersistGate loading={null} persistor={persistor}>
 				<Header />
+				<AdvertisementStrip /> {/* Adding the Advertisement Strip */}
 				<Routes>
 					<Route path="/" element={<Home />} />
 					<Route path="/customize" element={<CustomizeRing />} />

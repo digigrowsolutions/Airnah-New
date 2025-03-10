@@ -25,6 +25,7 @@ function Product() {
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+  const [activeTab, setActiveTab] = useState("earring");
 
   const handleClick = () => {
     dispatch(
@@ -112,73 +113,107 @@ function Product() {
       </div>
 
       {/* Product Description Section */}
-      <div className="mt-8 p-6">
-        <h3 className="text-2xl font-semibold mb-4">Product Description</h3>
-        <div className="border p-4 rounded-lg">
-          <p className="text-gray-700">SKU: 28008W141B</p>
-          <p className="text-gray-700">
+      <div className="mt-8 p-6 bg-white shadow-lg rounded-2xl">
+        <h3 className="text-2xl font-semibold mb-4 text-gray-900">
+          Product Description
+        </h3>
+        <div className="">
+          <p className="text-gray-700 font-medium">SKU: 28008W141B</p>
+          <p className="text-gray-600 mt-2">
             Two perfectly matched round brilliant diamonds set into a refined
-            14K white gold four prong mounting with standard friction backs.
+            14K white gold four-prong mounting with standard friction backs.
           </p>
-          <div className="bg-yellow-200 p-3 rounded-lg my-4">
-            <p className="text-yellow-800 font-light">
+          <div className="bg-yellow-100 p-3 rounded-lg my-4 border-l-4 border-yellow-500">
+            <p className="text-yellow-800 font-medium">
               <strong>DISCLAIMER:</strong> Earring backings are provided as
               shown and cannot be altered.
             </p>
           </div>
-          <h4 className="text-lg font-semibold mt-4">Earring Information</h4>
-          <table className="w-full mt-2">
-            <tbody>
-              <tr className="border-b">
-                <td className="py-2 font-semibold text-gray-700">Metal</td>
-                <td className="py-2 text-gray-700">14K White Gold</td>
-              </tr>
-              <tr className="border-b">
-                <td className="py-2 font-semibold text-gray-700">Backing</td>
-                <td className="py-2 text-gray-700">Push Back</td>
-              </tr>
-              <tr className="border-b">
-                <td className="py-2 font-semibold text-gray-700">
-                  Rhodium Finish
-                </td>
-                <td className="py-2 text-gray-700">Yes</td>
-              </tr>
-              <tr className="border-b">
-                <td className="py-2 font-semibold text-gray-700">
-                  Diamond Shape
-                </td>
-                <td className="py-2 text-gray-700">Round</td>
-              </tr>
-              <tr className="border-b">
-                <td className="py-2 font-semibold text-gray-700">Quantity</td>
-                <td className="py-2 text-gray-700">2</td>
-              </tr>
-              <tr className="border-b">
-                <td className="py-2 font-semibold text-gray-700">
-                  Average Total Carat
-                </td>
-                <td className="py-2 text-gray-700">0.25</td>
-              </tr>
-              <tr className="border-b">
-                <td className="py-2 font-semibold text-gray-700">
-                  Average Color
-                </td>
-                <td className="py-2 text-gray-700">H-I</td>
-              </tr>
-              <tr className="border-b">
-                <td className="py-2 font-semibold text-gray-700">
-                  Average Clarity
-                </td>
-                <td className="py-2 text-gray-700">SI1-SI2</td>
-              </tr>
-              <tr className="border-b">
-                <td className="py-2 font-semibold text-gray-700">
-                  Setting Type
-                </td>
-                <td className="py-2 text-gray-700">Prong</td>
-              </tr>
-            </tbody>
-          </table>
+
+          {/* Tabs Navigation */}
+          <div className="flex justify-start border-b pb-2 relative">
+            <button
+              className={`px-6 py-2 text-gray-600 font-semibold transition-all duration-300 rounded-t-lg ${
+                activeTab === "earring"
+                  ? "text-gray-900 border-b-4 border-gray-900"
+                  : "hover:text-gray-900 hover:border-b-4 hover:border-gray-300"
+              }`}
+              onClick={() => setActiveTab("earring")}
+            >
+              Earring Information
+            </button>
+
+            <button
+              className={`px-6 py-2 text-gray-600 font-semibold transition-all duration-300 rounded-t-lg ${
+                activeTab === "setting"
+                  ? "text-gray-900 border-b-4 border-gray-900"
+                  : "hover:text-gray-900 hover:border-b-4 hover:border-gray-300"
+              }`}
+              onClick={() => setActiveTab("setting")}
+            >
+              Setting Information
+            </button>
+
+            {/* Decorative Highlight Bar */}
+           
+          </div>
+
+          {/* Tab Content */}
+          <div className="mt-4">
+            {activeTab === "earring" && (
+              <table className="w-full border-collapse text-left">
+                <tbody>
+                  {[
+                    ["Metal", "14K White Gold"],
+                    ["Backing", "Push Back"],
+                    ["Rhodium Finish", "Yes"],
+                    ["Diamond Shape", "Round"],
+                    ["Quantity", "2"],
+                    ["Average Total Carat", "0.25"],
+                    ["Average Color", "H-I"],
+                    ["Average Clarity", "SI1-SI2"],
+                    ["Setting Type", "Prong"],
+                  ].map(([label, value], index) => (
+                    <tr
+                      key={label}
+                      className={`${
+                        index % 2 === 0 ? "bg-gray-100" : "bg-white"
+                      }`}
+                    >
+                      <td className="py-2 px-4 font-semibold text-gray-700">
+                        {label}
+                      </td>
+                      <td className="py-2 px-4 text-gray-700">{value}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )}
+
+            {activeTab === "setting" && (
+              <table className="w-full border-collapse text-left">
+                <tbody>
+                  {[
+                    ["Metal", "14K White Gold"],
+                    ["Width", "2.00mm"],
+                    ["Rhodium Finish", "Yes"],
+                  ].map(([label, value], index) => (
+                    <tr
+                      key={label}
+                      className={`${
+                        index % 2 === 0 ? "bg-gray-100" : "bg-white"
+                      }`}
+                    >
+                      <td className="py-2 px-4 font-semibold text-gray-700">
+                        {label}
+                      </td>
+                      <td className="py-2 px-4 text-gray-700">{value}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )}
+          </div>
         </div>
       </div>
 
