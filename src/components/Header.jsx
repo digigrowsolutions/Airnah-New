@@ -1,63 +1,96 @@
-import { useState, useEffect } from 'react'
-import { ShoppingCart, Heart, Search } from 'lucide-react'
-import LOGO from '../assets/logo.webp'
+import { useState, useEffect } from 'react';
+import { ShoppingCart, Heart, Search } from 'lucide-react';
+import LOGO from '../assets/logo.webp';
 import {
 	SignedIn,
 	SignedOut,
 	SignInButton,
 	UserButton,
 	useUser,
-} from '@clerk/clerk-react'
-import { useDispatch, useSelector } from 'react-redux'
-import { fetchCurrencyRates, setCountry } from '../redux/localizationSlice'
-import { Link, useNavigate } from 'react-router-dom'
-import { menuItems } from '../utils/menuItems'
-import model from '../assets/Wedding-rings.jpg'
-
+} from '@clerk/clerk-react';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchCurrencyRates, setCountry } from '../redux/localizationSlice';
+import { Link, useNavigate } from 'react-router-dom';
+import { menuItems } from '../utils/menuItems';
+import model from '../assets/Wedding-rings.jpg';
 import {
 	fetchUserCartItems,
 	fetchUserFavorites,
-} from '../redux/favoritesCartSlice'
+} from '../redux/favoritesCartSlice';
+
+// Define navigation links for admin and regular users
+const adminNavLinks = [
+	{ to: '/dashboard', label: 'Dashboard' },
+	{ to: '/master', label: 'Master' },
+	{ to: '/userList', label: 'User List' },
+	{ to: '/productsList', label: 'Product List' },
+	{ to: '/diamondsList', label: 'Diamond List' },
+	{ to: '/stylesList', label: 'Style List' },
+	{ to: '/addProducts', label: 'Add Products' },
+	{ to: '/addDiamonds', label: 'Add Diamonds' },
+	{ to: '/addStyles', label: 'Add Styles' },
+];
+
+const userNavLinks = [
+	{ to: '/customize', label: 'Customize' },
+	{ to: '/product', label: 'Products' },
+	{ to: '/Edu', label: 'Education' },
+];
 
 export default function Header() {
-	const [dropdownOpen, setDropdownOpen] = useState(null)
-	const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-	const [query, setQuery] = useState('')
-	const dispatch = useDispatch()
-	const navigate = useNavigate()
-	const { country } = useSelector((state) => state.localization)
-	const { favorites, cartItems } = useSelector((state) => state.favoritesCart)
-	const { user, isSignedIn } = useUser()
-	const role = user?.publicMetadata?.role
-	const dbId = user?.publicMetadata?.dbId
+	const [dropdownOpen, setDropdownOpen] = useState(null);
+	const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+	const [query, setQuery] = useState('');
+	const dispatch = useDispatch();
+	const navigate = useNavigate();
+	const { country } = useSelector((state) => state.localization);
+	const { favorites, cartItems } = useSelector((state) => state.favoritesCart);
+	const { user, isSignedIn } = useUser();
+	const role = user?.publicMetadata?.role;
+	const dbId = user?.publicMetadata?.dbId;
 
+	// Fetch user data and currency rates on component mount
 	useEffect(() => {
-		if (isSignedIn && !role === 'admin') {
-			dispatch(fetchUserFavorites(dbId))
-			dispatch(fetchUserCartItems(dbId))
+		if (isSignedIn && role !== 'admin') {
+			dispatch(fetchUserFavorites(dbId));
+			dispatch(fetchUserCartItems(dbId));
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [user, isSignedIn])
+	}, [user, isSignedIn]);
 
 	useEffect(() => {
-		dispatch(fetchCurrencyRates())
+		dispatch(fetchCurrencyRates());
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [])
+	}, []);
 
+	// Handlers for mobile menu, country change, and search
 	const handleMobileMenuToggle = () => {
-		setMobileMenuOpen(!mobileMenuOpen)
-	}
+		setMobileMenuOpen(!mobileMenuOpen);
+	};
 
 	const handleCountryChange = (event) => {
-		dispatch(setCountry(event.target.value))
-	}
+		dispatch(setCountry(event.target.value));
+	};
 
 	const handleSearch = () => {
-		navigate('/search', { state: query })
-	}
+		navigate('/search', { state: query });
+	};
+
+	// Render navigation links dynamically
+	const renderNavLinks = (links) => {
+		return links.map((link, index) => (
+			<Link
+				key={index}
+				to={link.to}
+				className="relative text-gray-700 hover:text-gray-900 font-medium after:absolute after:left-0 after:bottom-0 after:h-[1px] after:bg-black after:w-0 after:transition-all after:duration-300 after:ease-in-out hover:after:w-full"
+			>
+				{link.label}
+			</Link>
+		));
+	};
 
 	return (
-		<header className="bg-white  w-full p-4 sticky top-0 z-50">
+		<header className="bg-white w-full p-4 sticky top-0 z-50">
 			<div className="max-w-full mx-auto flex items-center justify-evenly">
 				{/* Logo */}
 				<div className="text-2xl font-bold text-gray-800 flex items-center space-x-2">
@@ -73,60 +106,7 @@ export default function Header() {
 				{/* Navigation */}
 				{role === 'admin' && isSignedIn ? (
 					<nav className="flex-1 flex justify-center space-x-6">
-						<Link
-							to="/dashboard"
-							className="relative text-gray-700 hover:text-gray-900 font-medium after:absolute after:left-0 after:bottom-0 after:h-[1px] after:bg-black after:w-0 after:transition-all after:duration-300 after:ease-in-out hover:after:w-full"
-						>
-							Dashboard
-						</Link>
-						<Link
-							to="/master"
-							className="relative text-gray-700 hover:text-gray-900 font-medium after:absolute after:left-0 after:bottom-0 after:h-[1px] after:bg-black after:w-0 after:transition-all after:duration-300 after:ease-in-out hover:after:w-full"
-						>
-							Master
-						</Link>
-						<Link
-							to="/userList"
-							className="relative text-gray-700 hover:text-gray-900 font-medium after:absolute after:left-0 after:bottom-0 after:h-[1px] after:bg-black after:w-0 after:transition-all after:duration-300 after:ease-in-out hover:after:w-full"
-						>
-							User List
-						</Link>
-						<Link
-							to="/productsList"
-							className="relative text-gray-700 hover:text-gray-900 font-medium after:absolute after:left-0 after:bottom-0 after:h-[1px] after:bg-black after:w-0 after:transition-all after:duration-300 after:ease-in-out hover:after:w-full"
-						>
-							Product List
-						</Link>
-						<Link
-							to="/diamondsList"
-							className="relative text-gray-700 hover:text-gray-900 font-medium after:absolute after:left-0 after:bottom-0 after:h-[1px] after:bg-black after:w-0 after:transition-all after:duration-300 after:ease-in-out hover:after:w-full"
-						>
-							Diamond List
-						</Link>
-						<Link
-							to="/stylesList"
-							className="relative text-gray-700 hover:text-gray-900 font-medium after:absolute after:left-0 after:bottom-0 after:h-[1px] after:bg-black after:w-0 after:transition-all after:duration-300 after:ease-in-out hover:after:w-full"
-						>
-							Style List
-						</Link>
-						<Link
-							to="/addProducts"
-							className="relative text-gray-700 hover:text-gray-900 font-medium after:absolute after:left-0 after:bottom-0 after:h-[1px] after:bg-black after:w-0 after:transition-all after:duration-300 after:ease-in-out hover:after:w-full"
-						>
-							Add Products
-						</Link>
-						<Link
-							to="/addDiamonds"
-							className="relative text-gray-700 hover:text-gray-900 font-medium after:absolute after:left-0 after:bottom-0 after:h-[1px] after:bg-black after:w-0 after:transition-all after:duration-300 after:ease-in-out hover:after:w-full"
-						>
-							Add Diamonds
-						</Link>
-						<Link
-							to="/addStyles"
-							className="relative text-gray-700 hover:text-gray-900 font-medium after:absolute after:left-0 after:bottom-0 after:h-[1px] after:bg-black after:w-0 after:transition-all after:duration-300 after:ease-in-out hover:after:w-full"
-						>
-							Add Styles
-						</Link>
+						{renderNavLinks(adminNavLinks)}
 						<div className="flex items-center space-x-4">
 							<SignedIn>
 								<button className="p-2 rounded-full hover:bg-gray-100">
@@ -136,25 +116,8 @@ export default function Header() {
 						</div>
 					</nav>
 				) : (
-					<nav className="flex-1 flex justify-center space-x-6 ">
-						<Link
-							to="/customize"
-							className="relative text-gray-700 hover:text-gray-900 font-medium after:absolute after:left-0 after:bottom-0 after:h-[1px] after:bg-black after:w-0 after:transition-all after:duration-300 after:ease-in-out hover:after:w-full"
-						>
-							Customize
-						</Link>
-						<Link
-							to="/product"
-							className="relative text-gray-700 hover:text-gray-900 font-medium after:absolute after:left-0 after:bottom-0 after:h-[1px] after:bg-black after:w-0 after:transition-all after:duration-300 after:ease-in-out hover:after:w-full"
-						>
-							Products
-						</Link>
-						<Link
-							to="/Edu"
-							className="relative text-gray-700 hover:text-gray-900 font-medium after:absolute after:left-0 after:bottom-0 after:h-[1px] after:bg-black after:w-0 after:transition-all after:duration-300 after:ease-in-out hover:after:w-full"
-						>
-							Education
-						</Link>
+					<nav className="flex-1 flex justify-center space-x-6 items-center">
+						{renderNavLinks(userNavLinks)}
 						{Array.isArray(menuItems) && menuItems.length > 0
 							? menuItems.map((item, index) => (
 									<div
@@ -259,7 +222,7 @@ export default function Header() {
 							<select
 								value={country}
 								onChange={handleCountryChange}
-								className="  py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-400"
+								className="py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-400"
 							>
 								<option value="INR">INR</option>
 								<option value="USD">USD</option>
@@ -305,5 +268,5 @@ export default function Header() {
 				</div>
 			)}
 		</header>
-	)
-} 
+	);
+}

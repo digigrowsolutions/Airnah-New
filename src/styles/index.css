@@ -19,5 +19,17 @@ body {
 
 * {
   font-family: 'Lexend';
+}@keyframes scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
 }
 
+.animate-scroll {
+  display: inline-block;
+  width: max-content;
+  animation: scroll 120s linear infinite;
+}
