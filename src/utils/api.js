@@ -117,22 +117,18 @@ export const addProduct = async (data) => {
 
 export const getAllProducts = async (userId) => {
 	try {
-		console.log('Fetching products for user:', userId);
-		console.log('API URL:', `${REACT_APP_API_URL}/admin/getAllProducts/${userId}`);
-
 		const response = await axios.get(
 			`${REACT_APP_API_URL}/admin/getAllProducts/${userId}`
-		);
-		
-		console.log('Received response:', response.data); // Log API response
-
-		return response;
+		)
+		return response
 	} catch (error) {
-		console.log('Error getting all products:', error.response ? error.response.data : error.message);
-		throw error;
+		console.log(
+			'Error getting all products:',
+			error.response ? error.response.data : error.message
+		)
+		throw error
 	}
-};
-
+}
 
 export const getAllProductsByCategory = async (category) => {
 	try {

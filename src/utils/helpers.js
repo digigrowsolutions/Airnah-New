@@ -28,7 +28,7 @@ export const productJson = {
 	name: '',
 	category: 'ring',
 	description: '',
-	image_URL: '',
+	image_URL: [],
 	status: 'active',
 	source: 'natural',
 	shape: '',
@@ -51,7 +51,7 @@ export const productJson = {
 export const diamondJson = {
 	name: '',
 	description: '',
-	image_URL: '',
+	image_URL: [],
 	size: '0.5',
 	shape: 'round',
 	cut: 'regular',
@@ -63,7 +63,7 @@ export const diamondJson = {
 export const stylesJson = {
 	name: '',
 	description: '',
-	image_URL: '',
+	image_URL: [],
 	head_style: 'Four Prong',
 	head_style_price: '',
 	head_metal: '14K White Gold',

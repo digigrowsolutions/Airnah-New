@@ -2,16 +2,19 @@ import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchDiamonds } from '../../redux/userProductsSlice'
 import AddDiamond from './AddDiamond'
+import { useUser } from '@clerk/clerk-react'
 
 const DiamondsList = () => {
 	const dispatch = useDispatch()
 	const { diamonds } = useSelector((state) => state.userProducts)
 	const [selectedProduct, setSelectedProduct] = useState(null)
 	const [showForm, setShowForm] = useState(false)
+	const { user } = useUser()
+	const dbId = user?.publicMetadata?.dbId
 
 	useEffect(() => {
 		if (diamonds?.length === 0) {
-			dispatch(fetchDiamonds())
+			dispatch(fetchDiamonds(dbId))
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [])

@@ -11,6 +11,7 @@ export async function addDiamond(data) {
 }
 
 export async function getAllDiamonds(clerk_user_id) {
+	console.log(clerk_user_id)
 	const products = await db
 		.select({
 			diamond_id: diamondsTable.diamond_id,
@@ -18,6 +19,7 @@ export async function getAllDiamonds(clerk_user_id) {
 			category: diamondsTable.clarity,
 			price: diamondsTable.price,
 			favorite_id: favoritesTable.favourite_id,
+			image_URL: diamondsTable.image_URL,
 		})
 		.from(diamondsTable)
 		.leftJoin(

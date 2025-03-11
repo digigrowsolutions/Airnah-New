@@ -1,6 +1,4 @@
 import { useEffect, useState } from 'react'
-import diamondImage from '../assets/ring2.jpg'
-import diamondHoverImage from '../assets/Wedding-rings.jpg'
 import { useDispatch, useSelector } from 'react-redux'
 import {
 	setShowDiamond,
@@ -15,6 +13,7 @@ import {
 import { FaHeart, FaRegHeart } from 'react-icons/fa'
 import { useUser } from '@clerk/clerk-react'
 import { fetchDiamonds } from '../redux/userProductsSlice'
+import ImageCarousel from './ImageCarousel'
 
 function DiamondGrid() {
 	const dispatch = useDispatch()
@@ -24,7 +23,6 @@ function DiamondGrid() {
 	)
 	const { user } = useUser()
 	const dbId = user?.publicMetadata?.dbId
-	const [hoveredImage, setHoveredImage] = useState(null)
 	const [cut, setCut] = useState(50)
 	const [color, setColor] = useState(50)
 	const [carat, setCarat] = useState(50)
@@ -67,7 +65,7 @@ function DiamondGrid() {
 					ring_style_id: null,
 				})
 			).then(() => {
-				dispatch(fetchDiamonds(dbId)) // ✅ Re-fetch products after updating favorites
+				dispatch(fetchDiamonds(dbId))
 				dispatch(fetchUserFavorites(dbId))
 			})
 		} else {
@@ -79,13 +77,13 @@ function DiamondGrid() {
 					ring_style_id: null,
 				})
 			).then(() => {
-				dispatch(fetchDiamonds(dbId)) // ✅ Re-fetch products after adding to favorites
+				dispatch(fetchDiamonds(dbId))
 			})
 		}
 	}
 
 	return (
-		<>
+		<div className="min-h-screen bg-white flex flex-col items-center">
 			{/* Filters */}
 			<div className="grid grid-cols-1 md:grid-cols-3 gap-4 w-full text-center">
 				<div className="p-4">
@@ -230,49 +228,45 @@ function DiamondGrid() {
 					</div>
 				</div>
 			</div>
-			<div className="min-h-screen flex flex-col items-center">
-				<main className="flex-1 w-full  p-8">
-					<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8">
-						{diamonds.map((product, index) => (
-							<button
+
+			<main className="flex-1 w-full p-8">
+				<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8">
+					{diamonds.map((product) => (
+						<button
 							onClick={() => handleClick(product.diamond_id)}
 							key={product.diamond_id}
-							className="bg-white shadow-lg text-center transition-transform transform hover:scale-110 hover:shadow-xl border border-[#be9080] w-96 h-128 rounded-lg overflow-hidden"
-						  >
-								<div
-									className="absolute bottom-20 right-4 text-2xl cursor-pointer text-[#be9080]"
-									onClick={(e) =>
-										handleFavorite(e, product.diamond_id, product.favorite_id)
-									}
-								>
-									{favoriteStatus[product.diamond_id] ? (
-										<FaHeart className="text-red-500" />
-									) : (
-										<FaRegHeart />
-									)}
-								</div>
-							<img
-							  src={hoveredImage === index ? diamondHoverImage : diamondImage}
-							  alt={product.name}
-							  className="w-full h-96 object-cover border-b border-[#be9080] transition duration-1000 ease-in-out"
-							  onMouseEnter={() => setHoveredImage(index)}
-							  onMouseLeave={() => setHoveredImage(null)}
-							/>
-							<div className="pt-2">
-							  <h2 className="text-lg font-light  text-[#be9080]">
-								{product.name}
-							  </h2>
-							  <p className="text-[#be9080] text-xl pt-2 font-light mb-2">
-								{currency}
-								{convertPrice(product.price, country, INR_rate, GBP_rate)}
-							  </p>
+							className="bg-white shadow-lg text-center transition-transform transform hover:scale-105 hover:shadow-xl border border-[#be9080]"
+						>
+							<div
+								className="absolute bottom-28 right-4 text-2xl cursor-pointer text-[#be9080]"
+								onClick={(e) =>
+									handleFavorite(e, product.diamond_id, product.favorite_id)
+								}
+							>
+								{favoriteStatus[product.diamond_id] ? (
+									<FaHeart className="text-red-500" />
+								) : (
+									<FaRegHeart />
+								)}
 							</div>
-						  </button>
-						))}
-					</div>
-				</main>
-			</div>
-		</>
+							<ImageCarousel
+								images={product.image_URL}
+								className="w-full h-72 object-cover border-b border-[#be9080] transition duration-500 ease-in-out"
+							/>
+							<div className="p-4">
+								<h2 className="text-xl font-light mb-2 text-[#be9080]">
+									{product.name}
+								</h2>
+								<p className="text-[#be9080] text-lg mb-4 font-light">
+									{currency}
+									{convertPrice(product.price, country, INR_rate, GBP_rate)}
+								</p>
+							</div>
+						</button>
+					))}
+				</div>
+			</main>
+		</div>
 	)
 }
 

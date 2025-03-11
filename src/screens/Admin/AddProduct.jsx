@@ -4,6 +4,7 @@ import { convertFormData, productJson } from '../../utils/helpers'
 import { useDispatch } from 'react-redux'
 import { fetchProducts } from '../../redux/userProductsSlice'
 import { useUser } from '@clerk/clerk-react'
+import ImageURLInput from '../../components/ImageURLInput'
 
 const AddProduct = ({ initialData = null, onSuccess }) => {
 	const dispatch = useDispatch()
@@ -108,16 +109,12 @@ const AddProduct = ({ initialData = null, onSuccess }) => {
 						className="border p-2 rounded w-full"
 					/>
 				</div>
-				<div>
-					<label className="block font-medium">Image URL</label>
-					<input
-						type="text"
-						name="image_URL"
-						value={formData.image_URL}
-						onChange={handleChange}
-						className="border p-2 rounded w-full"
-					/>
-				</div>
+				<ImageURLInput
+					imageURLs={formData.image_URL}
+					setImageURLs={(newImageURLs) =>
+						setFormData({ ...formData, image_URL: newImageURLs })
+					}
+				/>
 				<div>
 					<label className="block font-medium">Shape</label>
 					<input
