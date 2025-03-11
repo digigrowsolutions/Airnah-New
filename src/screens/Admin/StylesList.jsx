@@ -2,16 +2,19 @@ import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchStyles } from '../../redux/userProductsSlice'
 import AddStyle from './AddStyle'
+import { useUser } from '@clerk/clerk-react'
 
 const StylesList = () => {
 	const dispatch = useDispatch()
 	const { styles } = useSelector((state) => state.userProducts)
 	const [selectedProduct, setSelectedProduct] = useState(null)
 	const [showForm, setShowForm] = useState(false)
+	const { user } = useUser()
+	const dbId = user?.publicMetadata?.dbId
 
 	useEffect(() => {
 		if (styles?.length === 0) {
-			dispatch(fetchStyles())
+			dispatch(fetchStyles(dbId))
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [])

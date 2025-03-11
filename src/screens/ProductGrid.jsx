@@ -11,6 +11,7 @@ import {
 	fetchUserFavorites,
 	removeFromFavorites,
 } from '../redux/favoritesCartSlice'
+import ImageCarousel from '../components/ImageCarousel'
 
 const filterOptions = [
 	{ label: 'Diamond Type', options: ['All', 'Natural', 'Lab Grown'] },
@@ -30,25 +31,14 @@ export default function ProductGrid() {
 	)
 	const { user } = useUser()
 	const dbId = user?.publicMetadata?.dbId
-	const [hoveredProduct, setHoveredProduct] = useState(null)
-	const [imageIndex, setImageIndex] = useState({})
 	const [favoriteStatus, setFavoriteStatus] = useState({})
 
 	useEffect(() => {
-		console.log('useEffect triggered!');
-		console.log('dbId value:', dbId); // Log dbId to check its value
-	
 		if (dbId) {
-			console.log('Dispatching fetchProducts with dbId:', dbId);
-			dispatch(fetchProducts(dbId));
-		} else {
-			console.log('dbId is missing or undefined, not dispatching.');
+			dispatch(fetchProducts(dbId))
 		}
-	
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [dbId, dispatch]);
-	
-	
+	}, [dbId, dispatch])
 
 	useEffect(() => {
 		const favStatus = {}
@@ -71,34 +61,14 @@ export default function ProductGrid() {
 			dispatch(
 				removeFromFavorites({ userId: dbId, productId: favorite_id })
 			).then(() => {
-				dispatch(fetchProducts(dbId)) // ✅ Re-fetch products after updating favorites
+				dispatch(fetchProducts(dbId))
 				dispatch(fetchUserFavorites(dbId))
 			})
 		} else {
 			dispatch(addToFavorites({ dbId, product_id })).then(() => {
-				dispatch(fetchProducts(dbId)) // ✅ Re-fetch products after adding to favorites
+				dispatch(fetchProducts(dbId))
 			})
 		}
-	}
-
-	// Function to start cycling images
-	const startImageCycle = (productId, images) => {
-		if (!images || images.length === 0) return
-		let index = 0
-
-		const interval = setInterval(() => {
-			setImageIndex((prev) => ({ ...prev, [productId]: index }))
-			index = (index + 1) % images.length
-		}, 500)
-
-		setHoveredProduct((prev) => ({ ...prev, [productId]: interval }))
-	}
-
-	// Function to stop cycling images
-	const stopImageCycle = (productId) => {
-		clearInterval(hoveredProduct?.[productId])
-		setHoveredProduct((prev) => ({ ...prev, [productId]: null }))
-		setImageIndex((prev) => ({ ...prev, [productId]: 0 }))
 	}
 
 	return (
@@ -124,7 +94,7 @@ export default function ProductGrid() {
 				))}
 			</div>
 
-			<main className="flex-1 w-full  p-8">
+			<main className="flex-1 w-full p-8">
 				<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8">
 					{products.map((product) => (
 						<button
@@ -144,23 +114,10 @@ export default function ProductGrid() {
 									<FaRegHeart />
 								)}
 							</div>
-							{/* Image section with hover effect */}
-							<img
-								src={product.image_URL?.[imageIndex[product.product_id] || 0]}
-								alt={product.name}
+							<ImageCarousel
+								images={product.image_URL}
 								className="w-full h-72 object-cover border-b border-[#be9080] transition duration-500 ease-in-out"
-								onMouseEnter={() =>
-									startImageCycle(product.product_id, product.image_URL)
-								}
-								onMouseLeave={() => stopImageCycle(product.product_id)}
 							/>
-							{/* <img
-								src={hoveredImage === index ? diamondHoverImage : diamondImage}
-								alt={product.name}
-								className="w-full h-72 object-cover border-b border-[#be9080] transition duration-1000 ease-in-out"
-								onMouseEnter={() => setHoveredImage(index)}
-								onMouseLeave={() => setHoveredImage(null)}
-							/> */}
 							<div className="p-4">
 								<h2 className="text-xl font-light mb-2 text-[#be9080]">
 									{product.name}

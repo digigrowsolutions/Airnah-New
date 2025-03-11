@@ -3,10 +3,14 @@ import { addDiamond, updateDiamond } from '../../utils/api'
 import { convertFormData, diamondJson } from '../../utils/helpers'
 import { useDispatch } from 'react-redux'
 import { fetchDiamonds } from '../../redux/userProductsSlice'
+import ImageURLInput from '../../components/ImageURLInput'
+import { useUser } from '@clerk/clerk-react'
 
 const AddDiamond = ({ initialData = null, onSuccess }) => {
 	const dispatch = useDispatch()
 	const [formData, setFormData] = useState(diamondJson)
+	const { user } = useUser()
+	const dbId = user?.publicMetadata?.dbId
 
 	// Pre-fill the form if initialData is provided
 	useEffect(() => {
@@ -28,13 +32,13 @@ const AddDiamond = ({ initialData = null, onSuccess }) => {
 			if (initialData) {
 				// Update existing product
 				await updateDiamond(initialData.diamond_id, cleanedData)
-				dispatch(fetchDiamonds())
+				dispatch(fetchDiamonds(dbId))
 				alert('Diamond updated successfully!')
 			} else {
 				// Add new product
 				await addDiamond(cleanedData)
 				alert('Diamond added successfully!')
-				dispatch(fetchDiamonds())
+				dispatch(fetchDiamonds(dbId))
 			}
 			setFormData(diamondJson)
 			onSuccess?.() // Call callback function to refresh list
@@ -119,16 +123,12 @@ const AddDiamond = ({ initialData = null, onSuccess }) => {
 						<option value="premium">premium</option>
 					</select>
 				</div>
-				<div>
-					<label className="block font-medium">Image URL</label>
-					<input
-						type="text"
-						name="image_URL"
-						value={formData.image_URL}
-						onChange={handleChange}
-						className="border p-2 rounded w-full"
-					/>
-				</div>
+				<ImageURLInput
+					imageURLs={formData.image_URL}
+					setImageURLs={(newImageURLs) =>
+						setFormData({ ...formData, image_URL: newImageURLs })
+					}
+				/>
 				<div>
 					<label className="block font-medium">Color</label>
 					<select

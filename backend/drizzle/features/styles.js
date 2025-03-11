@@ -21,6 +21,7 @@ export async function getAllStyles(clerk_user_id) {
 			shank_style_price: ringStylesTable.shank_style_price,
 			shank_metal_price: ringStylesTable.shank_metal_price,
 			favorite_id: favoritesTable.favourite_id,
+			image_URL: ringStylesTable.image_URL,
 		})
 		.from(ringStylesTable)
 		.leftJoin(
