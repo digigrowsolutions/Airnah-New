@@ -14,6 +14,7 @@ export async function getAllStyles(clerk_user_id) {
 	const products = await db
 		.select({
 			ring_style_id: ringStylesTable.ring_style_id,
+			SKU: ringStylesTable.SKU,
 			name: ringStylesTable.name,
 			category: ringStylesTable.head_style,
 			head_style_price: ringStylesTable.head_style_price,

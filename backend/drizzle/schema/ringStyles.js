@@ -4,6 +4,7 @@ import {
 	created_at,
 	description,
 	image_URL,
+	SKU,
 	updated_at,
 } from '../schemaHelpers.js'
 import { orderItemsTable } from './orderItems.js'
@@ -56,6 +57,7 @@ export const shankStyleEnum = pgEnum('shank_style', shankStyle)
 
 export const ringStylesTable = pgTable('ringStyles', {
 	ring_style_id: serial('ring_style_id').primaryKey(),
+	SKU,
 	name: text().notNull(),
 	image_URL,
 	description,

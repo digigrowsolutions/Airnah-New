@@ -22,6 +22,7 @@ import StylesList from './screens/Admin/StylesList'
 import Product from './screens/Product'
 import SearchGrid from './screens/SearchGrid'
 import AdvertisementStrip from './components/addstrip' // Importing Ad Strip
+import AddCoupon from './screens/Admin/AddCoupon'
 
 function App() {
 	return (
@@ -47,6 +48,7 @@ function App() {
 					<Route path="/diamondsList" element={<DiamondsList />} />
 					<Route path="/stylesList" element={<StylesList />} />
 					<Route path="/search" element={<SearchGrid />} />
+					<Route path="/addCoupon" element={<AddCoupon />} />
 				</Routes>
 				<Footer />
 			</PersistGate>

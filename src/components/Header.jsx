@@ -1,24 +1,23 @@
-import { useState, useEffect } from 'react';
-import { ShoppingCart, Heart, Search } from 'lucide-react';
-import LOGO from '../assets/logo.webp';
+import { useState, useEffect } from 'react'
+import { ShoppingCart, Heart, Search } from 'lucide-react'
+import LOGO from '../assets/logo.webp'
 import {
 	SignedIn,
 	SignedOut,
 	SignInButton,
 	UserButton,
 	useUser,
-} from '@clerk/clerk-react';
-import { useDispatch, useSelector } from 'react-redux';
-import { fetchCurrencyRates, setCountry } from '../redux/localizationSlice';
-import { Link, useNavigate } from 'react-router-dom';
-import { menuItems } from '../utils/menuItems';
-import model from '../assets/Wedding-rings.jpg';
+} from '@clerk/clerk-react'
+import { useDispatch, useSelector } from 'react-redux'
+import { fetchCurrencyRates, setCountry } from '../redux/localizationSlice'
+import { Link, useNavigate } from 'react-router-dom'
+import { menuItems } from '../utils/menuItems'
+import model from '../assets/Wedding-rings.jpg'
 import {
 	fetchUserCartItems,
 	fetchUserFavorites,
-} from '../redux/favoritesCartSlice';
+} from '../redux/favoritesCartSlice'
 
-// Define navigation links for admin and regular users
 const adminNavLinks = [
 	{ to: '/dashboard', label: 'Dashboard' },
 	{ to: '/master', label: 'Master' },
@@ -29,52 +28,53 @@ const adminNavLinks = [
 	{ to: '/addProducts', label: 'Add Products' },
 	{ to: '/addDiamonds', label: 'Add Diamonds' },
 	{ to: '/addStyles', label: 'Add Styles' },
-];
+	{ to: '/addCoupon', label: 'Coupons' },
+]
 
 const userNavLinks = [
 	{ to: '/customize', label: 'Customize' },
 	{ to: '/product', label: 'Products' },
 	{ to: '/Edu', label: 'Education' },
-];
+]
 
 export default function Header() {
-	const [dropdownOpen, setDropdownOpen] = useState(null);
-	const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-	const [query, setQuery] = useState('');
-	const dispatch = useDispatch();
-	const navigate = useNavigate();
-	const { country } = useSelector((state) => state.localization);
-	const { favorites, cartItems } = useSelector((state) => state.favoritesCart);
-	const { user, isSignedIn } = useUser();
-	const role = user?.publicMetadata?.role;
-	const dbId = user?.publicMetadata?.dbId;
+	const [dropdownOpen, setDropdownOpen] = useState(null)
+	const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+	const [query, setQuery] = useState('')
+	const dispatch = useDispatch()
+	const navigate = useNavigate()
+	const { country } = useSelector((state) => state.localization)
+	const { favorites, cartItems } = useSelector((state) => state.favoritesCart)
+	const { user, isSignedIn } = useUser()
+	const role = user?.publicMetadata?.role
+	const dbId = user?.publicMetadata?.dbId
 
 	// Fetch user data and currency rates on component mount
 	useEffect(() => {
 		if (isSignedIn && role !== 'admin') {
-			dispatch(fetchUserFavorites(dbId));
-			dispatch(fetchUserCartItems(dbId));
+			dispatch(fetchUserFavorites(dbId))
+			dispatch(fetchUserCartItems(dbId))
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [user, isSignedIn]);
+	}, [user, isSignedIn])
 
 	useEffect(() => {
-		dispatch(fetchCurrencyRates());
+		dispatch(fetchCurrencyRates())
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+	}, [])
 
 	// Handlers for mobile menu, country change, and search
 	const handleMobileMenuToggle = () => {
-		setMobileMenuOpen(!mobileMenuOpen);
-	};
+		setMobileMenuOpen(!mobileMenuOpen)
+	}
 
 	const handleCountryChange = (event) => {
-		dispatch(setCountry(event.target.value));
-	};
+		dispatch(setCountry(event.target.value))
+	}
 
 	const handleSearch = () => {
-		navigate('/search', { state: query });
-	};
+		navigate('/search', { state: query })
+	}
 
 	// Render navigation links dynamically
 	const renderNavLinks = (links) => {
@@ -86,8 +86,8 @@ export default function Header() {
 			>
 				{link.label}
 			</Link>
-		));
-	};
+		))
+	}
 
 	return (
 		<header className="bg-white w-full p-4 sticky top-0 z-50">
@@ -268,5 +268,5 @@ export default function Header() {
 				</div>
 			)}
 		</header>
-	);
+	)
 }

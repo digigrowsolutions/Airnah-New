@@ -16,3 +16,5 @@ export const price = decimal(10, 2).notNull()
 export const description = text().notNull()
 
 export const image_URL = jsonb('image_URL').default([]).notNull()
+
+export const SKU = text()

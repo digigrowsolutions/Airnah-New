@@ -15,6 +15,7 @@ export async function getAllDiamonds(clerk_user_id) {
 	const products = await db
 		.select({
 			diamond_id: diamondsTable.diamond_id,
+			SKU: diamondsTable.SKU,
 			name: diamondsTable.name,
 			category: diamondsTable.clarity,
 			price: diamondsTable.price,

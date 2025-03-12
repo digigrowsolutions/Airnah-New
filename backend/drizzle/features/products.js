@@ -15,8 +15,10 @@ export async function getAllProducts(clerk_user_id) {
 	const products = await db
 		.select({
 			product_id: productsTable.product_id,
+			SKU: productsTable.SKU,
 			name: productsTable.name,
 			category: productsTable.category,
+			carat: productsTable.carat,
 			total_cost: productsTable.total_cost,
 			average_rating: avg(reviewsTable.rating).as('average_rating'),
 			review_count: count(reviewsTable.review_id).as('review_count'),

@@ -6,6 +6,7 @@ import {
 	removeFromFavoritesAPI,
 	addToCartAPI,
 	removeFromCartAPI,
+	validateCouponAPI,
 } from '../utils/api'
 
 export const fetchUserFavorites = createAsyncThunk(
@@ -96,15 +97,32 @@ export const removeFromCart = createAsyncThunk(
 	}
 )
 
+export const validateCoupon = createAsyncThunk(
+	'favoritesCart/validateCoupon',
+	async (couponCode, { rejectWithValue }) => {
+		try {
+			return await validateCouponAPI(couponCode)
+		} catch (error) {
+			return rejectWithValue(error.response.data.error)
+		}
+	}
+)
+
 const favoritesCartSlice = createSlice({
 	name: 'favoritesCart',
 	initialState: {
 		favorites: [],
 		cartItems: [],
+		coupon: null,
+		discount: 0,
 		loading: false,
 		error: null,
 	},
-	reducers: {},
+	reducers: {
+		setAppliedCoupon: (state, action) => {
+			state.coupon = action.payload
+		},
+	},
 	extraReducers: (builder) => {
 		builder
 			// Fetch Favorites
@@ -148,6 +166,9 @@ const favoritesCartSlice = createSlice({
 
 			// Add to Cart
 			.addCase(addToCart.fulfilled, (state, action) => {
+				if (action.payload.success) {
+					return
+				}
 				state.cartItems.push(action.payload)
 			})
 
@@ -158,7 +179,20 @@ const favoritesCartSlice = createSlice({
 					(item) => item.cart_id !== cartId
 				)
 			})
+
+			.addCase(validateCoupon.fulfilled, (state, action) => {
+				state.discount = action.payload.discount || 0
+				state.error = null
+			})
+			.addCase(validateCoupon.rejected, (state, action) => {
+				state.discount = 0
+				state.error =
+					typeof action.payload === 'string'
+						? action.payload
+						: action.payload?.message || 'Coupon validation failed'
+			})
 	},
 })
 
+export const { setAppliedCoupon } = favoritesCartSlice.actions
 export default favoritesCartSlice.reducer
