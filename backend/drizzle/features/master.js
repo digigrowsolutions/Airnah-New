@@ -1,9 +1,10 @@
-import { ilike } from 'drizzle-orm'
+import { eq, ilike } from 'drizzle-orm'
 import { db } from '../db.js'
 import { diamondsTable } from '../schema/diamonds.js'
 import { masterTable } from '../schema/master.js'
 import { ringStylesTable } from '../schema/ringStyles.js'
 import { productsTable } from '../schema/products.js'
+import { couponsTable } from '../schema/coupons.js'
 
 export async function getMasterList() {
 	const products = await db.select().from(masterTable)
@@ -21,8 +22,23 @@ export async function addMasterEntry(data) {
 	return { success: true }
 }
 
+export async function getCouponList() {
+	const products = await db.select().from(couponsTable)
+
+	if (products == null) throw new Error('Failed to get all coupons')
+
+	return products
+}
+
+export async function addCouponEntry(data) {
+	const newProduct = await db.insert(couponsTable).values(data).returning()
+
+	if (newProduct == null) throw new Error('Failed to insert coupon')
+
+	return { success: true }
+}
+
 export async function searchProducts(search) {
-	// Search both tables
 	const diamondResults = await db
 		.select()
 		.from(diamondsTable)
@@ -39,9 +55,40 @@ export async function searchProducts(search) {
 		.where(ilike(productsTable.name, `%${search}%`))
 
 	const combinedResults = [
-		...diamondResults.map((item) => ({ ...item, type: 'diamond' })),
-		...ringStyleResults.map((item) => ({ ...item, type: 'ringStyle' })),
-		...productResults.map((item) => ({ ...item, type: 'product' })),
+		...diamondResults.map((item) => ({ ...item, type: 1 })),
+		...ringStyleResults.map((item) => ({ ...item, type: 2 })),
+		...productResults.map((item) => ({ ...item, type: 3 })),
 	]
 	return combinedResults
+}
+
+export async function validateCoupon(couponCode) {
+	const couponArray = await db
+		.select()
+		.from(couponsTable)
+		.where(eq(couponsTable.code, couponCode))
+		.limit(1)
+
+	// Ensure we get a valid coupon object
+	if (!couponArray || couponArray.length === 0) {
+		throw new Error('Invalid coupon')
+	}
+
+	const coupon = couponArray[0] // Extract the first (and only) result
+
+	const currentDate = new Date()
+	const expiryDate = new Date(coupon.expiry_date)
+
+	if (expiryDate < currentDate) {
+		throw new Error('Coupon has expired')
+	}
+
+	if (coupon.used_count >= coupon.max_uses) {
+		throw new Error('Coupon has been used too many times')
+	}
+
+	return {
+		success: true,
+		discount: coupon.discount_percentage,
+	}
 }

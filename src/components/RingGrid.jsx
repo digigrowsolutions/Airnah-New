@@ -81,7 +81,7 @@ function RingGrid() {
 								className="bg-white shadow-lg text-center transition-transform transform hover:scale-105 hover:shadow-xl border border-[#be9080]"
 							>
 								<div
-									className="absolute bottom-28 right-4 text-2xl cursor-pointer text-[#be9080]"
+									className="absolute bottom-20 right-4 text-2xl cursor-pointer text-[#be9080]"
 									onClick={(e) =>
 										handleFavorite(
 											e,

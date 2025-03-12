@@ -15,8 +15,10 @@ export async function getUserCart({ clerk_user_id }) {
 			quantity: cartTable.quantity,
 			product_name: productsTable.name,
 			product_price: productsTable.total_cost,
+			product_image: productsTable.image_URL,
 			diamond_name: diamondsTable.name,
 			diamond_price: diamondsTable.price,
+			diamond_image: diamondsTable.image_URL,
 			ring_style_name: ringStylesTable.name,
 			ring_style_price: sql`
 				${ringStylesTable.head_style_price} +
@@ -24,6 +26,7 @@ export async function getUserCart({ clerk_user_id }) {
 				${ringStylesTable.head_metal_price} +
 				${ringStylesTable.shank_metal_price}
 			`.as('ring_style_price'),
+			ring_images: ringStylesTable.image_URL,
 		})
 		.from(cartTable)
 		.leftJoin(productsTable, eq(cartTable.product_id, productsTable.product_id))

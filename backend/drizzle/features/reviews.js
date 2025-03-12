@@ -3,6 +3,13 @@ import { db } from '../db.js'
 import { reviewsTable } from '../schema/reviews.js'
 import { userTable } from '../schema/users.js'
 
+export async function addReview(data) {
+	const newReview = await db.insert(reviewsTable).values(data).returning()
+	if (newReview == null) throw new Error('Failed to add review')
+
+	return { success: true }
+}
+
 export async function getProductReviews({
 	product_id,
 	page = 1,

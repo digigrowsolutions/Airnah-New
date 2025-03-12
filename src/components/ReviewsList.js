@@ -1,8 +1,12 @@
 import React, { useEffect, useState } from 'react'
-import { fetchReviews } from '../utils/api'
+import { fetchReviews, submitReviews } from '../utils/api'
 import { StarRating } from './StarRating'
+import ImageURLInput from './ImageURLInput'
+import { useUser } from '@clerk/clerk-react'
 
 const ReviewsList = ({ product_id }) => {
+	const { user } = useUser()
+	const dbId = user?.publicMetadata?.dbId
 	const [reviews, setReviews] = useState([])
 	const [page, setPage] = useState(1)
 	const [limit] = useState(5)
@@ -11,6 +15,11 @@ const ReviewsList = ({ product_id }) => {
 	const [sortOrder, setSortOrder] = useState('desc')
 	const [rating, setRating] = useState(null)
 	const [hasImage, setHasImage] = useState(false)
+	const [newRating, setNewRating] = useState(5)
+	const [newComment, setNewComment] = useState('')
+	const [newImageUrls, setNewImageUrls] = useState([])
+	const [showForm, setShowForm] = useState(false)
+	const [refreshKey, setRefreshKey] = useState(0)
 
 	useEffect(() => {
 		const getReviews = async () => {
@@ -31,13 +40,94 @@ const ReviewsList = ({ product_id }) => {
 			}
 		}
 		getReviews()
-	}, [product_id, page, limit, sortBy, sortOrder, rating, hasImage])
+	}, [product_id, page, limit, sortBy, sortOrder, rating, hasImage, refreshKey])
+
+	const handleAddReview = async (e) => {
+		e.preventDefault()
+
+		const newReview = {
+			product_id,
+			user_id: dbId,
+			rating: newRating,
+			comment: newComment,
+			image_URL: newImageUrls.filter((url) => url.trim() !== ''),
+		}
+
+		const response = await submitReviews(newReview)
+		if (response.success) {
+			setReviews([response.review, ...reviews]) // Add new review to the list
+			setNewRating(5)
+			setNewComment('')
+			setNewImageUrls([])
+			setShowForm(false) // Close form on successful submission
+			setRefreshKey((prev) => prev + 1)
+		} else {
+			alert('Failed to add review')
+		}
+	}
 
 	return (
 		<div className="w-full mx-auto p-6 bg-white rounded-lg shadow-md">
 			<h2 className="text-2xl font-semibold mb-4 text-gray-800">
 				Customer Reviews
 			</h2>
+
+			{/* Add Review Button */}
+			<button
+				onClick={() => setShowForm(!showForm)}
+				className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 mb-4"
+			>
+				{showForm ? 'Cancel' : 'Add a Review'}
+			</button>
+
+			{/* Review Form (Hidden/Shown based on state) */}
+			{showForm && (
+				<form
+					onSubmit={handleAddReview}
+					className="mb-6 p-4 border rounded-lg bg-gray-50"
+				>
+					<h3 className="text-lg font-semibold mb-2">Write a Review</h3>
+					<div className="mb-3">
+						<label className="block text-sm font-medium text-gray-600">
+							Rating:
+						</label>
+						<select
+							value={newRating}
+							onChange={(e) => setNewRating(Number(e.target.value))}
+							className="border border-gray-300 rounded-lg px-3 py-1 w-full"
+						>
+							<option value="5">5 Stars</option>
+							<option value="4">4 Stars</option>
+							<option value="3">3 Stars</option>
+							<option value="2">2 Stars</option>
+							<option value="1">1 Star</option>
+						</select>
+					</div>
+					<div className="mb-3">
+						<label className="block text-sm font-medium text-gray-600">
+							Comment:
+						</label>
+						<textarea
+							value={newComment}
+							onChange={(e) => setNewComment(e.target.value)}
+							className="border border-gray-300 rounded-lg px-3 py-2 w-full"
+							required
+						></textarea>
+					</div>
+					<div className="mb-3">
+						<ImageURLInput
+							imageURLs={newImageUrls}
+							setImageURLs={setNewImageUrls}
+						/>
+					</div>
+					<button
+						type="submit"
+						className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
+					>
+						Submit Review
+					</button>
+				</form>
+			)}
 
 			{/* Filters */}
 			<div className="flex flex-wrap gap-4 mb-6">
@@ -94,24 +184,24 @@ const ReviewsList = ({ product_id }) => {
 			<ul className="space-y-6 w-full">
 				{reviews.map((review) => (
 					<li
-						key={review.review_id}
+						key={review?.review_id}
 						className="border rounded-xl p-5 bg-white shadow-md w-full"
 					>
 						<div className="flex justify-between items-center mb-2">
 							<h3 className="text-gray-900 font-semibold text-lg">
-								{review.user.name}
+								{review?.user?.name}
 							</h3>
 							<span className="text-gray-500 text-sm">
-								{new Date(review.created_at).toLocaleDateString()}
+								{new Date(review?.created_at).toLocaleDateString()}
 							</span>
 						</div>
-						<StarRating rating={review.rating || 0} />
-						<p className="text-gray-600 mt-2">{review.comment}</p>
+						<StarRating rating={review?.rating || 0} />
+						<p className="text-gray-600 mt-2">{review?.comment}</p>
 
 						{/* Render images if available */}
-						{review.image_URL.length > 0 && (
+						{review?.image_URL.length > 0 && (
 							<div className="mt-4 flex gap-3">
-								{review.image_URL.map((img, index) => (
+								{review?.image_URL.map((img, index) => (
 									<img
 										key={index}
 										src={img}

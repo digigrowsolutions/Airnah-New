@@ -15,6 +15,7 @@ const initialState = {
 				ring_price: null,
 			},
 			total_cost: null,
+			image_URL: [],
 		},
 	],
 }
@@ -55,6 +56,19 @@ const ringCustomizationSlice = createSlice({
 		setCustomization: (state, action) => {
 			state.productDetails[0] = action.payload
 		},
+		setImageURLs: (state, action) => {
+			if (state.productDetails.length > 0) {
+				// Ensure image_URL is an array before updating
+				const existingImages = Array.isArray(state.productDetails[0].image_URL)
+					? state.productDetails[0].image_URL
+					: []
+
+				state.productDetails[0] = {
+					...state.productDetails[0],
+					image_URL: [...existingImages, action.payload], // Append new image
+				}
+			}
+		},
 	},
 })
 
@@ -69,5 +83,6 @@ export const {
 	setCustomization,
 	resetDiamond,
 	resetRing,
+	setImageURLs,
 } = ringCustomizationSlice.actions
 export default ringCustomizationSlice.reducer

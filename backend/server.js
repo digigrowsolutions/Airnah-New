@@ -18,9 +18,12 @@ import {
 	updateProduct,
 } from './drizzle/features/products.js'
 import {
+	addCouponEntry,
 	addMasterEntry,
+	getCouponList,
 	getMasterList,
 	searchProducts,
+	validateCoupon,
 } from './drizzle/features/master.js'
 import {
 	addDiamond,
@@ -44,7 +47,7 @@ import {
 	getUserFavorites,
 	removeFromFavorites,
 } from './drizzle/features/favorites.js'
-import { getProductReviews } from './drizzle/features/reviews.js'
+import { addReview, getProductReviews } from './drizzle/features/reviews.js'
 
 dotenv.config()
 
@@ -435,6 +438,49 @@ app.get('/api/reviews', async (req, res) => {
 	} catch (error) {
 		console.error(error)
 		res.status(500).json({ error: 'Internal Server Error' })
+	}
+})
+
+app.post('/api/submitReview', async (req, res) => {
+	try {
+		const data = req.body
+		await addReview(data)
+		res.json({ success: true })
+	} catch (err) {
+		console.error('addToFavorites Error:', err)
+		res.status(500).json({ error: 'Failed to add to Favorites' })
+	}
+})
+
+app.get('/api/admin/getCouponList', async (req, res) => {
+	try {
+		const data = await getCouponList()
+		res.json(data)
+	} catch (err) {
+		console.log('getCouponList Error: ' + err)
+		res.status(500).json({ error: 'Failed to get coupon list' })
+	}
+})
+
+app.post('/api/admin/addCouponEntry', async (req, res) => {
+	try {
+		const data = req.body
+		await addCouponEntry(data)
+		res.json({ success: true })
+	} catch (err) {
+		console.log('addCouponEntry Error:', err)
+		res.status(500).json({ error: 'Failed to add coupon entry' })
+	}
+})
+
+app.post('/api/validateCoupon', async (req, res) => {
+	try {
+		const { couponCode } = req.body
+		const result = await validateCoupon(couponCode)
+		res.json(result)
+	} catch (err) {
+		console.log('validateCoupon Error:', err.message)
+		res.status(400).json({ error: err.message })
 	}
 })
 

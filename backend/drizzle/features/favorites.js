@@ -14,6 +14,7 @@ export async function getUserFavorites({ clerk_user_id }) {
 			diamond_id: favoritesTable.diamond_id,
 			product_name: productsTable.name,
 			product_price: productsTable.total_cost,
+			product_image: productsTable.image_URL,
 			ring_style_name: ringStylesTable.name,
 			ring_style_price: sql`
                 ${ringStylesTable.head_style_price} +
@@ -21,8 +22,10 @@ export async function getUserFavorites({ clerk_user_id }) {
                 ${ringStylesTable.head_metal_price} +
                 ${ringStylesTable.shank_metal_price}
             `.as('ring_style_price'),
+			ring_images: ringStylesTable.image_URL,
 			diamond_name: diamondsTable.name,
 			diamond_price: diamondsTable.price,
+			diamond_image: diamondsTable.image_URL,
 			product_type: sql`
                 CASE 
                     WHEN ${favoritesTable.product_id} IS NOT NULL THEN 1

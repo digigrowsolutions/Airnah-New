@@ -343,3 +343,54 @@ export const fetchReviews = async ({
 		return null
 	}
 }
+
+export const submitReviews = async (newReview) => {
+	try {
+		const response = await axios.post(
+			`${REACT_APP_API_URL}/submitReview`,
+			newReview
+		)
+		return response.data
+	} catch (error) {
+		console.error('Error submitting reviews:', error)
+		return null
+	}
+}
+
+export const addCouponEntry = async (data) => {
+	try {
+		const response = await axios.post(
+			`${REACT_APP_API_URL}/admin/addCouponEntry`,
+			data
+		)
+		return response
+	} catch (error) {
+		console.log('Error adding coupon entry', error)
+		throw error
+	}
+}
+
+export const getCouponList = async () => {
+	try {
+		const response = await axios.get(`${REACT_APP_API_URL}/admin/getCouponList`)
+		return response.data
+	} catch (error) {
+		console.log('Error getting coupon list', error)
+		throw error
+	}
+}
+
+export const validateCouponAPI = async (couponCode) => {
+	try {
+		const response = await axios.post(`${REACT_APP_API_URL}/validateCoupon`, {
+			couponCode,
+		})
+		return response.data
+	} catch (error) {
+		console.log(
+			'Error validating coupon',
+			error.response?.data?.error || error.message
+		)
+		throw new Error(error.response?.data?.error || 'Failed to validate coupon')
+	}
+}

@@ -4,6 +4,7 @@ import {
 	created_at,
 	description,
 	image_URL,
+	SKU,
 	updated_at,
 } from '../schemaHelpers.js'
 import { orderItemsTable } from './orderItems.js'
@@ -20,6 +21,7 @@ export const productCategoryEnum = pgEnum('product_category', productCategory)
 
 export const productsTable = pgTable('products', {
 	product_id: serial('product_id').primaryKey(),
+	SKU,
 	name: text().notNull(),
 	category: productCategoryEnum().default('ring'),
 	description,
