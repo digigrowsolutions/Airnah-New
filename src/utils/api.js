@@ -387,10 +387,6 @@ export const validateCouponAPI = async (couponCode) => {
 		})
 		return response.data
 	} catch (error) {
-		console.log(
-			'Error validating coupon',
-			error.response?.data?.error || error.message
-		)
-		throw new Error(error.response?.data?.error || 'Failed to validate coupon')
+		throw error
 	}
 }
