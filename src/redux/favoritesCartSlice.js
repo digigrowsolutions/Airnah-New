@@ -103,7 +103,7 @@ export const validateCoupon = createAsyncThunk(
 		try {
 			return await validateCouponAPI(couponCode)
 		} catch (error) {
-			return rejectWithValue(error.response.data.error)
+			return rejectWithValue(error.response?.data?.error)
 		}
 	}
 )
@@ -186,10 +186,7 @@ const favoritesCartSlice = createSlice({
 			})
 			.addCase(validateCoupon.rejected, (state, action) => {
 				state.discount = 0
-				state.error =
-					typeof action.payload === 'string'
-						? action.payload
-						: action.payload?.message || 'Coupon validation failed'
+				state.error = action.payload
 			})
 	},
 })

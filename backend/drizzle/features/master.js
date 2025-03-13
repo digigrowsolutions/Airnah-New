@@ -69,12 +69,11 @@ export async function validateCoupon(couponCode) {
 		.where(eq(couponsTable.code, couponCode))
 		.limit(1)
 
-	// Ensure we get a valid coupon object
 	if (!couponArray || couponArray.length === 0) {
 		throw new Error('Invalid coupon')
 	}
 
-	const coupon = couponArray[0] // Extract the first (and only) result
+	const coupon = couponArray[0]
 
 	const currentDate = new Date()
 	const expiryDate = new Date(coupon.expiry_date)

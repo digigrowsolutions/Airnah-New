@@ -5,7 +5,6 @@ import { useDispatch, useSelector } from 'react-redux'
 import {
 	fetchUserCartItems,
 	removeFromCart,
-	setAppliedCoupon,
 	validateCoupon,
 } from '../redux/favoritesCartSlice'
 import { convertPrice } from '../utils/helpers'
@@ -19,13 +18,13 @@ import { useNavigate } from 'react-router-dom'
 const Cart = () => {
 	const [selectedSize, setSelectedSize] = useState('6')
 	const [totalPrice, setTotalPrice] = useState(0)
-	// const [promo, setPromo] = useState('')
+	const [promo, setPromo] = useState('')
 	const [disabled, setDisabled] = useState(false)
 
 	const { currency, country, INR_rate, GBP_rate } = useSelector(
 		(state) => state.localization
 	)
-	const { cartItems, loading, error, coupon } = useSelector(
+	const { cartItems, loading, error, discount } = useSelector(
 		(state) => state.favoritesCart
 	)
 	const { user, isSignedIn } = useUser()
@@ -82,14 +81,14 @@ const Cart = () => {
 	}
 
 	const handlePromo = async () => {
-		if (coupon.trim() === '') return
+		if (promo.trim() === '') return
 
 		try {
-			const result = await dispatch(validateCoupon(coupon)).unwrap() // Wait for validation to complete
+			const result = await dispatch(validateCoupon(promo)).unwrap() // Wait for validation to complete
 			setTotalPrice((prevTotal) => Math.max(prevTotal - result.discount, 0)) // Use the correct discount
 			setDisabled(true) // Disable only if coupon is valid
 		} catch (error) {
-			console.error('Coupon validation failed:', error) // Handle error properly
+			console.error(error) // Handle error properly
 		}
 	}
 
@@ -326,8 +325,10 @@ const Cart = () => {
 					<div className="flex">
 						<input
 							type="text"
-							value={coupon}
-							onChange={(e) => dispatch(setAppliedCoupon(e.target.value))}
+							value={promo}
+							onChange={(e) => {
+								setPromo(e.target.value)
+							}}
 							disabled={disabled}
 							placeholder="Enter code"
 							className="w-full px-3 py-2 border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-800"
