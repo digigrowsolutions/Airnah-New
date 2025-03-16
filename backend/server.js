@@ -3,11 +3,7 @@ import { Webhook } from 'svix'
 import bodyParser from 'body-parser'
 import dotenv from 'dotenv'
 import ngrok from '@ngrok/ngrok'
-import {
-	insertUser,
-	updateUser,
-	getAllUsers,
-} from './drizzle/features/users.js'
+import { insertUser, getAllUsers } from './drizzle/features/users.js'
 import { clerkClient } from '@clerk/express'
 import cors from 'cors'
 import {
@@ -84,40 +80,30 @@ app.post('/webhook', async (req, res) => {
 
 	switch (event.type) {
 		case 'user.created':
-		case 'user.updated':
 			const email = event.data.email_addresses.find(
 				(email) => email.id === event.data.primary_email_address_id
 			)?.email_address
 			const name = `${event.data.first_name} ${event.data.last_name}`.trim()
 			if (email == null) return new Response('No email', { status: 400 })
 			if (name === '') return new Response('No name', { status: 400 })
-			if (event.type === 'user.created') {
-				const user = await insertUser({
-					clerk_user_id: event.data.id,
-					email,
-					name,
-					role: 'user',
-				})
-				await clerkClient.users.updateUserMetadata(user.clerk_user_id, {
-					publicMetadata: {
-						dbId: user.user_id,
-						role: user.role,
-					},
-				})
-			} else {
-				await updateUser(
-					{ clerk_user_id: event.data.id },
-					{
-						role: event.data.public_metadata.role,
-					}
-				)
-			}
+			const user = await insertUser({
+				clerk_user_id: event.data.id,
+				email,
+				name,
+				role: 'user',
+			})
+			await clerkClient.users.updateUserMetadata(user.clerk_user_id, {
+				publicMetadata: {
+					dbId: user.user_id,
+					role: user.role,
+				},
+			})
+			break
+		case 'user.updated':
+			console.log('user.updated')
 			break
 		case 'user.deleted':
 			console.log('user.deleted')
-			// if (event.data.id != null) {
-			// 	await deleteUser({ clerk_user_id: event.data.id })
-			// }
 			break
 		default:
 			return res.status(400).send('Unhandled event')
