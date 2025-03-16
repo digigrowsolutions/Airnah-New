@@ -26,6 +26,7 @@ export const formatDate = (date) => {
 
 export const productJson = {
 	name: '',
+	SKU: '',
 	category: 'ring',
 	description: '',
 	image_URL: [],
@@ -50,6 +51,7 @@ export const productJson = {
 
 export const diamondJson = {
 	name: '',
+	SKU: '',
 	description: '',
 	image_URL: [],
 	size: '0.5',
@@ -62,6 +64,7 @@ export const diamondJson = {
 
 export const stylesJson = {
 	name: '',
+	SKU: '',
 	description: '',
 	image_URL: [],
 	head_style: 'Four Prong',

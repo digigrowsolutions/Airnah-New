@@ -63,6 +63,16 @@ const AddProduct = ({ initialData = null, onSuccess }) => {
 					/>
 				</div>
 				<div>
+					<label className="block font-medium">SKU</label>
+					<input
+						type="text"
+						name="SKU"
+						value={formData.SKU}
+						onChange={handleChange}
+						className="border p-2 rounded w-full"
+					/>
+				</div>
+				<div>
 					<label className="block font-medium">Category</label>
 					<select
 						name="category"

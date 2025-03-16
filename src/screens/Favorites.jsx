@@ -107,7 +107,7 @@ const Favorites = () => {
 							<img
 								alt="something"
 								src={
-									item.product_type === 1
+									item?.product_type === 1
 										? item.product_image[0]
 										: item.product_type === 2
 										? item.diamond_image[0]

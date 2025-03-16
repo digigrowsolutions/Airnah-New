@@ -153,6 +153,9 @@ const favoritesCartSlice = createSlice({
 
 			// Add to Favorites
 			.addCase(addToFavorites.fulfilled, (state, action) => {
+				if (action.payload.success) {
+					return
+				}
 				state.favorites.push(action.payload)
 			})
 
