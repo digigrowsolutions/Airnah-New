@@ -95,7 +95,6 @@ app.post('/webhook', async (req, res) => {
 			await clerkClient.users.updateUserMetadata(user.clerk_user_id, {
 				publicMetadata: {
 					dbId: user.user_id,
-					role: user.role,
 				},
 			})
 			break
@@ -204,13 +203,22 @@ app.post('/api/admin/addProduct', async (req, res) => {
 	}
 })
 
-app.get('/api/admin/getAllProducts/:clerk_user_id', async (req, res) => {
+app.get('/api/admin/getAllProducts/:clerk_user_id?', async (req, res) => {
 	try {
-		const { clerk_user_id } = req.params
+		let { clerk_user_id } = req.params
+
+		if (
+			!clerk_user_id ||
+			clerk_user_id === 'null' ||
+			clerk_user_id === 'undefined'
+		) {
+			clerk_user_id = null
+		}
+
 		const data = await getAllProducts(clerk_user_id)
 		res.json(data)
 	} catch (err) {
-		console.log('getAllProducts Error: ' + err)
+		console.error('getAllProducts Error:', err)
 		res.status(500).json({ error: 'Failed to get all products' })
 	}
 })
@@ -326,9 +334,17 @@ app.post('/api/admin/addDiamond', async (req, res) => {
 	}
 })
 
-app.get('/api/admin/getAllDiamonds/:clerk_user_id', async (req, res) => {
+app.get('/api/admin/getAllDiamonds/:clerk_user_id?', async (req, res) => {
 	try {
-		const { clerk_user_id } = req.params
+		let { clerk_user_id } = req.params
+
+		if (
+			!clerk_user_id ||
+			clerk_user_id === 'null' ||
+			clerk_user_id === 'undefined'
+		) {
+			clerk_user_id = null
+		}
 		const data = await getAllDiamonds(clerk_user_id)
 		res.json(data)
 	} catch (err) {
@@ -358,9 +374,17 @@ app.post('/api/admin/addStyle', async (req, res) => {
 	}
 })
 
-app.get('/api/admin/getAllStyles/:clerk_user_id', async (req, res) => {
+app.get('/api/admin/getAllStyles/:clerk_user_id?', async (req, res) => {
 	try {
-		const { clerk_user_id } = req.params
+		let { clerk_user_id } = req.params
+
+		if (
+			!clerk_user_id ||
+			clerk_user_id === 'null' ||
+			clerk_user_id === 'undefined'
+		) {
+			clerk_user_id = null
+		}
 		const data = await getAllStyles(clerk_user_id)
 		res.json(data)
 	} catch (err) {

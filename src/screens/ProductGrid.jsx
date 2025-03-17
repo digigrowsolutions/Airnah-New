@@ -34,16 +34,14 @@ export default function ProductGrid() {
 	const [favoriteStatus, setFavoriteStatus] = useState({})
 
 	useEffect(() => {
-		if (dbId) {
-			dispatch(fetchProducts(dbId))
-		}
+		dispatch(fetchProducts(dbId))
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [dbId, dispatch])
 
 	useEffect(() => {
 		const favStatus = {}
 		products.forEach((product) => {
-			favStatus[product.product_id] = product.favorite_id !== null
+			favStatus[product.product_id] = product.isFavorited
 		})
 		setFavoriteStatus(favStatus)
 	}, [products])
@@ -108,7 +106,7 @@ export default function ProductGrid() {
 									handleFavorite(e, product.product_id, product.favorite_id)
 								}
 							>
-								{favoriteStatus[product.product_id] ? (
+								{product.isFavorited ? (
 									<FaHeart className="text-red-500" />
 								) : (
 									<FaRegHeart />

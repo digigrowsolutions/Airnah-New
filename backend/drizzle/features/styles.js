@@ -21,15 +21,15 @@ export async function getAllStyles(clerk_user_id) {
 			head_metal_price: ringStylesTable.head_metal_price,
 			shank_style_price: ringStylesTable.shank_style_price,
 			shank_metal_price: ringStylesTable.shank_metal_price,
-			favorite_id: favoritesTable.favourite_id,
+			favorite_id: clerk_user_id ? favoritesTable.favourite_id : '',
 			image_URL: ringStylesTable.image_URL,
 		})
 		.from(ringStylesTable)
 		.leftJoin(
 			favoritesTable,
 			and(
-				eq(ringStylesTable.ring_style_id, favoritesTable.ring_style_id),
-				eq(favoritesTable.user_id, clerk_user_id)
+				eq(ringStylesTable.ring_style_id, favoritesTable.product_id),
+				clerk_user_id ? eq(favoritesTable.user_id, clerk_user_id) : undefined
 			)
 		)
 		.groupBy(ringStylesTable.ring_style_id, favoritesTable.favourite_id)

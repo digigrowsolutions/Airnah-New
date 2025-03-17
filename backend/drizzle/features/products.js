@@ -12,7 +12,7 @@ export async function addProduct(data) {
 }
 
 export async function getAllProducts(clerk_user_id) {
-	const products = await db
+	const allProducts = await db
 		.select({
 			product_id: productsTable.product_id,
 			SKU: productsTable.SKU,
@@ -22,7 +22,6 @@ export async function getAllProducts(clerk_user_id) {
 			total_cost: productsTable.total_cost,
 			average_rating: avg(reviewsTable.rating).as('average_rating'),
 			review_count: count(reviewsTable.review_id).as('review_count'),
-			favorite_id: favoritesTable.favourite_id,
 			image_URL: productsTable.image_URL,
 		})
 		.from(productsTable)
@@ -30,18 +29,68 @@ export async function getAllProducts(clerk_user_id) {
 			reviewsTable,
 			eq(productsTable.product_id, reviewsTable.product_id)
 		)
-		.leftJoin(
-			favoritesTable,
-			and(
-				eq(productsTable.product_id, favoritesTable.product_id),
-				eq(favoritesTable.user_id, clerk_user_id)
-			)
-		)
-		.groupBy(productsTable.product_id, favoritesTable.favourite_id)
+		.groupBy(productsTable.product_id)
 
-	if (!products) throw new Error('Failed to get all products')
+	// If the user is not signed in, return all products without any favorite marks
+	if (!clerk_user_id) {
+		return allProducts.map((product) => ({
+			...product,
+			isFavorited: false, // Default to false for signed-out users
+		}))
+	}
 
-	return products
+	// If the user is signed in, fetch their favorite products
+	const userFavorites = await db
+		.select()
+		.from(favoritesTable)
+		.where(eq(favoritesTable.user_id, clerk_user_id))
+
+	// Create a set of product IDs that the user has favorited
+	const favoritedProductIds = new Set(
+		userFavorites.map((fav) => fav.product_id)
+	)
+
+	// Map through all products and mark the ones that are favorited
+	const productsWithFavorites = allProducts.map((product) => ({
+		...product,
+		isFavorited: favoritedProductIds.has(product.product_id), // Check if the product is favorited
+	}))
+
+	return productsWithFavorites
+	// const products = await db
+	// 	.select({
+	// 		product_id: productsTable.product_id,
+	// 		SKU: productsTable.SKU,
+	// 		name: productsTable.name,
+	// 		category: productsTable.category,
+	// 		carat: productsTable.carat,
+	// 		total_cost: productsTable.total_cost,
+	// 		average_rating: avg(reviewsTable.rating).as('average_rating'),
+	// 		review_count: count(reviewsTable.review_id).as('review_count'),
+	// 		favorite_id: clerk_user_id
+	// 			? db
+	// 					.select({ favorite_id: favoritesTable.favourite_id })
+	// 					.from(favoritesTable)
+	// 					.where(
+	// 						and(
+	// 							eq(favoritesTable.product_id, productsTable.product_id),
+	// 							eq(favoritesTable.user_id, clerk_user_id)
+	// 						)
+	// 					)
+	// 					.limit(1)
+	// 			: '', // If not logged in, favorite_id is null
+	// 		image_URL: productsTable.image_URL,
+	// 	})
+	// 	.from(productsTable)
+	// 	.leftJoin(
+	// 		reviewsTable,
+	// 		eq(productsTable.product_id, reviewsTable.product_id)
+	// 	)
+	// 	.groupBy(productsTable.product_id)
+
+	// if (!products) throw new Error('Failed to get all products')
+
+	// return products
 }
 
 export async function getAllDiamonds() {
