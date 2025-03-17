@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchProducts } from '../redux/userProductsSlice'
 import { convertPrice } from '../utils/helpers'
@@ -31,33 +31,20 @@ export default function ProductGrid() {
 	)
 	const { user } = useUser()
 	const dbId = user?.publicMetadata?.dbId
-	const [favoriteStatus, setFavoriteStatus] = useState({})
 
 	useEffect(() => {
 		dispatch(fetchProducts(dbId))
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [dbId, dispatch])
-
-	useEffect(() => {
-		const favStatus = {}
-		products.forEach((product) => {
-			favStatus[product.product_id] = product.isFavorited
-		})
-		setFavoriteStatus(favStatus)
-	}, [products])
 
 	const handleClick = (product_id) => {
 		navigate('/products/' + product_id)
 	}
 
-	const handleFavorite = (e, product_id, favorite_id) => {
+	const handleFavorite = (e, product_id, isFavorited) => {
 		e.stopPropagation()
-
-		const isCurrentlyFavorite = favoriteStatus[product_id]
-
-		if (isCurrentlyFavorite) {
+		if (isFavorited) {
 			dispatch(
-				removeFromFavorites({ userId: dbId, productId: favorite_id })
+				removeFromFavorites({ userId: dbId, product_id: product_id })
 			).then(() => {
 				dispatch(fetchProducts(dbId))
 				dispatch(fetchUserFavorites(dbId))
@@ -65,6 +52,7 @@ export default function ProductGrid() {
 		} else {
 			dispatch(addToFavorites({ dbId, product_id })).then(() => {
 				dispatch(fetchProducts(dbId))
+				dispatch(fetchUserFavorites(dbId))
 			})
 		}
 	}
@@ -103,7 +91,7 @@ export default function ProductGrid() {
 							<div
 								className="absolute bottom-28 right-4 text-2xl cursor-pointer text-[#be9080]"
 								onClick={(e) =>
-									handleFavorite(e, product.product_id, product.favorite_id)
+									handleFavorite(e, product.product_id, product.isFavorited)
 								}
 							>
 								{product.isFavorited ? (
