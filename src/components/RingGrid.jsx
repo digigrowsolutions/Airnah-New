@@ -23,9 +23,7 @@ function RingGrid() {
 	const [favoriteStatus, setFavoriteStatus] = useState({})
 
 	useEffect(() => {
-		if (dbId) {
-			dispatch(fetchStyles(dbId))
-		}
+		dispatch(fetchStyles(dbId))
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [dbId, dispatch])
 
@@ -90,7 +88,7 @@ function RingGrid() {
 										)
 									}
 								>
-									{favoriteStatus[product.ring_style_id] ? (
+									{product.favorite_id ? (
 										<FaHeart className="text-red-500" />
 									) : (
 										<FaRegHeart />

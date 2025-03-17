@@ -32,9 +32,7 @@ function DiamondGrid() {
 	const labels = ['M', 'L', 'K', 'J', 'I', 'H', 'G', 'F', 'E', 'D']
 
 	useEffect(() => {
-		if (dbId) {
-			dispatch(fetchDiamonds(dbId))
-		}
+		dispatch(fetchDiamonds(dbId))
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [dbId, dispatch])
 
@@ -243,7 +241,7 @@ function DiamondGrid() {
 									handleFavorite(e, product.diamond_id, product.favorite_id)
 								}
 							>
-								{favoriteStatus[product.diamond_id] ? (
+								{product.favorite_id ? (
 									<FaHeart className="text-red-500" />
 								) : (
 									<FaRegHeart />
