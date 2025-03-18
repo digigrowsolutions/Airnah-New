@@ -38,7 +38,6 @@ export default function ProductGrid() {
 
 	useEffect(() => {
 		if (!dbId) {
-			// dispatch(clearLocalFavorites())
 			const guestFavorites = JSON.parse(localStorage.getItem('favorites')) || []
 			guestFavorites.forEach((fav) => {
 				dispatch(addToFavoritesLocal(fav))
@@ -46,7 +45,14 @@ export default function ProductGrid() {
 		} else if (dbId) {
 			const localFavorites = JSON.parse(localStorage.getItem('favorites')) || []
 			localFavorites.forEach((fav) => {
-				dispatch(addToFavorites({ dbId, product_id: fav.product_id }))
+				dispatch(
+					addToFavorites({
+						dbId,
+						product_id: fav.product_id,
+						diamond_id: fav.diamond_id,
+						ring_style_id: fav.ring_style_id,
+					})
+				)
 			})
 			dispatch(clearLocalFavorites())
 			dispatch(fetchUserFavorites(dbId))
@@ -78,7 +84,7 @@ export default function ProductGrid() {
 			}
 		} else {
 			if (isProductFavorited(product_id)) {
-				dispatch(removeFromFavoritesLocal(product_id))
+				dispatch(removeFromFavoritesLocal({ product_id }))
 			} else {
 				dispatch(addToFavoritesLocal({ product_id }))
 			}

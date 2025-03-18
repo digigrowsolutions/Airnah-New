@@ -1,7 +1,9 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useUser, SignInButton } from '@clerk/clerk-react'
 import { useDispatch, useSelector } from 'react-redux'
 import {
+	addToFavorites,
+	clearLocalFavorites,
 	fetchUserFavorites,
 	removeFromFavorites,
 } from '../redux/favoritesCartSlice'
@@ -24,12 +26,49 @@ const Favorites = () => {
 		(state) => state.localization
 	)
 
+	// useEffect(() => {
+	// 	if (dbId) {
+	// 		dispatch(fetchUserFavorites(dbId))
+	// 	}
+	// 	// eslint-disable-next-line react-hooks/exhaustive-deps
+	// }, [])
+
+	const [favoritesSynced, setFavoritesSynced] = useState(false)
+
 	useEffect(() => {
-		if (isSignedIn && user?.id) {
-			dispatch(fetchUserFavorites(dbId))
+		const syncFavoritesAndFetch = async () => {
+			if (!dbId) return
+
+			const localFavorites = JSON.parse(localStorage.getItem('favorites')) || []
+
+			// Sync local favorites to the backend
+			if (localFavorites.length > 0) {
+				await Promise.all(
+					localFavorites.map((fav) =>
+						dispatch(
+							addToFavorites({
+								dbId,
+								product_id: fav.product_id,
+								diamond_id: fav.diamond_id,
+								ring_style_id: fav.ring_style_id,
+							})
+						)
+					)
+				)
+				dispatch(clearLocalFavorites()) // Clear local after syncing
+			}
+
+			// Now fetch the user's favorites
+			await dispatch(fetchUserFavorites(dbId))
+
+			// Mark as synced so UI can continue
+			setFavoritesSynced(true)
 		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [])
+
+		if (dbId && isSignedIn) {
+			syncFavoritesAndFetch()
+		}
+	}, [dbId, isSignedIn, dispatch])
 
 	const handleRemove = (product_id, diamond_id, ring_style_id, type) => {
 		const idMap = {
@@ -96,6 +135,14 @@ const Favorites = () => {
 						Log In
 					</button>
 				</SignInButton>
+			</div>
+		)
+	}
+
+	if (!favoritesSynced) {
+		return (
+			<div className="h-80 flex flex-col items-center justify-center bg-gray-50">
+				<p className="text-lg text-gray-600">Syncing favorites...</p>
 			</div>
 		)
 	}

@@ -51,7 +51,7 @@ export default function Header() {
 
 	// Fetch user data and currency rates on component mount
 	useEffect(() => {
-		if (isSignedIn && role !== 'admin') {
+		if (dbId) {
 			dispatch(fetchUserFavorites(dbId))
 			dispatch(fetchUserCartItems(dbId))
 		}
