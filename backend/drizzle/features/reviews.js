@@ -55,7 +55,7 @@ export async function getProductReviews({
 	}
 	if (hasImageBool) {
 		conditions.push(
-			sql`${reviewsTable.image_URL} IS NOT NULL AND array_length(${reviewsTable.image_URL}, 1) > 0`
+			sql`${reviewsTable.image_URL} IS NOT NULL AND jsonb_array_length(${reviewsTable.image_URL}) > 0`
 		)
 	}
 	if (dateRange?.from && dateRange?.to) {

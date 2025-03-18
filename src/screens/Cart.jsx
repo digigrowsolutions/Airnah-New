@@ -3,8 +3,10 @@ import { FaGem, FaRing } from 'react-icons/fa'
 import { useUser, SignInButton } from '@clerk/clerk-react'
 import { useDispatch, useSelector } from 'react-redux'
 import {
+	clearCoupon,
 	fetchUserCartItems,
 	removeFromCart,
+	setAppliedCoupon,
 	validateCoupon,
 } from '../redux/favoritesCartSlice'
 import { convertPrice } from '../utils/helpers'
@@ -24,7 +26,7 @@ const Cart = () => {
 	const { currency, country, INR_rate, GBP_rate } = useSelector(
 		(state) => state.localization
 	)
-	const { cartItems, loading, error, discount } = useSelector(
+	const { cartItems, loading, error, discount, coupon } = useSelector(
 		(state) => state.favoritesCart
 	)
 	const { user, isSignedIn } = useUser()
@@ -41,9 +43,13 @@ const Cart = () => {
 
 			return total + itemTotal * item.quantity
 		}, 0)
-
 		setTotalPrice(newTotal)
-	}, [cartItems])
+		if (cartItems.length > 0 && discount) {
+			setTotalPrice((prevTotal) => Math.max(prevTotal - discount, 0))
+			setPromo(coupon)
+			setDisabled(true)
+		}
+	}, [cartItems, discount, coupon])
 
 	useEffect(() => {
 		if (isSignedIn && dbId) {
@@ -85,6 +91,7 @@ const Cart = () => {
 
 		try {
 			const result = await dispatch(validateCoupon(promo)).unwrap() // Wait for validation to complete
+			dispatch(setAppliedCoupon({ coupon: promo, discount: result.discount }))
 			setTotalPrice((prevTotal) => Math.max(prevTotal - result.discount, 0)) // Use the correct discount
 			setDisabled(true) // Disable only if coupon is valid
 		} catch (error) {
@@ -322,21 +329,33 @@ const Cart = () => {
 				{/* Promo Code Input */}
 				<div className="mb-3">
 					<p className="text-lg font-medium text-gray-700 mb-1">Promo Code</p>
-					<div className="flex">
-						<input
-							type="text"
-							value={promo}
-							onChange={(e) => {
-								setPromo(e.target.value)
-							}}
-							disabled={disabled}
-							placeholder="Enter code"
-							className="w-full px-3 py-2 border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-800"
-						/>
+					<div className="flex justify-evenly">
+						<div className="relative">
+							<input
+								type="text"
+								value={promo}
+								onChange={(e) => setPromo(e.target.value)}
+								disabled={disabled}
+								placeholder="Enter code"
+								className="w-full px-3 py-2 border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-800 pr-10"
+							/>
+							{promo && (
+								<button
+									onClick={() => {
+										setPromo('')
+										setDisabled(false)
+										dispatch(clearCoupon())
+									}}
+									className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+								>
+									✕
+								</button>
+							)}
+						</div>
 						<button
 							onClick={handlePromo}
 							disabled={disabled}
-							className="w-full ms-3 bg-black text-white font-semibold rounded-md transition hover:bg-gray-800 active:scale-95"
+							className="px-4 bg-black text-white font-semibold rounded-md transition hover:bg-gray-800 active:scale-95"
 						>
 							{disabled ? 'Applied !!!' : 'Apply'}
 						</button>
@@ -349,7 +368,9 @@ const Cart = () => {
 					<p className="text-lg font-semibold text-gray-900">Total</p>
 					<p className="text-xl font-semibold text-gray-900">
 						{currency}
-						{convertPrice(totalPrice.toFixed(2), country, INR_rate, GBP_rate)}
+						{Number(
+							convertPrice(totalPrice, country, INR_rate, GBP_rate)
+						).toFixed(2)}
 					</p>
 				</div>
 
@@ -360,12 +381,9 @@ const Cart = () => {
 					</p>
 					<p className="text-xl font-semibold text-gray-900">
 						{currency}
-						{convertPrice(
-							(totalPrice / 3).toFixed(2),
-							country,
-							INR_rate,
-							GBP_rate
-						)}
+						{Number(
+							convertPrice(totalPrice / 3, country, INR_rate, GBP_rate)
+						).toFixed(2)}
 					</p>
 				</div>
 
