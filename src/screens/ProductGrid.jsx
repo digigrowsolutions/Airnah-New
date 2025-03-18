@@ -8,8 +8,11 @@ import { FaHeart, FaRegHeart } from 'react-icons/fa'
 import { useUser } from '@clerk/clerk-react'
 import {
 	addToFavorites,
+	addToFavoritesLocal,
+	clearLocalFavorites,
 	fetchUserFavorites,
 	removeFromFavorites,
+	removeFromFavoritesLocal,
 } from '../redux/favoritesCartSlice'
 import ImageCarousel from '../components/ImageCarousel'
 
@@ -31,29 +34,54 @@ export default function ProductGrid() {
 	)
 	const { user } = useUser()
 	const dbId = user?.publicMetadata?.dbId
+	const { favorites } = useSelector((state) => state.favoritesCart)
 
 	useEffect(() => {
+		if (!dbId) {
+			// dispatch(clearLocalFavorites())
+			const guestFavorites = JSON.parse(localStorage.getItem('favorites')) || []
+			guestFavorites.forEach((fav) => {
+				dispatch(addToFavoritesLocal(fav))
+			})
+		} else if (dbId) {
+			const localFavorites = JSON.parse(localStorage.getItem('favorites')) || []
+			localFavorites.forEach((fav) => {
+				dispatch(addToFavorites({ dbId, product_id: fav.product_id }))
+			})
+			dispatch(clearLocalFavorites())
+			dispatch(fetchUserFavorites(dbId))
+		}
 		dispatch(fetchProducts(dbId))
 	}, [dbId, dispatch])
+
+	const isProductFavorited = (product_id) => {
+		return favorites.some((fav) => fav.product_id === product_id)
+	}
 
 	const handleClick = (product_id) => {
 		navigate('/products/' + product_id)
 	}
 
-	const handleFavorite = (e, product_id, isFavorited) => {
+	const handleFavorite = (e, product_id) => {
 		e.stopPropagation()
-		if (isFavorited) {
-			dispatch(
-				removeFromFavorites({ userId: dbId, product_id: product_id })
-			).then(() => {
-				dispatch(fetchProducts(dbId))
-				dispatch(fetchUserFavorites(dbId))
-			})
+		if (dbId) {
+			if (isProductFavorited(product_id)) {
+				dispatch(removeFromFavorites({ userId: dbId, product_id })).then(() => {
+					dispatch(fetchProducts(dbId))
+					dispatch(fetchUserFavorites(dbId))
+				})
+			} else {
+				dispatch(addToFavorites({ dbId, product_id })).then(() => {
+					dispatch(fetchProducts(dbId))
+					dispatch(fetchUserFavorites(dbId))
+				})
+			}
 		} else {
-			dispatch(addToFavorites({ dbId, product_id })).then(() => {
-				dispatch(fetchProducts(dbId))
-				dispatch(fetchUserFavorites(dbId))
-			})
+			if (isProductFavorited(product_id)) {
+				dispatch(removeFromFavoritesLocal(product_id))
+			} else {
+				dispatch(addToFavoritesLocal({ product_id }))
+			}
 		}
 	}
 
@@ -90,11 +118,9 @@ export default function ProductGrid() {
 						>
 							<div
 								className="absolute bottom-28 right-4 text-2xl cursor-pointer text-[#be9080]"
-								onClick={(e) =>
-									handleFavorite(e, product.product_id, product.isFavorited)
-								}
+								onClick={(e) => handleFavorite(e, product.product_id)}
 							>
-								{product.isFavorited ? (
+								{isProductFavorited(product.product_id) ? (
 									<FaHeart className="text-red-500" />
 								) : (
 									<FaRegHeart />

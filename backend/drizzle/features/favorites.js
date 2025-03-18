@@ -79,15 +79,15 @@ export async function removeFromFavorites({
 	diamond_id,
 	ring_style_id,
 }) {
-	console.log(product_id)
+	console.log(diamond_id)
 	// Start with the required user condition
 	let conditions = [eq(favoritesTable.user_id, user_id)]
 
 	// Add conditions only if the respective values are provided
 	if (product_id) conditions.push(eq(favoritesTable.product_id, product_id))
-	if (diamond_id) conditions.push(eq(favoritesTable.favourite_id, diamond_id))
+	if (diamond_id) conditions.push(eq(favoritesTable.diamond_id, diamond_id))
 	if (ring_style_id)
-		conditions.push(eq(favoritesTable.favourite_id, ring_style_id))
+		conditions.push(eq(favoritesTable.ring_style_id, ring_style_id))
 
 	// Perform the delete operation
 	await db.delete(favoritesTable).where(and(...conditions))

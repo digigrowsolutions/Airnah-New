@@ -7,8 +7,11 @@ import {
 import { convertPrice } from '../utils/helpers'
 import {
 	addToFavorites,
+	addToFavoritesLocal,
+	clearLocalFavorites,
 	fetchUserFavorites,
 	removeFromFavorites,
+	removeFromFavoritesLocal,
 } from '../redux/favoritesCartSlice'
 import { FaHeart, FaRegHeart } from 'react-icons/fa'
 import { useUser } from '@clerk/clerk-react'
@@ -18,6 +21,7 @@ import ImageCarousel from './ImageCarousel'
 function DiamondGrid() {
 	const dispatch = useDispatch()
 	const { diamonds } = useSelector((state) => state.userProducts)
+	const { favorites } = useSelector((state) => state.favoritesCart)
 	const { currency, country, INR_rate, GBP_rate } = useSelector(
 		(state) => state.localization
 	)
@@ -28,55 +32,55 @@ function DiamondGrid() {
 	const [carat, setCarat] = useState(50)
 	const [clarity, setClarity] = useState(50)
 	const [price, setPrice] = useState(50)
-	const [favoriteStatus, setFavoriteStatus] = useState({})
 	const labels = ['M', 'L', 'K', 'J', 'I', 'H', 'G', 'F', 'E', 'D']
 
 	useEffect(() => {
+		if (!dbId) {
+			// dispatch(clearLocalFavorites())
+			const guestFavorites = JSON.parse(localStorage.getItem('favorites')) || []
+			guestFavorites.forEach((fav) => {
+				dispatch(addToFavoritesLocal(fav))
+			})
+		} else if (dbId) {
+			const localFavorites = JSON.parse(localStorage.getItem('favorites')) || []
+			localFavorites.forEach((fav) => {
+				dispatch(addToFavorites({ dbId, diamond_id: fav.diamond_id }))
+			})
+			dispatch(clearLocalFavorites())
+			dispatch(fetchUserFavorites(dbId))
+		}
 		dispatch(fetchDiamonds(dbId))
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [dbId, dispatch])
 
-	useEffect(() => {
-		const favStatus = {}
-		diamonds.forEach((product) => {
-			favStatus[product.diamond_id] = product.favorite_id !== null
-		})
-		setFavoriteStatus(favStatus)
-	}, [diamonds])
+	const isProductFavorited = (diamond_id) => {
+		return favorites.some((fav) => fav.diamond_id === diamond_id)
+	}
 
 	const handleClick = (product_id) => {
 		dispatch(updateDiamondDetails({ product_id: product_id }))
 		dispatch(setShowDiamond(true))
 	}
 
-	const handleFavorite = (e, product_id, favorite_id) => {
+	const handleFavorite = (e, diamond_id) => {
 		e.stopPropagation()
-
-		const isCurrentlyFavorite = favoriteStatus[product_id]
-
-		if (isCurrentlyFavorite) {
-			dispatch(
-				removeFromFavorites({
-					userId: dbId,
-					productId: null,
-					diamond_id: favorite_id,
-					ring_style_id: null,
+		if (dbId) {
+			if (isProductFavorited(diamond_id)) {
+				dispatch(removeFromFavorites({ userId: dbId, diamond_id })).then(() => {
+					dispatch(fetchDiamonds(dbId))
+					dispatch(fetchUserFavorites(dbId))
 				})
-			).then(() => {
-				dispatch(fetchDiamonds(dbId))
-				dispatch(fetchUserFavorites(dbId))
-			})
+			} else {
+				dispatch(addToFavorites({ dbId, diamond_id })).then(() => {
+					dispatch(fetchDiamonds(dbId))
+					dispatch(fetchUserFavorites(dbId))
+				})
+			}
 		} else {
-			dispatch(
-				addToFavorites({
-					dbId,
-					product_id: null,
-					diamond_id: product_id,
-					ring_style_id: null,
-				})
-			).then(() => {
-				dispatch(fetchDiamonds(dbId))
-			})
+			if (isProductFavorited(diamond_id)) {
+				dispatch(removeFromFavoritesLocal(diamond_id))
+			} else {
+				dispatch(addToFavoritesLocal({ diamond_id }))
+			}
 		}
 	}
 
@@ -237,11 +241,9 @@ function DiamondGrid() {
 						>
 							<div
 								className="absolute bottom-20 right-4 text-2xl cursor-pointer text-[#be9080]"
-								onClick={(e) =>
-									handleFavorite(e, product.diamond_id, product.favorite_id)
-								}
+								onClick={(e) => handleFavorite(e, product.diamond_id)}
 							>
-								{product.favorite_id ? (
+								{isProductFavorited(product.diamond_id) ? (
 									<FaHeart className="text-red-500" />
 								) : (
 									<FaRegHeart />
