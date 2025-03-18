@@ -35,15 +35,31 @@ export const addToFavorites = createAsyncThunk(
 	'favoritesCart/addToFavorites',
 	async (
 		{ dbId, product_id, diamond_id, ring_style_id },
-		{ rejectWithValue }
+		{ getState, rejectWithValue }
 	) => {
 		try {
-			return await addToFavoritesAPI(
-				dbId,
-				product_id,
-				diamond_id,
-				ring_style_id
-			)
+			if (dbId) {
+				// If user is logged in, call the API
+				return await addToFavoritesAPI(
+					dbId,
+					product_id,
+					diamond_id,
+					ring_style_id
+				)
+			} else {
+				// If user is not logged in, store in localStorage
+				const { favorites } = getState().favoritesCart
+				const updatedFavorites = [
+					...favorites,
+					{ product_id, diamond_id, ring_style_id },
+				]
+
+				// Save to localStorage
+				localStorage.setItem('favorites', JSON.stringify(updatedFavorites))
+
+				// Return locally stored favorite object
+				return { product_id, diamond_id, ring_style_id }
+			}
 		} catch (error) {
 			return rejectWithValue(error.message)
 		}
@@ -63,7 +79,7 @@ export const removeFromFavorites = createAsyncThunk(
 				diamond_id,
 				ring_style_id
 			)
-			return product_id
+			return product_id || diamond_id || ring_style_id
 		} catch (error) {
 			return rejectWithValue(error.message)
 		}
@@ -116,7 +132,7 @@ export const validateCoupon = createAsyncThunk(
 const favoritesCartSlice = createSlice({
 	name: 'favoritesCart',
 	initialState: {
-		favorites: [],
+		favorites: JSON.parse(localStorage.getItem('favorites')) || [],
 		cartItems: [],
 		coupon: null,
 		discount: 0,
@@ -125,7 +141,48 @@ const favoritesCartSlice = createSlice({
 	},
 	reducers: {
 		setAppliedCoupon: (state, action) => {
-			state.coupon = action.payload
+			state.coupon = action.payload.coupon
+			state.discount = action.payload.discount
+		},
+		clearCoupon: (state) => {
+			state.coupon = null
+			state.discount = 0
+		},
+		addToFavoritesLocal: (state, action) => {
+			// Add to local Redux state
+			const exists = state.favorites.some(
+				(item) => item.product_id === action.payload.product_id
+			)
+			if (!exists) {
+				state.favorites.push(action.payload)
+			}
+
+			// Update localStorage
+			localStorage.setItem('favorites', JSON.stringify(state.favorites))
+		},
+		removeFromFavoritesLocal: (state, action) => {
+			// Remove from local Redux state
+			if (action.payload.product_id) {
+				state.favorites = state.favorites.filter(
+					(item) => item.product_id !== action.payload
+				)
+			} else if (action.payload.diamond_id) {
+				state.favorites = state.favorites.filter(
+					(item) => item.diamond_id !== action.payload
+				)
+			} else {
+				state.favorites = state.favorites.filter(
+					(item) => item.ring_style_id !== action.payload
+				)
+			}
+
+			// Update localStorage
+			localStorage.setItem('favorites', JSON.stringify(state.favorites))
+		},
+		clearLocalFavorites: (state) => {
+			// Clear local favorites when user logs in
+			state.favorites = []
+			localStorage.removeItem('favorites')
 		},
 	},
 	extraReducers: (builder) => {
@@ -198,5 +255,11 @@ const favoritesCartSlice = createSlice({
 	},
 })
 
-export const { setAppliedCoupon } = favoritesCartSlice.actions
+export const {
+	setAppliedCoupon,
+	clearCoupon,
+	addToFavoritesLocal,
+	removeFromFavoritesLocal,
+	clearLocalFavorites,
+} = favoritesCartSlice.actions
 export default favoritesCartSlice.reducer

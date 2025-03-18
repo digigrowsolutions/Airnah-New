@@ -1,4 +1,4 @@
-import { and, avg, count, eq } from 'drizzle-orm'
+import { avg, count, eq } from 'drizzle-orm'
 import { db } from '../db.js'
 import { productsTable } from '../schema/products.js'
 import { reviewsTable } from '../schema/reviews.js'
@@ -53,44 +53,10 @@ export async function getAllProducts(clerk_user_id) {
 	// Map through all products and mark the ones that are favorited
 	const productsWithFavorites = allProducts.map((product) => ({
 		...product,
-		isFavorited: favoritedProductIds.has(product.product_id), // Check if the product is favorited
+		isFavorited: favoritedProductIds.has(product.product_id),
 	}))
 
 	return productsWithFavorites
-	// const products = await db
-	// 	.select({
-	// 		product_id: productsTable.product_id,
-	// 		SKU: productsTable.SKU,
-	// 		name: productsTable.name,
-	// 		category: productsTable.category,
-	// 		carat: productsTable.carat,
-	// 		total_cost: productsTable.total_cost,
-	// 		average_rating: avg(reviewsTable.rating).as('average_rating'),
-	// 		review_count: count(reviewsTable.review_id).as('review_count'),
-	// 		favorite_id: clerk_user_id
-	// 			? db
-	// 					.select({ favorite_id: favoritesTable.favourite_id })
-	// 					.from(favoritesTable)
-	// 					.where(
-	// 						and(
-	// 							eq(favoritesTable.product_id, productsTable.product_id),
-	// 							eq(favoritesTable.user_id, clerk_user_id)
-	// 						)
-	// 					)
-	// 					.limit(1)
-	// 			: '', // If not logged in, favorite_id is null
-	// 		image_URL: productsTable.image_URL,
-	// 	})
-	// 	.from(productsTable)
-	// 	.leftJoin(
-	// 		reviewsTable,
-	// 		eq(productsTable.product_id, reviewsTable.product_id)
-	// 	)
-	// 	.groupBy(productsTable.product_id)
-
-	// if (!products) throw new Error('Failed to get all products')
-
-	// return products
 }
 
 export async function getAllDiamonds() {

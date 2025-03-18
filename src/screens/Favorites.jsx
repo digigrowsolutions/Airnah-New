@@ -31,9 +31,18 @@ const Favorites = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [])
 
-	const handleRemove = (productId) => {
-		dispatch(removeFromFavorites({ userId: dbId, productId }))
-		dispatch(fetchUserFavorites(dbId))
+	const handleRemove = (product_id, diamond_id, ring_style_id, type) => {
+		const idMap = {
+			1: { product_id },
+			2: { diamond_id },
+			3: { ring_style_id },
+		}
+
+		const idObj = idMap[type]
+		if (idObj) {
+			dispatch(removeFromFavorites({ userId: dbId, ...idObj }))
+			dispatch(fetchUserFavorites(dbId))
+		}
 	}
 
 	const handleView = (item) => {
@@ -140,7 +149,14 @@ const Favorites = () => {
 									View
 								</button>
 								<button
-									onClick={() => handleRemove(item.favorite_id)}
+									onClick={() =>
+										handleRemove(
+											item.product_id,
+											item.diamond_id,
+											item.ring_style_id,
+											item.product_type
+										)
+									}
 									className="px-4 py-2 bg-white text-black rounded-md hover:bg-black border border-solid border-grey hover:text-white transition duration-300 ease-in-out"
 								>
 									Remove from Favorites

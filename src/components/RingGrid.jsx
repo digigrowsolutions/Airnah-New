@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { setShowRing, updateRingDetails } from '../redux/ringCustomizationSlice'
 import { convertPrice } from '../utils/helpers'
@@ -7,63 +7,73 @@ import { fetchStyles } from '../redux/userProductsSlice'
 import { FaHeart, FaRegHeart } from 'react-icons/fa'
 import {
 	addToFavorites,
+	addToFavoritesLocal,
+	clearLocalFavorites,
 	fetchUserFavorites,
 	removeFromFavorites,
+	removeFromFavoritesLocal,
 } from '../redux/favoritesCartSlice'
 import ImageCarousel from './ImageCarousel'
 
 function RingGrid() {
 	const dispatch = useDispatch()
 	const { styles } = useSelector((state) => state.userProducts)
+	const { favorites } = useSelector((state) => state.favoritesCart)
 	const { currency, country, INR_rate, GBP_rate } = useSelector(
 		(state) => state.localization
 	)
 	const { user } = useUser()
 	const dbId = user?.publicMetadata?.dbId
-	const [favoriteStatus, setFavoriteStatus] = useState({})
 
 	useEffect(() => {
+		if (!dbId) {
+			// dispatch(clearLocalFavorites())
+			const guestFavorites = JSON.parse(localStorage.getItem('favorites')) || []
+			guestFavorites.forEach((fav) => {
+				dispatch(addToFavoritesLocal(fav))
+			})
+		} else if (dbId) {
+			const localFavorites = JSON.parse(localStorage.getItem('favorites')) || []
+			localFavorites.forEach((fav) => {
+				dispatch(addToFavorites({ dbId, ring_style_id: fav.ring_style_id }))
+			})
+			dispatch(clearLocalFavorites())
+			dispatch(fetchUserFavorites(dbId))
+		}
 		dispatch(fetchStyles(dbId))
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [dbId, dispatch])
 
-	useEffect(() => {
-		const favStatus = {}
-		styles.forEach((product) => {
-			favStatus[product.ring_style_id] = product.favorite_id !== null
-		})
-		setFavoriteStatus(favStatus)
-	}, [styles])
+	const isProductFavorited = (ring_style_id) => {
+		return favorites.some((fav) => fav.ring_style_id === ring_style_id)
+	}
 
 	const handleClick = (product_id) => {
 		dispatch(updateRingDetails({ product_id: product_id }))
 		dispatch(setShowRing(true))
 	}
 
-	const handleFavorite = (e, product_id, favorite_id) => {
+	const handleFavorite = (e, ring_style_id) => {
 		e.stopPropagation()
-
-		const isCurrentlyFavorite = favoriteStatus[product_id]
-
-		if (isCurrentlyFavorite) {
-			dispatch(
-				removeFromFavorites({
-					userId: dbId,
-					ring_style_id: favorite_id,
+		if (dbId) {
+			if (isProductFavorited(ring_style_id)) {
+				dispatch(removeFromFavorites({ userId: dbId, ring_style_id })).then(
+					() => {
+						dispatch(fetchStyles(dbId))
+						dispatch(fetchUserFavorites(dbId))
+					}
+				)
+			} else {
+				dispatch(addToFavorites({ dbId, ring_style_id })).then(() => {
+					dispatch(fetchStyles(dbId))
+					dispatch(fetchUserFavorites(dbId))
 				})
-			).then(() => {
-				dispatch(fetchStyles(dbId)) // ✅ Re-fetch products after updating favorites
-				dispatch(fetchUserFavorites(dbId))
-			})
+			}
 		} else {
-			dispatch(
-				addToFavorites({
-					dbId,
-					ring_style_id: product_id,
-				})
-			).then(() => {
-				dispatch(fetchStyles(dbId)) // ✅ Re-fetch products after adding to favorites
-			})
+			if (isProductFavorited(ring_style_id)) {
+				dispatch(removeFromFavoritesLocal(ring_style_id))
+			} else {
+				dispatch(addToFavoritesLocal({ ring_style_id }))
+			}
 		}
 	}
 
@@ -80,15 +90,9 @@ function RingGrid() {
 							>
 								<div
 									className="absolute bottom-20 right-4 text-2xl cursor-pointer text-[#be9080]"
-									onClick={(e) =>
-										handleFavorite(
-											e,
-											product.ring_style_id,
-											product.favorite_id
-										)
-									}
+									onClick={(e) => handleFavorite(e, product.ring_style_id)}
 								>
-									{product.favorite_id ? (
+									{isProductFavorited(product.ring_style_id) ? (
 										<FaHeart className="text-red-500" />
 									) : (
 										<FaRegHeart />
