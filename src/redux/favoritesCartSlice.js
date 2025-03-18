@@ -35,31 +35,15 @@ export const addToFavorites = createAsyncThunk(
 	'favoritesCart/addToFavorites',
 	async (
 		{ dbId, product_id, diamond_id, ring_style_id },
-		{ getState, rejectWithValue }
+		{ rejectWithValue }
 	) => {
 		try {
-			if (dbId) {
-				// If user is logged in, call the API
-				return await addToFavoritesAPI(
-					dbId,
-					product_id,
-					diamond_id,
-					ring_style_id
-				)
-			} else {
-				// If user is not logged in, store in localStorage
-				const { favorites } = getState().favoritesCart
-				const updatedFavorites = [
-					...favorites,
-					{ product_id, diamond_id, ring_style_id },
-				]
-
-				// Save to localStorage
-				localStorage.setItem('favorites', JSON.stringify(updatedFavorites))
-
-				// Return locally stored favorite object
-				return { product_id, diamond_id, ring_style_id }
-			}
+			return await addToFavoritesAPI(
+				dbId,
+				product_id,
+				diamond_id,
+				ring_style_id
+			)
 		} catch (error) {
 			return rejectWithValue(error.message)
 		}
@@ -150,9 +134,21 @@ const favoritesCartSlice = createSlice({
 		},
 		addToFavoritesLocal: (state, action) => {
 			// Add to local Redux state
-			const exists = state.favorites.some(
-				(item) => item.product_id === action.payload.product_id
-			)
+			let exists
+			if (action.payload.product_id) {
+				exists = state.favorites.some(
+					(item) => item.product_id === action.payload.product_id
+				)
+			} else if (action.payload.diamond_id) {
+				exists = state.favorites.some(
+					(item) => item.diamond_id === action.payload.diamond_id
+				)
+			} else {
+				exists = state.favorites.some(
+					(item) => item.ring_style_id === action.payload.ring_style_id
+				)
+			}
+
 			if (!exists) {
 				state.favorites.push(action.payload)
 			}
@@ -164,15 +160,15 @@ const favoritesCartSlice = createSlice({
 			// Remove from local Redux state
 			if (action.payload.product_id) {
 				state.favorites = state.favorites.filter(
-					(item) => item.product_id !== action.payload
+					(item) => item.product_id !== action.payload.product_id
 				)
 			} else if (action.payload.diamond_id) {
 				state.favorites = state.favorites.filter(
-					(item) => item.diamond_id !== action.payload
+					(item) => item.diamond_id !== action.payload.diamond_id
 				)
 			} else {
 				state.favorites = state.favorites.filter(
-					(item) => item.ring_style_id !== action.payload
+					(item) => item.ring_style_id !== action.payload.ring_style_id
 				)
 			}
 
