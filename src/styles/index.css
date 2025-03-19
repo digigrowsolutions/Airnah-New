@@ -11,14 +11,14 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 @font-face {
-  font-family: 'Lexend';
-  src: url('../assets/fonts/Lexend.ttf') format('truetype');
+  font-family: 'Monsterat';
+  src: url('../assets/fonts/Monsterat.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
 }
 
 * {
-  font-family: 'Lexend';
+  font-family: 'Monsterat';
 }@keyframes scroll {
   from {
     transform: translateX(0);
